@@ -12,6 +12,8 @@ export const filter_metaData_store = writable([])
 
 export const peopleDataStore = writable({})
 
+export const imageDataStore = writable([])
+
 export const queryResultsStore = writable({
     "last_metaData" : [],
     "last_dataHash" : [],
