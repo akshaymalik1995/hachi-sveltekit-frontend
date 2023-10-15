@@ -8,15 +8,16 @@
     <!-- A single div element -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    {#each people_list as person_id}
+    {#each people_list as person}
+    <!-- person => ['person_id', {}] -->
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="flex flex-col justify-center items-center cursor-pointer" on:click={e => {console.log("Person id is", person_id)}}>
+        <div class="flex flex-col justify-center items-center cursor-pointer" on:click={e => {console.log("Person id is", person[0])}}>
                 <div>
-                    <a href="{'/people/' + person_id}" class="flex items-center w-48 min-h-[200px] rounded bg-gray-800">
-                        <img src={DOMAIN + "/getPreviewPerson/" + person_id} class="object-strech  hover:rounded-none rounded  w-full h-full bg-gray-100 border-gray-100 shadow-smr" alt="">
+                    <a href="{'/search?person=' + person[0]}" class="flex items-center w-48 min-h-[200px] rounded bg-gray-800">
+                        <img loading="lazy" src={DOMAIN + "/getPreviewPerson/" + person[0]} class="object-strech  hover:rounded-none rounded  w-full h-full bg-gray-100 border-gray-100 shadow-smr" alt="">
                     </a>
                     <div class="flex text-black my-2 text-md justify-center items-center">
-                        {person_id.slice(0, 1).toUpperCase() + person_id.slice(1).toLowerCase()}
+                        {person[0].slice(0, 1).toUpperCase() + person[0].slice(1).toLowerCase()}
                     </div>
                 </div>
 

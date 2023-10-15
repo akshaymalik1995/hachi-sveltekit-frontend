@@ -13,7 +13,7 @@
     let currentUrl = $page.url; // Get the current URL of the page. Does the current url changes automatically everytime the url changes ? And if yes what is its utility? Ideally the component will rerender only if the currentUrl is directly used in the UI
     console.log(currentUrl)
     // FOR PAGINATION. It could be a function or a component since it might be used at a lot of places in the app
-    const imagesOnAPage = 50; // BY default how many images do we want.
+    const imagesOnAPage = 25; // BY default how many images do we want.
     let currentPage = Number($page.url.searchParams.get("page")) || 1; // What is the current page?
     let totalPages = 1; // Initialzing total pages
     let lowerIndex = (currentPage - 1) * imagesOnAPage; // Determining lower index and upper index. So that we can get the right images from the list based on the page number we have
