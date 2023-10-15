@@ -22,18 +22,9 @@ export async function load({ fetch }) {
 
             if (!(person in people_data)) {
                 people_data[person] = {
-                    list_metaData: [],
-                    list_score: [],
-                    list_dataHash: [],
-                    sortedScoreIndex : [],
                     numOfPhotos : 0
                 }
             }
-
-            people_data[person].list_metaData.push(data['meta_data'][i])
-            people_data[person].list_score.push(data['score'][i])
-            people_data[person].list_dataHash.push(data['data_hash'][i])
-            people_data[person].sortedScoreIndex.push({ix : i, score: data['score'][i]})
             people_data[person].numOfPhotos += 1
 
         }
@@ -42,6 +33,8 @@ export async function load({ fetch }) {
         image_data.list_metaData.push(data["meta_data"][i]);
         image_data.sortedScoreIndex.push({ix : i, score: data['score'][i]})
     }
+
+    console.log(image_data.list_metaData)
 
     return {
         image_data,
