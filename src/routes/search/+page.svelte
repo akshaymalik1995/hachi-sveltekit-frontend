@@ -110,6 +110,7 @@
         
         } else {
             // If the query is not new, we send client id along with the request
+            loading = false
             formData.append("query_start", "false");
             formData.append("client_id", client_id); // Send this key along with subsequent requests. We would get this from the server
         }
@@ -153,7 +154,7 @@
             totalPages = Math.floor(
                 imageDataForChild.list_dataHash.length / imagesOnAPage
             );
-            loading = false
+            
             pagesNumbers = [];
             for (let i = 1; i <= totalPages; i++) {
                 pagesNumbers.push(i);
@@ -163,6 +164,7 @@
         }
 
         // Keep executing the function unless the query is completed
+        
         await handleQuery(temp_id, true);
     }
 

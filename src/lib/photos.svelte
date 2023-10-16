@@ -74,7 +74,7 @@
 <!-- SHOW ALL AVAILABLE PHOTOS -->
 
 {#if imageData["sortedScoreIndex"]}
-  <div class="grid grid-cols-3  gap-8  p-4 mb-12 sm:p-12 px-auto">
+  <div class="grid grid-cols-3  gap-2  mb-12 sm:p-12 px-auto">
       {#each imageData["sortedScoreIndex"].slice(pageSize.lowerIndex, Math.min(pageSize.upperIndex, imageData.list_dataHash.length )) as score, i}
       <!-- (-1) here would indicate invalid index. so ignore that index -->
 
@@ -84,9 +84,9 @@
           <!-- svelte-ignore a11y-img-redundant-alt -->
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-          <a class="shadow-6 shadow-black rounded-lg flex justify-center items-center w-full rounded-lg " href="#">
+          <a class="shadow-6 bg-black shadow-black rounded-lg flex justify-center items-center w-full rounded-lg " href="#">
             <img
-            class=" w-full rounded-lg shadow-xl cursor-pointer"
+            class=" rounded-lg shadow-xl cursor-pointer"
             on:click={(e) => openImageView(i)}
             src={DOMAIN + "/getRawData/" + imageData.list_dataHash[score.ix]}
             alt="image"
