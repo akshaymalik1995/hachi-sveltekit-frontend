@@ -1,38 +1,10 @@
 <script>
-    import Photos from "$lib/photos.svelte";
-    import Pagination from "$lib/Pagination.svelte";
-    import { page } from "$app/stores";
-    import { goto } from "$app/navigation";
+    
+    import {DOMAIN} from "$lib/stores"
     export let data;
     const { image_data, directories_data } = data;
-    let filteredImageData = image_data
     const directories = Object.keys(directories_data)
-    const imagesOnAPage = 50;
-    let currentPage = 1;
-    let totalPages = Math.ceil(filteredImageData.list_dataHash.length / imagesOnAPage);
-    let lowerIndex = (currentPage - 1) * imagesOnAPage;
-    let upperIndex = imagesOnAPage * currentPage;
 
-    $: {
-        totalPages = Math.ceil(filteredImageData.list_dataHash.length / imagesOnAPage);
-        currentPage = Number($page.url.searchParams.get("page")) || 1;
-        lowerIndex = (currentPage - 1) * imagesOnAPage;
-        upperIndex = imagesOnAPage * currentPage;
-        console.log(lowerIndex, upperIndex)
-    }
-    
-    function changeDirectory(e){
-        const dir = e.target.value
-        if (dir === 'all'){
-            filteredImageData = image_data
-        } else {
-            filteredImageData = directories_data[dir]
-        }
-        
-        goto("/photos")
-        
-        
-    }
 </script>
 
 <div>
@@ -40,19 +12,22 @@
     
    
     <div class="text-center my-8 text-6xl">Gallary</div>
+    <!-- I want to display directories as folders -->
 
-    <div class="mx-12">
-        <select class="w-full px-4  py-2 rounded" on:change={changeDirectory} name="" id="">
-            <option  selected value="all">All</option>
-            {#each directories as d}
-            <option value="{d}">{d}</option>
-            {/each}
-           
-        </select>
+    <div class='grid grid-cols-6 gap-8'>
+        {#each directories as d}
+        <a href="{'/photos/' + encodeURIComponent(d) }" class='flex gap-2 flex-col  bg-blue-300 cursor-pointer hover:bg-blue-200 py-4 px-4 rounded'>
+            <!-- svelte-ignore a11y-img-redundant-alt -->
+            <img
+            class="h-48 rounded-lg shadow-xl cursor-pointer"
+            src={DOMAIN + "/getRawData/" + directories_data[d].list_dataHash[0]}
+            alt="image"
+          />
+          <div class="text-center">{d}</div>
+        </a>
+       
+        {/each}
     </div>
     
-    <Photos imageData={filteredImageData} pageSize={{ lowerIndex, upperIndex }} />
-    <Pagination {currentPage} {totalPages} />
-    
-   
+
 </div>
