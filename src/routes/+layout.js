@@ -2,7 +2,7 @@ export const ssr = false
 export const csr = true
 export const prerender = true
 
-import { DOMAIN, imageDataStore } from '$lib/stores'
+import { DOMAIN } from '$lib/stores'
 export async function load({ fetch }) {
     let image_data = {
         list_metaData: [],
@@ -52,7 +52,6 @@ export async function load({ fetch }) {
         image_data.sortedScoreIndex.push({ix : i, score: data['score'][i]})
     }
 
-    imageDataStore.update(data => image_data)
 
     return {
         image_data,

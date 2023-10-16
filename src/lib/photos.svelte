@@ -1,6 +1,6 @@
 <script>
   console.log("PHOTOS COMPONENT RENDERED");
-  import { DOMAIN, imageDataStore } from "$lib/stores";
+  import { DOMAIN } from "$lib/stores";
   import {goto} from "$app/navigation"
   import {page} from "$app/stores"
   import ImageView from "$lib/ImageView.svelte";

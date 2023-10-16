@@ -14,7 +14,7 @@
     <div class="text-center my-8 text-6xl">Gallary</div>
     <!-- I want to display directories as folders -->
 
-    <div class='grid grid-cols-6 gap-8'>
+    <div class='grid md:grid-cols-3 xl:grid-cols-6 gap-8'>
         {#each directories as d}
         <a href="{'/photos/' + encodeURIComponent(d) }" class='flex gap-2 flex-col  bg-blue-300 cursor-pointer hover:bg-blue-200 py-4 px-4 rounded'>
             <!-- svelte-ignore a11y-img-redundant-alt -->

@@ -6,7 +6,7 @@
     import { argSort } from "$lib/utils";
     import { page } from "$app/stores";
     import {goto, afterNavigate} from "$app/navigation"
-    import { DOMAIN, queryResultsStore } from "$lib/stores.js";
+    import { DOMAIN } from "$lib/stores.js";
 
     let loading = false
 
@@ -106,8 +106,8 @@
                 
             };
             formData.append("query_start", "true"); // We are informing the server that this is a completely new query
-            queryResultsStore.update((value) => imageDataForChild); // If we are storing the results in the store, we also need to reset values there too
             
+        
         } else {
             // If the query is not new, we send client id along with the request
             formData.append("query_start", "false");
