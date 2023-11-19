@@ -29,8 +29,8 @@
         const currentUrl = $page.url
         for (let key of filtersList){
             if (filtersList.includes(key) && currentUrl.searchParams.get(key)){
-                if (textQuery !== "") {textQuery += ","}
-                textQuery += key + ":" + currentUrl.searchParams.get(key)
+                if (textQuery !== "") {textQuery += "&"}
+                textQuery += key + "=" + currentUrl.searchParams.get(key)
                 console.log(currentUrl.searchParams.get(key))
             }
         }
@@ -110,7 +110,7 @@
         
         } else {
             // If the query is not new, we send client id along with the request
-            loading = false
+            
             formData.append("query_start", "false");
             formData.append("client_id", client_id); // Send this key along with subsequent requests. We would get this from the server
         }
@@ -148,6 +148,7 @@
 
         
         if (data["query_completed"] == true) {
+            loading = false
             imageDataForChild.done = true; // This should be enough to indicate svelte
             queryCompleted = true;
             console.log("The query is completed");

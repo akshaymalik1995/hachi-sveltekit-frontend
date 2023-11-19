@@ -3,8 +3,7 @@
     import {DOMAIN} from "$lib/stores"
     export let data;
     const { image_data, directories_data } = data;
-    const directories = Object.keys(directories_data)
-
+    let directories = Object.keys(directories_data)
 </script>
 
 <div>

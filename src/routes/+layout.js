@@ -15,6 +15,7 @@ export async function load({ fetch }) {
     const directories_data = {}
     const response = await fetch(DOMAIN + "/getGroup/person")
     const data = await response.json()
+    console.log(data)
     const people_list = data.person
     for (let i = 0; i < data["meta_data"].length; i++) {
         let personList = data['meta_data'][i]['person']
@@ -29,9 +30,7 @@ export async function load({ fetch }) {
             people_data[person].numOfPhotos += 1
 
         }
-        let absolutePathParts = data['meta_data'][i]['absolute_path'].split("\\")
-        absolutePathParts = absolutePathParts.slice(0, absolutePathParts.length - 1)
-        let directory = absolutePathParts.join("\\")
+        let directory = data['meta_data'][i]['absolute_path']
         if (!(directory in directories_data)) {
             directories_data[directory] = {
                 list_metaData: [],

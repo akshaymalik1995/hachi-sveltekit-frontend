@@ -27,7 +27,7 @@
             // Loop through the filter options
             if (currentUrl.searchParams.get(key)) {
                 // Check if the option is in the searchParams
-                const values = currentUrl.searchParams.get(key).split("-"); // If it is, it could be in the form "value1-value2". We turn it into a list of values such as ['value1', 'value2']
+                const values = currentUrl.searchParams.get(key).split("?"); // If it is, it could be in the form "value1?value2". We turn it into a list of values such as ['value1', 'value2']
                 for (let v of values) {
                     // Looping through the values
                     selectedFilters[key] = [...selectedFilters[key], v]; // Pushing the values to the approprtiate filter option
@@ -117,12 +117,13 @@
         for (let key of temp_keys){
             if (selectedFilters[key].length > 0) {
                 if (finalQuery !== ""){
-                finalQuery += ","
+                finalQuery += "&"
             }
-                finalQuery += key + ":" + selectedFilters[key].join("-")
+                finalQuery += key + "=" + selectedFilters[key].join("?")
             }
             
         }
+        
         dispatch('queryReady', { query : finalQuery})
         goto("/search")
     }

@@ -74,7 +74,7 @@
 <!-- SHOW ALL AVAILABLE PHOTOS -->
 
 {#if imageData["sortedScoreIndex"]}
-  <div class="grid grid-cols-3  gap-2  mb-12 sm:p-12 px-auto">
+  <div class="grid grid-cols-5  gap-2  mb-12 sm:p-12 px-auto">
       {#each imageData["sortedScoreIndex"].slice(pageSize.lowerIndex, Math.min(pageSize.upperIndex, imageData.list_dataHash.length )) as score, i}
       <!-- (-1) here would indicate invalid index. so ignore that index -->
 
