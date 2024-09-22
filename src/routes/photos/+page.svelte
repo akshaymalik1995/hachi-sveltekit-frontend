@@ -4,12 +4,13 @@
     export let data;
     console.log("DATA", data)
     const { images_data, directories_data } = data
+    let imagespath = Object.keys(images_data)
     let directories = Object.keys(directories_data);
     let selectedDirectory = '';
     let filteredImages = [];
     let currentPage = 1;
     let itemsPerPage = 50;
-    let totalPages = Math.ceil(images_data.length / itemsPerPage);
+    let totalPages = Math.ceil(imagespath.length / itemsPerPage);
 
     function paginate() {
     scrollToTop()
@@ -32,9 +33,9 @@
         selectedDirectory = dir;
         filteredImages = [];
         if (dir === '') {
-            filteredImages = images_data;
+            filteredImages = imagespath;
         } else {
-            filteredImages = directories_data[dir];
+            filteredImages = Object.keys(directories_data[dir]);
         }
         totalPages = Math.ceil(filteredImages.length / itemsPerPage);
         resetpaginaion()
@@ -56,9 +57,9 @@
         const startIndex = (pageNumber - 1) * itemsPerPage;
         const endIndex = pageNumber * itemsPerPage;
         if (dir) {
-            return directories_data[dir].slice(startIndex, endIndex)
+            return Object.keys(directories_data[dir]).slice(startIndex, endIndex)
         } 
-        return images_data.slice(startIndex, endIndex)
+        return imagespath.slice(startIndex, endIndex)
         
     }
 
@@ -106,10 +107,13 @@
 
     <div class='grid md:grid-cols-3 lg:grid-cols-4 gap-4'>
         {#each getPaginatedItems(currentPage, selectedDirectory) as image}
-            <a href={'/photos/' + encodeURIComponent(image.meta.absolute_path)} class='relative overflow-hidden rounded-lg shadow-md'>
+        <div class="flex justify-center rounded-lg items-center" >
+            <a href={'/photos/' + encodeURIComponent(images_data[image].meta.absolute_path)} class='relative overflow-hidden rounded-lg shadow-md'>
                 <!-- svelte-ignore a11y-img-redundant-alt -->
-                <img class="w-full h-auto rounded-lg shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + image.hash} alt="image" />
+                <img class="w-full h-full rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + images_data[image].hash} alt="image" />
             </a>
+        </div>
+            
         {/each}
     </div>
 

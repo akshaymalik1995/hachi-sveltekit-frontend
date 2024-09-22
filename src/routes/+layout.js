@@ -4,7 +4,7 @@ export const prerender = true
 
 import { DOMAIN } from '$lib/stores'
 export async function load({ fetch }) {
-    let images_data = []
+    let images_data = {}
 
     const people_data = []
     const directories_data = {}
@@ -28,7 +28,7 @@ export async function load({ fetch }) {
         const directory = path.match(/^.*[\/\\](?=[^\/\\]+$)/);
 
         if (!(directory in directories_data)) {
-            directories_data[directory] = []
+            directories_data[directory] = {}
         }
         
 
@@ -39,8 +39,8 @@ export async function load({ fetch }) {
             scoreindex: {ix : i, score: data['score'][i]}
         }
 
-        directories_data[directory].push(image)
-        images_data.push(image)
+        directories_data[directory][path] = image
+        images_data[path] = image
     }
 
 

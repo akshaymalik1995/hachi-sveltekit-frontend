@@ -6,7 +6,7 @@
     import { page } from '$app/stores';
     export let data
     const directories_data = data.directories_data
-    const dir = decodeURIComponent($page.params.dir) 
+    const dir = decodeURIComponent($page.params.path) 
     const imageData = directories_data[dir]
     imageData['sortedScoreIndex'] = argSort(imageData.list_score)
     const imagesOnAPage = 50;
