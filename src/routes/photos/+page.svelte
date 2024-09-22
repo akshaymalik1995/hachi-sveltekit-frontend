@@ -1,5 +1,6 @@
 <script>
-    import { Button,  Modal } from 'flowbite-svelte';
+    import { Button,  Modal, Tooltip } from 'flowbite-svelte';
+    import {EditOutline, FolderOpenOutline, ZoomInSolid} from "flowbite-svelte-icons"
     import { DOMAIN } from "$lib/stores";
     export let data;
     console.log("DATA", data)
@@ -154,6 +155,22 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </button>
+
+            <!-- Add icons for fullscreen, edit, open in file, favorite -->
+        <div class="absolute  inset-x-0 top-4 flex justify-center space-x-4">
+            <button class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
+                <FolderOpenOutline />
+             </button>
+             <Tooltip>Open in File Explorer</Tooltip>
+            <button class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
+               <EditOutline />
+            </button>
+            <Tooltip>Edit Details</Tooltip>
+            <button class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
+               <ZoomInSolid />
+            </button>
+            <Tooltip>Fullscreen</Tooltip>
+        </div>
         </div>
     </Modal>
 </div>

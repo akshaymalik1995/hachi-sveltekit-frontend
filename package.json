@@ -10,13 +10,14 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"flowbite": "^2.5.1",
+		"flowbite-svelte": "^0.46.17",
+		"flowbite-svelte-icons": "^1.6.1",
 		"svelte": "^4.0.5",
 		"vite": "^4.4.2"
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-static": "^2.0.3",
-		"flowbite": "^2.5.1",
-		"flowbite-svelte": "^0.46.17"
+		"@sveltejs/adapter-static": "^2.0.3"
 	}
 }
