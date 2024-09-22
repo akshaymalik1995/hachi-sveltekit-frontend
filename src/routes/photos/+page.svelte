@@ -2,11 +2,11 @@
 
     import { DOMAIN } from "$lib/stores";
     export let data;
-    const { image_data, directories_data } = data;
-    let directories = Object.keys(directories_data);
+    console.log("DATA", data)
+    const { images_data, directories_data } = data
     let currentPage = 1;
     let itemsPerPage = 10;
-    let totalPages = Math.ceil(directories.length / itemsPerPage);
+    let totalPages = Math.ceil(images_data.length / itemsPerPage);
 
     function paginate() {
     if (totalPages <= 5) {
@@ -23,7 +23,7 @@
     function getPaginatedItems(pageNumber) {
         const startIndex = (pageNumber - 1) * itemsPerPage;
         const endIndex = pageNumber * itemsPerPage;
-        return directories.slice(startIndex, endIndex);
+        return images_data.slice(startIndex, endIndex);
     }
 
     function prevPage() {
@@ -48,10 +48,10 @@
     <!-- I want to display directories as folders -->
 
     <div class='grid md:grid-cols-3 xl:grid-cols-6 gap-8'>
-        {#each getPaginatedItems(currentPage) as directory}
-            <a href={'/photos/' + encodeURIComponent(directory)} class='flex gap-2 flex-col cursor-pointer hover:bg-blue-200 py-4 px-4 rounded'>
+        {#each getPaginatedItems(currentPage) as image}
+            <a href={'/photos/' + encodeURIComponent(image.meta.absolute_path)} class='flex gap-2 flex-col cursor-pointer hover:bg-blue-200 py-4 px-4 rounded'>
                 <!-- svelte-ignore a11y-img-redundant-alt -->
-                <img class="h-48 rounded-lg shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + directories_data[directory].list_dataHash[0]} alt="image" />
+                <img class="h-48 rounded-lg shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + image.hash} alt="image" />
             </a>
         {/each}
     </div>
