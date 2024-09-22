@@ -1,5 +1,5 @@
 <script>
-
+    import { Button,  Modal } from 'flowbite-svelte';
     import { DOMAIN } from "$lib/stores";
     export let data;
     console.log("DATA", data)
@@ -10,6 +10,7 @@
     let filteredImages = [];
     let currentPage = 1;
     let itemsPerPage = 50;
+    let imageModal = false
     let totalPages = Math.ceil(imagespath.length / itemsPerPage);
 
     function paginate() {
@@ -89,9 +90,23 @@
         pagesnumbers = paginate()
         
     }
+
+    function onImageModalClick(hash){
+        imageModal = true
+        modalimagehash = hash
+    }
+
+    let modalimagehash = ""
 </script>
 
 <div>
+
+    <Modal title="Image" size="xl" bind:open={imageModal} autoclose>
+        <div class='w-full h-full flex justify-center'>
+            <!-- svelte-ignore a11y-img-redundant-alt -->
+            <img class="w-auto h-full rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + modalimagehash} alt="image" />
+        </div>
+      </Modal>
    
     <div class="text-center my-8 text-6xl">Gallery</div>
     <!-- I want to display directories as folders -->
@@ -107,11 +122,13 @@
 
     <div class='grid md:grid-cols-3 lg:grid-cols-4 gap-4'>
         {#each getPaginatedItems(currentPage, selectedDirectory) as image}
-        <div class="flex justify-center rounded-lg items-center" >
-            <a href={'/photos/' + encodeURIComponent(images_data[image].meta.absolute_path)} class='relative overflow-hidden rounded-lg shadow-md'>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div on:click={() => onImageModalClick(images_data[image].hash)} class="flex justify-center rounded-lg items-center" >
+            <div class='relative overflow-hidden rounded-lg shadow-md'>
                 <!-- svelte-ignore a11y-img-redundant-alt -->
                 <img class="w-full h-full rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + images_data[image].hash} alt="image" />
-            </a>
+            </div>
         </div>
             
         {/each}
