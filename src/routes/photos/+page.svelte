@@ -101,10 +101,10 @@
 
 <div>
 
-    <Modal title="Image" size="xl" bind:open={imageModal} autoclose>
-        <div class='w-full h-full flex justify-center'>
+    <Modal class="h-screen" title="Image" size="xl" bind:open={imageModal} autoclose>
+        <div class='w-full h-full items-center flex justify-center'>
             <!-- svelte-ignore a11y-img-redundant-alt -->
-            <img class="w-auto h-full rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + modalimagehash} alt="image" />
+            <img class="w-auto h-4/6 rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + modalimagehash} alt="image" />
         </div>
       </Modal>
    
