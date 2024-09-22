@@ -4,6 +4,9 @@
     export let data;
     console.log("DATA", data)
     const { images_data, directories_data } = data
+    let directories = Object.keys(directories_data);
+    let selectedDirectory = '';
+    let filteredImages = [];
     let currentPage = 1;
     let itemsPerPage = 10;
     let totalPages = Math.ceil(images_data.length / itemsPerPage);
@@ -18,12 +21,32 @@
         }
     }
 
+    function filterImagesByDirectory(dir) {
+        selectedDirectory = dir;
+        filteredImages = [];
+        if (dir === '') {
+            filteredImages = images_data;
+        } else {
+            filteredImages = directories_data[dir];
+        }
+    }
+
+    function getFilteredImages() {
+        return filteredImages;
+    }
+
+
+    $: {
+        // Initialize with all images
+        filterImagesByDirectory('');
+    }
+
     let pagesnumbers = paginate()
 
     function getPaginatedItems(pageNumber) {
         const startIndex = (pageNumber - 1) * itemsPerPage;
         const endIndex = pageNumber * itemsPerPage;
-        return images_data.slice(startIndex, endIndex);
+        return filteredImages.slice(startIndex, endIndex);
     }
 
     function prevPage() {
@@ -46,6 +69,15 @@
    
     <div class="text-center my-8 text-6xl">Gallery</div>
     <!-- I want to display directories as folders -->
+
+    <div class="directory-selector mb-8">
+        <select bind:value={selectedDirectory} on:change={() => filterImagesByDirectory(selectedDirectory)}>
+            <option value="">All Directories</option>
+            {#each directories as dir}
+                <option value={dir}>{dir}</option>
+            {/each}
+        </select>
+    </div>
 
     <div class='grid md:grid-cols-3 xl:grid-cols-6 gap-8'>
         {#each getPaginatedItems(currentPage) as image}
