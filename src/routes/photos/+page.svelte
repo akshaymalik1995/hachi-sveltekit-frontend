@@ -104,9 +104,22 @@
     <Modal class="h-screen" title="Image" size="xl" bind:open={imageModal} autoclose>
         <div class='w-full h-full items-center flex justify-center'>
             <!-- svelte-ignore a11y-img-redundant-alt -->
-            <img class="w-auto h-4/6 rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + modalimagehash} alt="image" />
+            <img class="w-auto h-4/6 rounded-lg shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + modalimagehash} alt="image" />
+            
+            <!-- Add navigation buttons -->
+            <button class="absolute top-1/2 left-6 flex justify-center items-center z-10 -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none" onclick={() => onPreviousClick()}>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+    
+            <button class="absolute top-1/2 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none" onclick={() => onNextClick()}>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
         </div>
-      </Modal>
+    </Modal>
    
     <div class="text-center my-8 text-6xl">Gallery</div>
     <!-- I want to display directories as folders -->
