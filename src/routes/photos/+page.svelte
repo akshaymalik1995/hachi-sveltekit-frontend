@@ -8,10 +8,11 @@
     let selectedDirectory = '';
     let filteredImages = [];
     let currentPage = 1;
-    let itemsPerPage = 10;
+    let itemsPerPage = 50;
     let totalPages = Math.ceil(images_data.length / itemsPerPage);
 
     function paginate() {
+    scrollToTop()
     if (totalPages <= 5) {
         return Array.from({ length: totalPages }, (_, i) => i + 1);
         } else {
@@ -21,6 +22,12 @@
         }
     }
 
+    function scrollToTop() {
+        window.scrollTo(0, 0);
+    }
+
+    
+
     function filterImagesByDirectory(dir) {
         selectedDirectory = dir;
         filteredImages = [];
@@ -29,6 +36,8 @@
         } else {
             filteredImages = directories_data[dir];
         }
+        totalPages = Math.ceil(filteredImages.length / itemsPerPage);
+        resetpaginaion()
     }
 
     function getFilteredImages() {
@@ -43,10 +52,20 @@
 
     let pagesnumbers = paginate()
 
-    function getPaginatedItems(pageNumber) {
+    function getPaginatedItems(pageNumber, dir) {
         const startIndex = (pageNumber - 1) * itemsPerPage;
         const endIndex = pageNumber * itemsPerPage;
-        return filteredImages.slice(startIndex, endIndex);
+        if (dir) {
+            return directories_data[dir].slice(startIndex, endIndex)
+        } 
+        return images_data.slice(startIndex, endIndex)
+        
+    }
+
+    function resetpaginaion(){
+        currentPage = 1
+        pagesnumbers = paginate()
+        
     }
 
     function prevPage() {
@@ -54,14 +73,20 @@
             currentPage--;
         }
         pagesnumbers = paginate()
+        
+    }
+
+   function changepage(page){
+        scrollToTop()
+        currentPage = page
     }
 
     function nextPage() {
-        
         if (currentPage < totalPages) {
             currentPage++;
         }
         pagesnumbers = paginate()
+        
     }
 </script>
 
@@ -71,16 +96,16 @@
     <!-- I want to display directories as folders -->
 
     <div class="directory-selector mb-8">
-        <select bind:value={selectedDirectory} on:change={() => filterImagesByDirectory(selectedDirectory)}>
-            <option value="">All Directories</option>
+        <select bind:value={selectedDirectory} on:change={() => filterImagesByDirectory(selectedDirectory)} class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="" class="text-gray-600">All Directories</option>
             {#each directories as dir}
-                <option value={dir}>{dir}</option>
+                <option value={dir} class="text-gray-600">{dir.slice(0, dir.length - 1)}</option>
             {/each}
         </select>
     </div>
 
     <div class='grid md:grid-cols-3 xl:grid-cols-6 gap-8'>
-        {#each getPaginatedItems(currentPage) as image}
+        {#each getPaginatedItems(currentPage, selectedDirectory) as image}
             <a href={'/photos/' + encodeURIComponent(image.meta.absolute_path)} class='flex gap-2 flex-col cursor-pointer hover:bg-blue-200 py-4 px-4 rounded'>
                 <!-- svelte-ignore a11y-img-redundant-alt -->
                 <img class="h-48 rounded-lg shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + image.hash} alt="image" />
@@ -110,7 +135,7 @@
                     <li>
                         <button 
                             class={`px-3 py-2 ml-2 border rounded-md text-sm font-medium text-gray-700 ${currentPage === page ? "bg-blue-200 hover:bg-blue-100" : 'hover:bg-gray-100 bg-white'} `}
-                            on:click={() => currentPage = page}
+                            on:click={() => changepage(page)}
                         >
                             {page}
                         </button>
