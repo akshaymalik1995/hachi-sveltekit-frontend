@@ -121,6 +121,14 @@
         modalimage = images_data[modalimagepath]
     }
 
+    function convertPathString(path) {
+        // Remove any trailing slashes (both backslash and forward slash)
+        path = path.replace(/[\/\\]+$/, '');
+        path = path.split('\\').join(' > ');
+        // Replace all backslashes with ' > '
+        return path
+    }
+
     let showFullImage = true
 
     let modalimage = null
@@ -166,7 +174,7 @@
         <select bind:value={selectedDirectory} on:change={() => filterImagesByDirectory(selectedDirectory)} class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="" class="text-gray-600">All Directories</option>
             {#each directories as dir}
-                <option value={dir} class="text-gray-600">{dir.slice(0, dir.length - 1)}</option>
+                <option value={dir} class="text-gray-600">{convertPathString(dir)}</option>
             {/each}
         </select>
     </div>
