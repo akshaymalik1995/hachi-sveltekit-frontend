@@ -1,6 +1,6 @@
 <script>
     import { Button,  Modal, Tooltip } from 'flowbite-svelte';
-    import {EditOutline, FolderOpenOutline, ZoomInSolid} from "flowbite-svelte-icons"
+    import {EditOutline, FolderOpenOutline, ZoomInSolid, CloseCircleOutline} from "flowbite-svelte-icons"
     import { DOMAIN } from "$lib/stores";
     export let data;
     console.log("DATA", data)
@@ -130,16 +130,15 @@
         return path
     }
 
-    let showFullImage = true
-
+    let imageview
     let modalimage = null
     let modalImageIndex = null
 </script>
 
 
 <div class="flex justify-center items-center">
-    <Modal dialogClass="fixed top-0 start-0 end-0 h-modal md:inset-0 md:h-full z-50 w-full flex" bodyClass='bg-white h-full' headerClass='hidden' autoclose outsideclose class="h-screen" title="Image" size="xl" bind:open={imageModal}>
-        <div class='w-full h-full items-center flex justify-center'>
+    <Modal dialogClass="fixed top-0 start-0 end-0 h-modal md:inset-0 md:h-full z-50 w-full flex" bodyClass='bg-white h-full' headerClass='hidden' autoclose class="h-screen" title="Image" size="xl" bind:open={imageModal}>
+        <div bind:this={imageview} class='w-full h-full items-center flex justify-center'>
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img class="w-auto h-full shadow-xl cursor-pointer" src={DOMAIN + "/getRawDataFull/" + modalimage.hash} alt="image" />
             
@@ -166,12 +165,18 @@
                <EditOutline />
             </button>
             <Tooltip>Edit Details</Tooltip>
-            <button class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
-               <ZoomInSolid />
+            <button on:click={() => {imageview.requestFullscreen()}} class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
+                
+            <div><ZoomInSolid  /></div>
             </button>
             <Tooltip>Fullscreen</Tooltip>
+            <button on:click={() => {imageModal = false}} class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
+                
+                <div><CloseCircleOutline  /></div>
+                </button>
+                <Tooltip>Close</Tooltip>
         </div>
-        </div>
+        </div> 
     </Modal>
 </div>
 
