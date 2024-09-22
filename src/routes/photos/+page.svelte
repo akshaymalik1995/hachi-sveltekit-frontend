@@ -104,11 +104,11 @@
         </select>
     </div>
 
-    <div class='grid md:grid-cols-3 xl:grid-cols-6 gap-8'>
+    <div class='grid md:grid-cols-3 lg:grid-cols-4 gap-4'>
         {#each getPaginatedItems(currentPage, selectedDirectory) as image}
-            <a href={'/photos/' + encodeURIComponent(image.meta.absolute_path)} class='flex gap-2 flex-col cursor-pointer hover:bg-blue-200 py-4 px-4 rounded'>
+            <a href={'/photos/' + encodeURIComponent(image.meta.absolute_path)} class='relative overflow-hidden rounded-lg shadow-md'>
                 <!-- svelte-ignore a11y-img-redundant-alt -->
-                <img class="h-48 rounded-lg shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + image.hash} alt="image" />
+                <img class="w-full h-auto rounded-lg shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + image.hash} alt="image" />
             </a>
         {/each}
     </div>
