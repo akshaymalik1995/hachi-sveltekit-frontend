@@ -158,10 +158,6 @@
             <!-- Add icons for fullscreen, edit, open in file, favorite -->
         <div class="absolute  inset-x-0 top-4 flex justify-center space-x-4">
             <button class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
-                <FolderOpenOutline />
-             </button>
-             <Tooltip>Open in File Explorer</Tooltip>
-            <button class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none">
                <EditOutline />
             </button>
             <Tooltip>Edit Details</Tooltip>
