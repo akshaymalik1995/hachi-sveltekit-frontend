@@ -58,11 +58,11 @@
     let imageDataForChild = {
         // We basically want to use this to pass it to the Photos component.
         // Though I am not sure why do we need a separate object for it
-        list_metaData: [],
-        list_dataHash: [],
-        list_score: [],
-        sortedScoreIndex: [],
-        done: false, // indicating if query is finished
+        meta_data: [],
+        data_hash: [],
+        score: [],
+        scoreIndex: [],
+        done: false,
     };
 
     let text_query = ""; // Initilizing the text query that will eventually be sent to the server
@@ -98,10 +98,10 @@
 
             // We need to so that we can rerender the Photos component whenever it is updated
             imageDataForChild = {
-                list_metaData: [],
-                list_dataHash: [],
-                list_score: [],
-                sortedScoreIndex: [],
+                meta_data: [],
+                data_hash: [],
+                score: [],
+                scoreIndex: [],
                 done: false,
                 
             };
@@ -139,10 +139,10 @@
         image_metaData = [...data["meta_data"], ...image_metaData];
 
         imageDataForChild = {
-            list_metaData: image_metaData,
-            list_dataHash: image_local_hash,
-            list_score: image_scores,
-            sortedScoreIndex: argSort(image_scores),
+            meta_data: image_metaData,
+            data_hash: image_local_hash,
+            score : image_scores,
+            scoreindex : argSort(image_scores),
             done: false,
         };
 
@@ -153,7 +153,7 @@
             queryCompleted = true;
             console.log("The query is completed");
             totalPages = Math.floor(
-                imageDataForChild.list_dataHash.length / imagesOnAPage
+                imageDataForChild.data_hash.length / imagesOnAPage
             );
             
             pagesNumbers = [];
@@ -172,7 +172,7 @@
     $: {
         currentPage = Number($page.url.searchParams.get("page")) || 1;
         totalPages = Math.ceil(
-            imageDataForChild.list_dataHash.length / imagesOnAPage
+            imageDataForChild.data_hash.length / imagesOnAPage
         );
         lowerIndex = (currentPage - 1) * imagesOnAPage;
         upperIndex = imagesOnAPage * currentPage;
@@ -184,6 +184,22 @@
     
     
     handleQuery()
+
+    function normalizeImagesData(data){
+        console.log("data to normalize", data)
+        const images_data = {}
+        for (let i = 0; i < data["meta_data"].length; i++) {
+            let path = data['meta_data'][i]['absolute_path']
+            const image = {
+                hash: data["data_hash"][i],
+                score: data["score"][i],
+                meta: data["meta_data"][i],
+                scoreindex: {ix : i, score: data['score'][i]}
+            }
+            images_data[path] = image
+        }
+        return images_data
+    }
     
     
 </script>
@@ -202,15 +218,8 @@
 
     {:else}
 
-    {#if queryCompleted && totalPages > 1}
-    <Pagination {totalPages} {currentPage} />
-{/if}
-
 <Photos
-    imageData={imageDataForChild}
-    pageSize={{ lowerIndex, upperIndex }}
+    data={{images_data : normalizeImagesData(imageDataForChild)}}
 />
     {/if}
-
-    
 </div>
