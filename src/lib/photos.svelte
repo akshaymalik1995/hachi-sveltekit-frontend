@@ -8,7 +8,7 @@
   let imagespath = Object.keys(images_data).sort((a, b) => Number(images_data[b].score) - Number(images_data[a].score))
   console.log(imagespath)
   let currentPage = 1;
-  let itemsPerPage = 100;
+  let itemsPerPage = 20;
   let imageModal = false
   let totalPages = Math.ceil(imagespath.length / itemsPerPage);
 
@@ -136,7 +136,7 @@
       <div on:click={() => onImageModalClick(index)} class="flex justify-center rounded-lg items-center" >
           <div class='relative overflow-hidden rounded-lg shadow-md'>
               <!-- svelte-ignore a11y-img-redundant-alt -->
-              <img class="w-full h-48 rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + images_data[image].hash} alt="image" />
+              <img loading="lazy" class="w-full h-48 rounded-lg  shadow-xl cursor-pointer" src={DOMAIN + "/getRawData/" + images_data[image].hash} alt="image" />
           </div>
       </div>
       {/each}

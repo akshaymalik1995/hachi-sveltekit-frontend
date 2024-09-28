@@ -10,6 +10,7 @@ export async function load({ fetch }) {
     const directories_data = {}
     const response = await fetch(DOMAIN + "/getGroup/person")
     const data = await response.json()
+    console.log("DATA", data)
     const people_list = data.person
     for (let i = 0; i < data["meta_data"].length; i++) {
         let personList = data['meta_data'][i]['person']
