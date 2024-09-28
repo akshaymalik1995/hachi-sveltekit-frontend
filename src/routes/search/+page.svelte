@@ -219,7 +219,7 @@
     {:else}
 
 <Photos
-    data={{images_data : normalizeImagesData(imageDataForChild)}}
+    images_data = {normalizeImagesData(imageDataForChild)}
 />
     {/if}
 </div>
