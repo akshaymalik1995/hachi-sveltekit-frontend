@@ -9,25 +9,15 @@
     import { DOMAIN } from "$lib/stores";
     export let images_data;
     console.log("IMAGES DATA", images_data);
-    export let searchmode = false;
-
-    let imagespath = [];
-
+    
     $: {
-        imagesloadedcount = 20
-        if (searchmode) {
-            imagespath = Object.keys(images_data).sort(
-                (a, b) =>
-                    Number(images_data[b].score) - Number(images_data[a].score),
-            );
-        } else {
-            imagespath = Object.keys(images_data);
-        }
+        images_data = images_data
     }
 
     let imagesloadedcount = 20;
 
     let imageModal = false;
+
 
     function loadMoreImages() {
         imagesloadedcount += 20;
@@ -35,25 +25,28 @@
 
     function loadPrevImage(index) {
         modalImageIndex = index;
-        let modalimagepath = imagespath[index];
-        modalimage = images_data[modalimagepath];
+        modalimagehash = getImageHash(index)
     }
 
     function loadNextImage(index) {
         modalImageIndex = index;
-        let modalimagepath = imagespath[index];
-        modalimage = images_data[modalimagepath];
+        modalimagehash = getImageHash(index)
+    }
+
+    function getImageHash(index){
+        const {ix} = images_data.scoreIndex[index]
+        console.log()
+        return images_data.data_hash[ix]
     }
 
     function onImageModalClick(index) {
         modalImageIndex = index;
         imageModal = true;
-        let modalimagepath = imagespath[index];
-        modalimage = images_data[modalimagepath];
+        modalimagehash = getImageHash(index)
     }
 
     let imageview;
-    let modalimage = null;
+    let modalimagehash = null;
     let modalImageIndex = null;
 </script>
 
@@ -75,7 +68,7 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
                 class="w-auto h-full shadow-xl cursor-pointer"
-                src={DOMAIN + "/getRawDataFull/" + modalimage.hash}
+                src={DOMAIN + "/getRawDataFull/" + modalimagehash}
                 alt="image"
             />
 
@@ -154,7 +147,7 @@
 <div class="px-4">
     <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
         <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
-            {#each imagespath.slice(0, imagesloadedcount) as image, index}
+            {#each images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex , index}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <div
@@ -167,8 +160,8 @@
                             loading="lazy"
                             class="w-full h-48 rounded-lg shadow-xl cursor-pointer"
                             src={DOMAIN +
-                                "/getRawData/" +
-                                images_data[image].hash}
+                                "/getRawData/" + images_data["data_hash"][scoreindex.ix]
+                            }
                             alt="image"
                         />
                     </div>

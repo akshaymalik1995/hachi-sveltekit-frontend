@@ -74,7 +74,7 @@
         if (text_query.length === 0 ) return;
         // Taking Query from the URL
         // formData.append("query", text_query);
-        loading = true
+        // loading = true
         formData.append("query", text_query);
         formData.append("topk", topk.toString());
 
@@ -134,20 +134,21 @@
             meta_data: image_metaData,
             data_hash: image_local_hash,
             score : image_scores,
-            // scoreindex : argSort(image_scores),
+            scoreIndex : argSort(image_scores),
             done: false,
-        };
+        }
 
         console.log("QUERY COMPLETED", data["query_completed"], data)
 
         
         if (data["query_completed"] == true) {
-            loading = false
             imageDataForChild.done = true; // This should be enough to indicate svelte
             queryCompleted = true;
             console.log("The query is completed");
             return;
         }
+
+        
 
         // Keep executing the function unless the query is completed
         
@@ -156,23 +157,6 @@
 
     handleQuery()
 
-    function normalizeImagesData(data){
-        console.log("data to normalize", data)
-        const images_data = {}
-        for (let i = 0; i < data["meta_data"].length; i++) {
-            let path = data['meta_data'][i]['absolute_path']
-            const image = {
-                hash: data["data_hash"][i],
-                score: data["score"][i],
-                meta: data["meta_data"][i],
-                scoreindex: {ix : i, score: data['score'][i]}
-            }
-            images_data[path] = image
-        }
-        return images_data
-    }
-    
-    
 </script>
 
 <div class="flex w-full flex-col p-2">
@@ -183,13 +167,7 @@
         }}
     />
 
-    {#if loading}
-        <Loading />
-
-    {:else}
-
 <Photos searchmode = {true}
-    images_data = {normalizeImagesData(imageDataForChild)}
+    images_data = {imageDataForChild}
 />
-    {/if}
 </div>
