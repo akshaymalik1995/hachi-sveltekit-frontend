@@ -11,14 +11,6 @@
     let loading = false
 
     let currentUrl = $page.url; // Get the current URL of the page. Does the current url changes automatically everytime the url changes ? And if yes what is its utility? Ideally the component will rerender only if the currentUrl is directly used in the UI
-    console.log(currentUrl)
-    // FOR PAGINATION. It could be a function or a component since it might be used at a lot of places in the app
-    const imagesOnAPage = 25; // BY default how many images do we want.
-    let currentPage = Number($page.url.searchParams.get("page")) || 1; // What is the current page?
-    let totalPages = 1; // Initialzing total pages
-    let lowerIndex = (currentPage - 1) * imagesOnAPage; // Determining lower index and upper index. So that we can get the right images from the list based on the page number we have
-    let upperIndex = imagesOnAPage * currentPage;
-    let pagesNumbers = [1]; // Based on the data list, we make a list of possible page numbers
 
     let filtersList = ['person', 'query', 'filename', 'place'] // These are the filter options we used. But why do we need it both in the Fuzzy component and here as well.
 
@@ -142,9 +134,11 @@
             meta_data: image_metaData,
             data_hash: image_local_hash,
             score : image_scores,
-            scoreindex : argSort(image_scores),
+            // scoreindex : argSort(image_scores),
             done: false,
         };
+
+        console.log("QUERY COMPLETED", data["query_completed"], data)
 
         
         if (data["query_completed"] == true) {
@@ -152,15 +146,6 @@
             imageDataForChild.done = true; // This should be enough to indicate svelte
             queryCompleted = true;
             console.log("The query is completed");
-            totalPages = Math.floor(
-                imageDataForChild.data_hash.length / imagesOnAPage
-            );
-            
-            pagesNumbers = [];
-            for (let i = 1; i <= totalPages; i++) {
-                pagesNumbers.push(i);
-            }
-
             return;
         }
 
@@ -169,20 +154,6 @@
         await handleQuery(temp_id, true);
     }
 
-    $: {
-        currentPage = Number($page.url.searchParams.get("page")) || 1;
-        totalPages = Math.ceil(
-            imageDataForChild.data_hash.length / imagesOnAPage
-        );
-        lowerIndex = (currentPage - 1) * imagesOnAPage;
-        upperIndex = imagesOnAPage * currentPage;
-        pagesNumbers = [];
-        for (let i = 1; i <= totalPages; i++) {
-            pagesNumbers.push(i);
-        }
-    }
-    
-    
     handleQuery()
 
     function normalizeImagesData(data){
@@ -208,7 +179,6 @@
     <Fuzzy
         on:queryReady={(event) => {
             text_query = event.detail.query;
-            // query_attributes = event.detail.attributes;
             handleQuery();
         }}
     />
@@ -218,7 +188,7 @@
 
     {:else}
 
-<Photos
+<Photos searchmode = {true}
     images_data = {normalizeImagesData(imageDataForChild)}
 />
     {/if}

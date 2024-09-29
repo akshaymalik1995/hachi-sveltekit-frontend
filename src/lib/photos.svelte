@@ -159,7 +159,7 @@
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <div
                     on:click={() => onImageModalClick(index)}
-                    class="flex justify-center rounded-lg items-center"
+                    class="flex  bg-gray-200 justify-center rounded-lg items-center"
                 >
                     <div class="relative overflow-hidden rounded-lg shadow-md">
                         <!-- svelte-ignore a11y-img-redundant-alt -->
