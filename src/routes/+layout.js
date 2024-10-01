@@ -4,10 +4,15 @@ export const prerender = true
 
 import { DOMAIN } from '$lib/stores'
 export async function load({ fetch }) {
-    let images_data = {}
+    let images_data = {
+        data_hash: [],
+        score: [],
+        meta_data: [],
+        scoreIndex: []
+    }
 
     const people_data = []
-    const directories_data = {}
+    const directories_data = []
     const response = await fetch(DOMAIN + "/getGroup/person")
     const data = await response.json()
     console.log("DATA", data)
@@ -29,19 +34,25 @@ export async function load({ fetch }) {
         const directory = path.match(/^.*[\/\\](?=[^\/\\]+$)/);
 
         if (!(directory in directories_data)) {
-            directories_data[directory] = {}
+            directories_data[directory] = {
+                data_hash: [],
+                score: [],
+                meta_data: [],
+                scoreIndex: []
+            }
         }
         
 
-        const image = {
-            hash: data["data_hash"][i],
-            score: data["score"][i],
-            meta: data["meta_data"][i],
-            scoreindex: {ix : i, score: data['score'][i]}
-        }
+        directories_data[directory].data_hash.push(data["data_hash"][i])
+        directories_data[directory].score.push(data["score"][i])
+        directories_data[directory].meta_data.push(data["meta_data"][i])
+        directories_data[directory].scoreIndex.push({ ix: directories_data[directory].scoreIndex.length, score: data['score'][i] })
+        
+        images_data.data_hash.push(data["data_hash"][i])
+        images_data.score.push(data["score"][i])
+        images_data.meta_data.push(data["meta_data"][i])
+        images_data.scoreIndex.push({ix : i, score: data['score'][i]})
 
-        directories_data[directory][path] = image
-        images_data[path] = image
     }
 
 
