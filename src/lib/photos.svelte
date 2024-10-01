@@ -11,6 +11,7 @@
     console.log("IMAGES DATA", images_data);
     
     $: {
+        imagesloadedcount = 20
         images_data = images_data
     }
 
