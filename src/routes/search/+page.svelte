@@ -126,15 +126,15 @@
 
         // We receive the data from the server
 
-        image_local_hash = [...data["data_hash"], ...image_local_hash];
-        image_scores = [...data["score"], ...image_scores];
-        image_metaData = [...data["meta_data"], ...image_metaData];
+        // image_local_hash = [...data["data_hash"], ...image_local_hash];
+        // image_scores = [...data["score"], ...image_scores];
+        // image_metaData = [...data["meta_data"], ...image_metaData];
 
         imageDataForChild = {
-            meta_data: image_metaData,
-            data_hash: image_local_hash,
-            score : image_scores,
-            scoreIndex : argSort(image_scores),
+            meta_data: [...imageDataForChild.meta_data, ...data["meta_data"]],
+            data_hash: [...imageDataForChild.data_hash, ...data["data_hash"]],
+            score : [...imageDataForChild.score, ...data["data_hash"]],
+            scoreIndex : argSort(imageDataForChild.scoreIndex ,data["score"]),
             done: false,
         }
 

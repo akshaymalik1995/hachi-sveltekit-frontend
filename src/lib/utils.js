@@ -1,34 +1,52 @@
-export function argSort(list_score, mask = [1], key = null) {
-    let temp_scoreIndex = [];
-    if (mask.length != 1 && mask.length != list_score.length) {
+export function argSort(originalScoreIndex, new_scores, mask = [1], key = null) {
+    let mergedScores = [];
+    let newScoreIndex = []
+    if (mask.length != 1 && mask.length != new_scores.length) {
         throw new Error("Assertion failed");
     }
 
-    for (let i = 0; i < list_score.length; i++) {
+    for (let i = 0; i < new_scores.length; i++) {
         let current_ix = i;
         if (mask[i % mask.length] !== 1) {
             current_ix = -1; // indicating invalid index, not to show/render
         }
 
         if (key) {
-            temp_scoreIndex.push({ ix: current_ix, score: list_score[i][key] });
+            newScoreIndex.push({ ix: current_ix + originalScoreIndex.length, score: new_scores[i][key] });
         } else {
-            temp_scoreIndex.push({ ix: current_ix, score: list_score[i] });
+            newScoreIndex.push({ ix: current_ix + originalScoreIndex.length, score: new_scores[i] });
         }
     }
 
-    temp_scoreIndex.sort((a, b) => {
-        if (a.score > b.score) {
-            return -1
-        }
-        else if (a.score < b.score) {
-            return 1
-        } else {
-            return 0
-        }
-    })
+    newScoreIndex.sort((a, b) => b.score - a.score);
 
-    return temp_scoreIndex
+    let i = 0; // pointer for sortedArray
+    let j = 0; // pointer for newArray
+
+    // Merge two arrays
+    while (i < originalScoreIndex.length && j < newScoreIndex.length) {
+        if (originalScoreIndex[i].score >= newScoreIndex[j].score) {
+            mergedScores.push(originalScoreIndex[i]);
+            i++;
+        } else {
+            mergedScores.push(newScoreIndex[j]);
+            j++;
+        }
+    }
+
+     // If there are remaining elements in sortedArray, add them
+     while (i < originalScoreIndex.length) {
+        mergedScores.push(originalScoreIndex[i]);
+        i++;
+    }
+
+    // If there are remaining elements in newArray, add them
+    while (j < newScoreIndex.length) {
+        mergedScores.push(newScoreIndex[j]);
+        j++;
+    }
+    console.log('merged scores', mergedScores)
+    return mergedScores;
 }
 
 
