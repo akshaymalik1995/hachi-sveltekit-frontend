@@ -97,8 +97,9 @@
         inputElement.focus();
     }
 
-    function handleFormSubmit(e) {
+    async function handleFormSubmit(e) {
         e.preventDefault();
+        await caches.delete(caches.keys()[0])
         showDropdown = false; // Closing off the dropdown
         console.debug("SELECTED FILTERS", selectedFilters);
         if (
