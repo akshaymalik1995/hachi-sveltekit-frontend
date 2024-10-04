@@ -99,7 +99,7 @@
 
     async function handleFormSubmit(e) {
         e.preventDefault();
-        await caches.delete(caches.keys()[0])
+        await caches.delete(caches.keys())
         showDropdown = false; // Closing off the dropdown
         console.debug("SELECTED FILTERS", selectedFilters);
         if (
