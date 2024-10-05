@@ -7,6 +7,7 @@
   } from "flowbite-svelte-icons";
   import InfiniteScroll from "./InfiniteScroll.svelte";
   import { DOMAIN } from "$lib/stores";
+
   export let images_data;
   console.log("IMAGES DATA", images_data);
 
@@ -32,12 +33,14 @@
 
   function loadPrevImage(index) {
     imageCard = getImageData(index);
+    // update_image_card_previous();
     modalImageIndex = index;
     modalimagehash = getImageHash(index);
   }
 
   function loadNextImage(index) {
     imageCard = getImageData(index);
+    // update_image_card_next();
     modalImageIndex = index;
     modalimagehash = getImageHash(index);
   }
@@ -58,6 +61,56 @@
   let imageview;
   let modalimagehash = null;
   let modalImageIndex = null;
+
+  /// FOR BOXES
+  let loadTimeoutId;
+
+  let scaled_face_bboxes = []; // to hold the array of scaled face bboxes, according to dimensions of image being currently shown.
+  let full_image_loaded = true;
+  function scale_face_bboxes(node) {
+    let card_rects = node.target.getClientRects()[0];
+    let card_width = card_rects.width;
+    let card_height = card_rects.height;
+
+    const offsetLeft = node.target.offsetLeft;
+    let result = [];
+    let original_bboxes = imageCard.face_bboxes;
+    if (original_bboxes) {
+      let image_width = imageCard.width;
+      let image_height = imageCard.height;
+
+      for (let i = 0; i < original_bboxes.length; i++) {
+        let temp_bbox = structuredClone(original_bboxes[i]); // [x1, y1, x2, y2]
+
+        let w_scale = Number(card_width) / (Number(image_width) + 1e-4);
+        let h_scale = Number(card_height) / (Number(image_height) + 1e-4);
+
+        temp_bbox.top = temp_bbox[1] * h_scale;
+        temp_bbox.height = (temp_bbox[3] - temp_bbox[1]) * h_scale;
+
+        temp_bbox.left = temp_bbox[0] * w_scale + offsetLeft;
+        temp_bbox.width = (temp_bbox[2] - temp_bbox[0]) * w_scale;
+
+        result.push(temp_bbox);
+      }
+    }
+    scaled_face_bboxes = result;
+
+    if (loadTimeoutId) {
+      clearTimeout(loadTimeoutId);
+    }
+    full_image_loaded = true;
+  }
+
+//   let editForm = {}
+
+  let current_box_ix; // current selected face bbox for an image.
+
+  let tag_interface = {
+    active: false,
+    top: null,
+    left: null,
+  };
 </script>
 
 <div class="flex justify-center items-center">
@@ -77,19 +130,36 @@
     >
       <!-- svelte-ignore a11y-img-redundant-alt -->
       <img
+        on:load={scale_face_bboxes}
         class="w-auto h-full shadow-xl cursor-pointer"
         src={DOMAIN + "/getRawData/" + modalimagehash}
         alt="image"
       />
 
+      <!-- TODO: calculate scale -->
+      {#each scaled_face_bboxes as box, i}
+        <!-- svelte-ignore missing-declaration -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div
+          on:click={(e) => {
+            tag_interface = { active: true, top: box.top - 28, left: box.left };
+            current_box_ix = Number(e.target.attributes["data-ix"].value);
+          }}
+          data-ix={i}
+          class="absolute text-white cursor-pointer border-solid border-2 border-green-300 hover:opacity-40 hover:bg-green-300 bg-transparent"
+          style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
+        ></div>
+      {/each}
+
       <div class="absolute flex justify-center bottom-0">
         <div class="flex gap-4">
-            {#each imageCard.person as person}
+          {#each imageCard.person as person}
             {#if person !== "no person detected"}
               <a
                 target="_blank"
                 href={"/search?person=" + person}
-                class="flex  items-center"
+                class="flex items-center"
               >
                 <img
                   loading="lazy"
@@ -101,7 +171,6 @@
             {/if}
           {/each}
         </div>
-
       </div>
 
       <!-- Add navigation buttons -->
