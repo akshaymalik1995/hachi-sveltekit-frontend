@@ -1,10 +1,18 @@
 export const ssr = false
 export const csr = true
 export const prerender = true
+import { imagesDataStore } from '../lib/stores'
 
 import { DOMAIN } from '$lib/stores'
 export async function load({ fetch }) {
     let images_data = {
+        data_hash: [],
+        score: [],
+        meta_data: [],
+        scoreIndex: []
+    }
+
+    let likedImagesData = {
         data_hash: [],
         score: [],
         meta_data: [],
@@ -41,12 +49,21 @@ export async function load({ fetch }) {
                 scoreIndex: []
             }
         }
+
+        if (data['meta_data'][i].is_favourite === "true") {
+            likedImagesData.data_hash.push(data["data_hash"][i])
+            likedImagesData.score.push(data["score"][i])
+            likedImagesData.meta_data.push(data["meta_data"][i])
+            likedImagesData.scoreIndex.push({ ix: likedImagesData.scoreIndex.length, score: data['score'][i] })
+        }
         
 
         directories_data[directory].data_hash.push(data["data_hash"][i])
         directories_data[directory].score.push(data["score"][i])
         directories_data[directory].meta_data.push(data["meta_data"][i])
         directories_data[directory].scoreIndex.push({ ix: directories_data[directory].scoreIndex.length, score: data['score'][i] })
+
+
         
         images_data.data_hash.push(data["data_hash"][i])
         images_data.score.push(data["score"][i])
@@ -55,11 +72,11 @@ export async function load({ fetch }) {
 
     }
 
-
     return {
         images_data,
         people_data,
         people_list,
-        directories_data
+        directories_data,
+        likedImagesData
     }
 }  

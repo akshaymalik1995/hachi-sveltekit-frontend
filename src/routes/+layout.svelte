@@ -1,5 +1,16 @@
 <script>
     import Sidebar from "$lib/Sidebar.svelte"
+    import {imagesDataStore, likedImagesStore} from "$lib/stores.js"
+    export let data
+    const {images_data, likedImagesData} = data
+
+    $ : {
+        $imagesDataStore = images_data
+    }
+
+    $ : {
+        $likedImagesStore = likedImagesData
+    }
 </script>
 
 
