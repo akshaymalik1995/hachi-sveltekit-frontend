@@ -4,6 +4,8 @@
     EditOutline,
     ZoomInSolid,
     CloseCircleOutline,
+    HeartOutline,
+    HeartSolid
   } from "flowbite-svelte-icons";
   import InfiniteScroll from "./InfiniteScroll.svelte";
   import { DOMAIN } from "$lib/stores";
@@ -67,6 +69,7 @@
 
   let scaled_face_bboxes = []; // to hold the array of scaled face bboxes, according to dimensions of image being currently shown.
   let full_image_loaded = true;
+  
   function scale_face_bboxes(node) {
     let card_rects = node.target.getClientRects()[0];
     let card_width = card_rects.width;
@@ -78,6 +81,11 @@
     if (original_bboxes) {
       let image_width = imageCard.width;
       let image_height = imageCard.height;
+
+      // Swap width and height if the image is in portrait mode
+      if (image_height > image_width) {
+        [image_width, image_height] = [image_height, image_width];
+      }
 
       for (let i = 0; i < original_bboxes.length; i++) {
         let temp_bbox = structuredClone(original_bboxes[i]); // [x1, y1, x2, y2]
@@ -102,6 +110,7 @@
     full_image_loaded = true;
   }
 
+
 //   let editForm = {}
 
   let current_box_ix; // current selected face bbox for an image.
@@ -111,6 +120,35 @@
     top: null,
     left: null,
   };
+
+
+
+
+  async function handleImageLike(event, meta_data, data_hash) {
+    event.stopPropagation();
+    try {
+      meta_data['is_favourite'] = "true"
+      const formData = new FormData();
+      formData.append('data_hash', data_hash);
+      for (const [key, value] of Object.entries(meta_data)) {
+        formData.append(key, value);
+      }
+
+      const response = await fetch(DOMAIN + '/editMetaData', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        console.error('Failed to update metadata');
+      } else {
+        meta_data['is_favourite'] = 'true'
+      }
+    } catch (error) {
+      console.error('An error occurred during image like handling:', error);
+    }
+  }
+
 </script>
 
 <div class="flex justify-center items-center">
@@ -265,6 +303,18 @@
                 images_data["data_hash"][scoreindex.ix]}
               alt="image"
             />
+            <!-- Add like icon at the bottom -->
+            <div class="absolute flex bottom-0 left-0 right-0 justify-center mb-2">
+              <div on:click={(event) => handleImageLike(event, images_data["meta_data"][scoreindex.ix], images_data["data_hash"][scoreindex.ix])} class={"cursor-pointer hover:bg-gray-100 p-1 rounded"}>
+                {#if images_data["meta_data"][scoreindex.ix].is_favourite == "true"}
+                <HeartSolid color='red' />
+                {:else}
+                <HeartOutline />
+                {/if}
+                
+              </div>
+              
+            </div>
           </div>
         </div>
       {/each}
