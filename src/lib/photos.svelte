@@ -54,6 +54,7 @@
 
   function loadNextImage(index) {
     imageCard = getImageMetaData(index);
+    console.log(imageCard);
     // update_image_card_next();
     modalImageIndex = index;
     modalimagehash = getImageHash(index);
@@ -83,45 +84,61 @@
   let full_image_loaded = true;
 
   function scale_face_bboxes(node) {
+    console.log('scale_face_bboxes called');
     let card_rects = node.target.getClientRects()[0];
     let card_width = card_rects.width;
     let card_height = card_rects.height;
+    console.log(`card_width: ${card_width}, card_height: ${card_height}`);
 
     const offsetLeft = node.target.offsetLeft;
+    console.log(`offsetLeft: ${offsetLeft}`);
     let result = [];
     let original_bboxes = imageCard.face_bboxes;
     if (original_bboxes) {
-      let image_width = imageCard.width;
-      let image_height = imageCard.height;
+      console.log('original_bboxes found');
+      let image_width = imageCard.height;
+      let image_height = imageCard.width;
+      console.log(`image_width: ${image_width}, image_height: ${image_height}`);
 
-      // Swap width and height if the image is in portrait mode
-      if (image_height > image_width) {
+      if (image_width < image_height) {
         [image_width, image_height] = [image_height, image_width];
+        console.log('Image is in portrait mode, swapping dimensions');
+        console.log(`image_width: ${image_width}, image_height: ${image_height}`);
       }
 
       for (let i = 0; i < original_bboxes.length; i++) {
         let temp_bbox = structuredClone(original_bboxes[i]); // [x1, y1, x2, y2]
+        console.log(`Processing bbox ${i}: ${JSON.stringify(temp_bbox)}`);
 
         let w_scale = Number(card_width) / (Number(image_width) + 1e-4);
         let h_scale = Number(card_height) / (Number(image_height) + 1e-4);
+        console.log(`w_scale: ${w_scale}, h_scale: ${h_scale}`);
+
+        if (image_height > image_width) {
+          [w_scale , h_scale] = [h_scale, w_scale]
+        }
 
         temp_bbox.top = temp_bbox[1] * h_scale;
         temp_bbox.height = (temp_bbox[3] - temp_bbox[1]) * h_scale;
-
         temp_bbox.left = temp_bbox[0] * w_scale + offsetLeft;
         temp_bbox.width = (temp_bbox[2] - temp_bbox[0]) * w_scale;
+        console.log('Scaled bbox:', temp_bbox);
 
         result.push(temp_bbox);
       }
+    } else {
+      console.log('No original_bboxes present');
     }
     scaled_face_bboxes = result;
+    console.log('scaled_face_bboxes:', scaled_face_bboxes);
 
     if (loadTimeoutId) {
       clearTimeout(loadTimeoutId);
+      console.log('Cleared loadTimeoutId');
     }
     full_image_loaded = true;
+    console.log('full_image_loaded set to true');
   }
-
   //   let editForm = {}
 
   let current_box_ix; // current selected face bbox for an image.
@@ -171,12 +188,21 @@
             },
           ];
         } else {
-          const removeIndex = $likedImagesStore['data_hash'].findIndex(item => item === data_hash)
-          $likedImagesStore['meta_data'] = $likedImagesStore['meta_data'].filter((item, index) => index !== removeIndex)
-          $likedImagesStore['score'] = $likedImagesStore['score'].filter((item, index) => index !== removeIndex)
-          $likedImagesStore['scoreIndex'] = $likedImagesStore['scoreIndex'].filter((item, index) => index !== removeIndex).map((item, index )=> ({ix : index, score : item.score}))
-          $likedImagesStore['data_hash'] = $likedImagesStore['data_hash'].filter((item, index) => index !== removeIndex)
-
+          const removeIndex = $likedImagesStore["data_hash"].findIndex(
+            (item) => item === data_hash
+          );
+          $likedImagesStore["meta_data"] = $likedImagesStore[
+            "meta_data"
+          ].filter((item, index) => index !== removeIndex);
+          $likedImagesStore["score"] = $likedImagesStore["score"].filter(
+            (item, index) => index !== removeIndex
+          );
+          $likedImagesStore["scoreIndex"] = $likedImagesStore["scoreIndex"]
+            .filter((item, index) => index !== removeIndex)
+            .map((item, index) => ({ ix: index, score: item.score }));
+          $likedImagesStore["data_hash"] = $likedImagesStore[
+            "data_hash"
+          ].filter((item, index) => index !== removeIndex);
         }
       }
     } catch (error) {
@@ -226,7 +252,22 @@
 
       <div class="absolute flex justify-center bottom-0">
         <div class="flex gap-4">
-          {#if imageCard.person !== "no person detected"}
+          {#if typeof imageCard.person === "string"}
+            {#if imageCard.person !== "no person detected"}
+              <a
+                target="_blank"
+                href={"/search?person=" + imageCard.person}
+                class="flex items-center"
+              >
+                <img
+                  loading="lazy"
+                  src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
+                  class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-100 border-gray-100 shadow-smr"
+                  alt=""
+                />
+              </a>
+            {/if}
+          {:else}
             {#each imageCard.person as person}
               {#if person !== "no person detected"}
                 <a
@@ -343,7 +384,7 @@
             <div
               class="absolute flex bottom-0 left-0 right-0 justify-center mb-2"
             >
-              {#if $likedImagesStore['data_hash'].includes(images_data["data_hash"][scoreindex.ix])}
+              {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
                 <div
                   on:click={(event) => handleImageLike(event, "false", index)}
                   class={"cursor-pointer hover:bg-gray-100 p-1 rounded"}

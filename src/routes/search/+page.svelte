@@ -167,7 +167,7 @@
         }}
     />
 
-<Photos searchmode = {true}
+<Photos
     images_data = {imageDataForChild}
 />
 </div>
