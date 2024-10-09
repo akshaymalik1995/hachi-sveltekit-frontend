@@ -67,6 +67,7 @@
   }
 
   function onImageModalClick(index) {
+    scaled_face_bboxes=[]
     imageCard = getImageMetaData(index);
     modalImageIndex = index;
     imageModal = true;
@@ -94,13 +95,16 @@
     console.log(`offsetLeft: ${offsetLeft}`);
     let result = [];
     let original_bboxes = imageCard.face_bboxes;
+    if (typeof original_bboxes === "string") {
+        original_bboxes = [original_bboxes.split(",").map(item => Number(item.trim()))]
+    }
     if (original_bboxes) {
-      console.log('original_bboxes found');
-      let image_width = imageCard.height;
-      let image_height = imageCard.width;
+      console.log('original_bboxes found', original_bboxes);
+      let image_width = imageCard.width;
+      let image_height = imageCard.height;
       console.log(`image_width: ${image_width}, image_height: ${image_height}`);
 
-      if (image_width < image_height) {
+      if (card_width < card_height) {
         [image_width, image_height] = [image_height, image_width];
         console.log('Image is in portrait mode, swapping dimensions');
         console.log(`image_width: ${image_width}, image_height: ${image_height}`);
@@ -230,7 +234,7 @@
       <img
         on:load={scale_face_bboxes}
         class="w-auto h-full shadow-xl cursor-pointer"
-        src={DOMAIN + "/getRawData/" + modalimagehash}
+        src={DOMAIN + "/getRawDataFull/" + modalimagehash}
         alt="image"
       />
 
@@ -243,9 +247,13 @@
           on:click={(e) => {
             tag_interface = { active: true, top: box.top - 28, left: box.left };
             current_box_ix = Number(e.target.attributes["data-ix"].value);
+            console.log("current_box_ix",current_box_ix)
+            if (imageCard.person instanceof Object){
+              window.open("/search?person=" + imageCard.person[current_box_ix])
+            }
           }}
           data-ix={i}
-          class="absolute text-white cursor-pointer border-solid border-2 border-green-300 hover:opacity-40 hover:bg-green-300 bg-transparent"
+          class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
           style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
         ></div>
       {/each}
