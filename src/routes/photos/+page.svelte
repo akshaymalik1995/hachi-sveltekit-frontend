@@ -9,20 +9,18 @@
 
 
  
-<div class="px-4" >
-    <div class="text-center  my-8 text-6xl">Gallery</div>
-    
-    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+<div class="px-4 py-8">
+    <div class="flex justify-center gap-2 flex-wrap">
         {#each directories as directory}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <!-- svelte-ignore a11y-no-static-element-interactions -->
-          <div class="flex flex-col justify-center rounded-lg items-center">
-            <div class="relative overflow-hidden rounded-lg shadow-md">
+          <div class="flex w-64 flex-col justify-center rounded items-center">
+            <div class="relative overflow-hidden rounded shadow-md">
               <!-- svelte-ignore a11y-img-redundant-alt -->
               <a href={`photos/${directory}`}>
                 <img
                   loading="lazy"
-                  class="w-64 h-64 rounded-lg shadow-xl cursor-pointer"
+                  class="w-64 h-64 rounded shadow-xl cursor-pointer"
                   src={DOMAIN +
                     "/getRawData/" +
                     directories_data[directory]["data_hash"][0]}

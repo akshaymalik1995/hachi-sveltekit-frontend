@@ -4,7 +4,6 @@
 </script>
     
 
-<div>
-    <div class="text-6xl py-8 text-center">Favourites</div>
+<div class="p-4" >
     <Photos images_data={$likedImagesStore} />
 </div>

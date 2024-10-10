@@ -10,7 +10,7 @@
   function updatePersonId(event, id) {
     event.preventDefault();
     loading = true
-    let new_person_id = document.querySelector("form#" + id)["person"].value;
+    let new_person_id = document.querySelector("form#form-" + id)["person"].value;
     let old_person_id = id;
 
     let data = new FormData();
@@ -33,6 +33,8 @@
           return item;
         });
         loading = false
+        document.querySelector("#parent-" + id).innerText = new_person_id
+        document.querySelector("form#form-" + id)["person"].blur()
         // alert("Success");
       }
     });
@@ -54,7 +56,7 @@
 
 <!-- Display each value in group as a clickable div, later on click we would use the PHOTOS component -->
 <div
-  class="grid grid-cols-5 justify-center items-center gap-2 mb-16 py-2 flex-wrap"
+  class="flex justify-center items-center gap-2 mb-16 py-2 flex-wrap"
 >
   <!-- A single div element -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -85,22 +87,24 @@
 
             </a>
             <div
+              id = {"parent-" + id}
               class="flex text-black my-2 text-md text-white justify-center items-center"
               on:click={(e) => {
                 if (
                   e.currentTarget.innerText ===
                   id.slice(0, 1).toUpperCase() + id.slice(1).toLowerCase()
                 ) {
-                  e.currentTarget.innerHTML = `<form id='${id}'><input name='person' class='bg-gray-800 text-white' type='text' value='${
+                  e.currentTarget.innerHTML = `<form id='form-${id}'><input name='person' class='bg-gray-800 p-1 text-white' type='text' value='${
                     id.slice(0, 1).toUpperCase() + id.slice(1).toLowerCase()
                   }' /></form>`;
                   document
-                    .querySelector("form#" + id)
+                    .querySelector("form#form-" + id)
                     .addEventListener("submit", (event) => {
                       updatePersonId(event, id);
                     });
                 }
               }}
+              
               on:focusout={(e) => {
                 if (e.currentTarget.firstChild.tagName === "FORM") {
                   id = e.currentTarget.firstChild.value;
