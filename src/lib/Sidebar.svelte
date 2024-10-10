@@ -1,10 +1,11 @@
 <script>
 	import { onMount } from "svelte";
-	import {DOMAIN, likedImagesStore} from "$lib/stores.js"
+	import {DOMAIN, likedImagesStore, calendarImagesStore} from "$lib/stores.js"
 	import {page} from "$app/stores"
 	export const sidebarOpen = true;
 
 	let likedPhotosCount = $likedImagesStore['meta_data'].length
+	let calendarCount = Object.keys($calendarImagesStore).length
 
 	$ : {
 		console.log($likedImagesStore)
@@ -39,7 +40,7 @@
 			icon: "calendar",
 			path: "/calendar",
 			name: "Calendar",
-			count: "",
+			count: calendarCount,
 		},
 	
 		indexing : {

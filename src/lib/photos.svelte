@@ -370,7 +370,7 @@
 </div>
 
 <div class="">
-  <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+  <div class="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
     <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
       {#each images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
