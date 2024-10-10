@@ -1,8 +1,8 @@
 <script>
     import Sidebar from "$lib/Sidebar.svelte"
-    import {imagesDataStore, likedImagesStore, calendarImagesStore} from "$lib/stores.js"
+    import {imagesDataStore, likedImagesStore, calendarImagesStore, peopleListStore} from "$lib/stores.js"
     export let data
-    const {images_data, likedImagesData, calendarImagesData} = data
+    const {images_data, likedImagesData, calendarImagesData, people_list} = data
 
     $ : {
         $imagesDataStore = images_data
@@ -14,6 +14,9 @@
 
     $ : {
         $calendarImagesStore = calendarImagesData
+    }
+    $ : {
+        $peopleListStore = people_list
     }
 </script>
 

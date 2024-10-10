@@ -5,6 +5,7 @@ export const DOMAIN = "http://localhost:8200"
 export const imagesDataStore = writable({})
 export const likedImagesStore = writable({})
 export const calendarImagesStore = writable({})
+export const peopleListStore = writable([])
 
 
 
