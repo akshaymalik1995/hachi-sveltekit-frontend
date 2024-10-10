@@ -219,7 +219,7 @@
 <div class="flex justify-center items-center">
   <Modal
     dialogClass="fixed top-0 start-0 end-0 h-modal md:inset-0 md:h-full z-50 w-full flex"
-    bodyClass="bg-white h-full"
+    bodyClass="bg-black h-full"
     headerClass="hidden"
     autoclose
     class="h-screen"
@@ -271,7 +271,7 @@
                 <img
                   loading="lazy"
                   src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
-                  class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-100 border-gray-100 shadow-smr"
+                  class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
                   alt=""
                 />
               </a>
@@ -287,7 +287,7 @@
                   <img
                     loading="lazy"
                     src={DOMAIN + "/getPreviewPerson/" + person}
-                    class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-100 border-gray-100 shadow-smr"
+                    class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
                     alt=""
                   />
                 </a>
