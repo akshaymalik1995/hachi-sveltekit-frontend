@@ -138,7 +138,7 @@
                 {#each Object.keys(selectedFilters) as option}
                     {#if selectedFilters[option].length >= 1}
                         <div
-                            class="self-center bg-white px-4 py-2 rounded-md inline-flex place-self-center items-center mr-2 mb-2"
+                            class="self-center bg-gray-800 text-white px-4 py-2 rounded-md inline-flex place-self-center items-center mr-2 mb-2"
                         >
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
                             <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -171,7 +171,7 @@
             <div class="flex space-x-2">
                 <select
                     on:change={(e) => handleOptionChange(e.target.value)}
-                    class="px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    class="px-4 bg-gray-800 text-white py-2 border rounded-md focus:outline-none focus:border-blue-500"
                     name="select-option"
                     id="select-option"
                     bind:value={selectedOption}
@@ -189,7 +189,7 @@
                         bind:this={inputElement}
                         bind:value={valueInput}
                         on:input={handleValueChange}
-                        class="px-4 py-4 border rounded-md focus:outline-none h-full w-full"
+                        class="px-4 py-4 bg-gray-800 text-white border rounded-md focus:outline-none h-full w-full"
                         type="search"
                         placeholder="Enter value here"
                     />
