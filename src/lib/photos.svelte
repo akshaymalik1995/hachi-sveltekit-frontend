@@ -370,7 +370,7 @@
 </div>
 
 <div class="">
-  <div class="flex justify-center gap-2 flex-wrap mx-auto">
+  <div class="flex justify-center gap-1 flex-wrap mx-auto">
     <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
       {#each images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -391,19 +391,19 @@
             />
             <!-- Add like icon at the bottom -->
             <div
-              class="absolute flex bottom-0 left-0 right-0 justify-center mb-2"
+              class="absolute flex bottom-0 left-0 right-0 m-2"
             >
               {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
                 <div
                   on:click={(event) => handleImageLike(event, "false", index)}
-                  class={"cursor-pointer hover:bg-gray-100 p-1 rounded"}
+                  class={"cursor-pointer"}
                 >
-                  <HeartSolid color="red" />
+                  <HeartSolid color="white" />
                 </div>
               {:else}
                 <div
                   on:click={(event) => handleImageLike(event, "true", index)}
-                  class={"cursor-pointer hover:bg-gray-100 p-1 rounded"}
+                  class={"cursor-pointer"}
                 >
                   <HeartOutline />
                 </div>
