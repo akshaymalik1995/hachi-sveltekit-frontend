@@ -1,3 +1,4 @@
+
 export function argSort(originalScoreIndex, new_scores, mask = [1], key = null) {
     let mergedScores = [];
     let newScoreIndex = []
@@ -47,6 +48,14 @@ export function argSort(originalScoreIndex, new_scores, mask = [1], key = null) 
     }
     console.log('merged scores', mergedScores)
     return mergedScores;
+}
+
+export function convertPathString(path) {
+    // Remove any trailing slashes (both backslash and forward slash)
+    path = path.replace(/[\/\\]+$/, '');
+    path = path.split('\\').join('-');
+    // Replace all backslashes with ' > '
+    return path
 }
 
 

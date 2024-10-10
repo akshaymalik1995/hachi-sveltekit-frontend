@@ -1,11 +1,12 @@
 <script>
 	import { onMount } from "svelte";
-	import {DOMAIN, likedImagesStore, calendarImagesStore} from "$lib/stores.js"
+	import {DOMAIN, likedImagesStore, calendarImagesStore, directoriesDataStore} from "$lib/stores.js"
 	import {page} from "$app/stores"
 	export const sidebarOpen = true;
 
 	let likedPhotosCount = $likedImagesStore['meta_data'].length
 	let calendarCount = Object.keys($calendarImagesStore).length
+	let albumsCount = Object.keys($directoriesDataStore).length
 
 	$ : {
 		console.log($likedImagesStore)
@@ -27,7 +28,7 @@
 			icon: "image",
 			path: "/photos",
 			name: "Albums",
-			count: 0,
+			count: albumsCount,
 		},
 
 		favourites : {
@@ -72,7 +73,6 @@
 			const data = await response.json()
 			console.log("DATA FETCHED TO PROVIDE IMAGES COUNT IMAGES")
 			menuItemsData.people.count = data.image.unique_people_count
-			menuItemsData.albums.count = data.image.count
 		}
 
 		onMount(()=> {

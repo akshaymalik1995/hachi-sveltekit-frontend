@@ -2,6 +2,7 @@ export const ssr = false
 export const csr = true
 export const prerender = true
 import { imagesDataStore } from '../lib/stores'
+import { convertPathString } from '../lib/utils'
 
 function parseDate(dateString) {
     // Split the date string into date and time parts
@@ -98,7 +99,8 @@ export async function load({ fetch }) {
 
 
         let path = data['meta_data'][i]['absolute_path']
-        const directory = path.match(/^.*[\/\\](?=[^\/\\]+$)/);
+        let directory = path.match(/^.*[\/\\](?=[^\/\\]+$)/);
+        directory = convertPathString(directory[0])
 
         if (!(directory in directories_data)) {
             directories_data[directory] = {
