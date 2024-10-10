@@ -81,7 +81,7 @@
                   })
                 }
               }}
-              on:submit={(e) => {
+              on:focusout={(e) => {
                 if (e.currentTarget.firstChild.tagName === "FORM") {
                   id = e.currentTarget.firstChild.value;
                   e.currentTarget.innerHTML =
