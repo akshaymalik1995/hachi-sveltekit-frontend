@@ -16,11 +16,11 @@
 
   $: {
     console.log($imagesDataStore);
-    imagesloadedcount = 20;
+    imagesloadedcount = 50;
     images_data = images_data;
   }
 
-  let imagesloadedcount = 20;
+  let imagesloadedcount = 50;
 
   let imageModal = false;
 
@@ -383,7 +383,7 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
               loading="lazy"
-              class="w-48 h-48 rounded shadow-xl cursor-pointer"
+              class="w-32 h-32 rounded shadow-xl cursor-pointer"
               src={DOMAIN +
                 "/getRawData/" +
                 images_data["data_hash"][scoreindex.ix]}
