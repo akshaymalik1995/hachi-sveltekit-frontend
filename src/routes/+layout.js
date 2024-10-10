@@ -3,6 +3,37 @@ export const csr = true
 export const prerender = true
 import { imagesDataStore } from '../lib/stores'
 
+function parseDate(dateString) {
+    // Split the date string into date and time parts
+    const [date, time] = dateString.split(' ');
+
+    // Replace the colons with dashes in the date part
+    const formattedDate = date.replace(/:/g, '-');
+
+    // Concatenate the date and time parts with a space in between
+    const formattedDateString = `${formattedDate} ${time}`;
+
+    // Parse the formatted date string
+    return new Date(formattedDateString);
+}
+
+function getMonthYear(date) {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${month} ${year}`;
+}
+
+function initializeImageData() {
+    return {
+        data_hash: [],
+        score: [],
+        meta_data: [],
+        scoreIndex: []
+    }
+}
+
 import { DOMAIN } from '$lib/stores'
 export async function load({ fetch }) {
     let images_data = {
@@ -19,6 +50,8 @@ export async function load({ fetch }) {
         scoreIndex: []
     }
 
+    let calendarImagesData = {}
+
     const people_data = []
     const directories_data = []
     const response = await fetch(DOMAIN + "/getGroup/person")
@@ -32,12 +65,34 @@ export async function load({ fetch }) {
 
             if (!(person in people_data)) {
                 people_data[person] = {
-                    numOfPhotos : 0
+                    numOfPhotos: 0
                 }
             }
             people_data[person].numOfPhotos += 1
 
         }
+
+        // CALENDER IMAGES DATA
+        const metadata = data['meta_data'][i] // Get meta data
+        const takenAt = metadata.taken_at // Get the date
+
+        // console.log(takenAt.toString())
+
+        if (takenAt) {
+            const date = parseDate(takenAt) // Get date object 
+            
+            const title = getMonthYear(date) // Get December 2021
+            if (!Object.keys(calendarImagesData).includes(title)) {
+                calendarImagesData[title] = initializeImageData()
+            }
+
+            calendarImagesData[title].data_hash.push(data["data_hash"][i])
+            calendarImagesData[title].score.push(data["score"][i])
+            calendarImagesData[title].meta_data.push(data["meta_data"][i])
+            calendarImagesData[title].scoreIndex.push({ ix: calendarImagesData[title].scoreIndex.length, score: data['score'][i] })
+        }
+
+
         let path = data['meta_data'][i]['absolute_path']
         const directory = path.match(/^.*[\/\\](?=[^\/\\]+$)/);
 
@@ -56,7 +111,7 @@ export async function load({ fetch }) {
             likedImagesData.meta_data.push(data["meta_data"][i])
             likedImagesData.scoreIndex.push({ ix: likedImagesData.scoreIndex.length, score: data['score'][i] })
         }
-        
+
 
         directories_data[directory].data_hash.push(data["data_hash"][i])
         directories_data[directory].score.push(data["score"][i])
@@ -64,11 +119,11 @@ export async function load({ fetch }) {
         directories_data[directory].scoreIndex.push({ ix: directories_data[directory].scoreIndex.length, score: data['score'][i] })
 
 
-        
+
         images_data.data_hash.push(data["data_hash"][i])
         images_data.score.push(data["score"][i])
         images_data.meta_data.push(data["meta_data"][i])
-        images_data.scoreIndex.push({ix : i, score: data['score'][i]})
+        images_data.scoreIndex.push({ ix: i, score: data['score'][i] })
 
     }
 
@@ -77,6 +132,7 @@ export async function load({ fetch }) {
         people_data,
         people_list,
         directories_data,
-        likedImagesData
+        likedImagesData,
+        calendarImagesData
     }
 }  
