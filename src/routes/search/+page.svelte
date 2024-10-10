@@ -1,7 +1,6 @@
 <script>
     import Fuzzy from "$lib/Fuzzy.svelte";
     import Photos from "$lib/photos.svelte";
-    import Pagination from "$lib/Pagination.svelte";
     import Loading from "$lib/Loading.svelte"
     import { argSort } from "$lib/utils";
     import { page } from "$app/stores";

@@ -1,6 +1,5 @@
 <script>
     import Photos from "$lib/photos.svelte";
-    import Pagination from "$lib/Pagination.svelte"
     import {argSort} from "$lib/utils"
     import { page } from '$app/stores';
     export let data;
@@ -22,4 +21,3 @@
 </script>
 
 <Photos imageData={imageData} pageSize = {{lowerIndex : lowerIndex, upperIndex : upperIndex}} />
-<Pagination {totalPages} {currentPage} />

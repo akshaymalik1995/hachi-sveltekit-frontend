@@ -1,6 +1,5 @@
 <script>
     import People from "$lib/People.svelte";
-    import Pagination from "$lib/Pagination.svelte";
     import { page } from '$app/stores';
     export let data
     const {people_list, people_data} = data
@@ -17,10 +16,3 @@
     }
 </script>
     
-
-<div>
-    
-    <div class="text-6xl py-8 text-center">People</div>
-    <People people_list={peopleListForThePage} />
-    <Pagination {totalPages} {currentPage} />
-</div>
