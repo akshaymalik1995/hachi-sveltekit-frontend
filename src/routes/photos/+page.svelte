@@ -28,8 +28,8 @@
     <div class="text-center  my-8 text-6xl">Gallery</div>
     <!-- I want to display directories as folders -->
   
-    <div class="directory-selector mb-8">
-        <select bind:value={selectedDirectory} on:change={() => filterImagesByDirectory(selectedDirectory)} class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <div class="directory-selector mx-8 mb-8">
+        <select bind:value={selectedDirectory} on:change={() => filterImagesByDirectory(selectedDirectory)} class="w-full p-2 border border-gray-800 rounded-lg focus:outline-none bg-gray-800">
             {#each directories as dir , index}
                 <option value={dir} class="text-gray-600">{convertPathString(dir)}</option>
             {/each}

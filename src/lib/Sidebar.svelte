@@ -14,7 +14,7 @@
 	const state = {
 		sidebarOpen: sidebarOpen,
 	};
-	const menuItems = ["albums", 'search', 'favourites', "indexing", "people" ]
+	const menuItems = ["albums", 'search', "calendar", 'favourites', "indexing", "people" ]
 	const menuItemsData = {
 		search : {
 			icon: "search",
@@ -34,6 +34,12 @@
 			path: "/favourites",
 			name: "Favourites",
 			count: likedPhotosCount,
+		},
+		calendar : {
+			icon: "calendar",
+			path: "/calendar",
+			name: "Calendar",
+			count: "",
 		},
 	
 		indexing : {
@@ -80,9 +86,9 @@
 </script>
 
 
-<div class="flex sticky top-0 z-10 shadow h-screen text-white">
+<div class="flex sticky top-0 z-10 shadow h-screen bg-gray-900 text-white">
 	<aside  class="{state.sidebarOpen && 'w-64'}">
-		<div class="flex h-16 items-center justify-between font-semifold text-black">
+		<div class="flex h-16 items-center justify-between font-semifold text-white">
 			{#if state.sidebarOpen}
 			<a href="/" class="px-4 text-3xl">Hachi</a>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -100,13 +106,13 @@
 		</div>
 		<nav class="">
 			{#each menuItems as item,i}
-			<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-200' : ''} items-center space-x-2 px-4 py-3 text-black hover:bg-gray-100 hover:text-black">
+			<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-800' : ''} items-center text-white hover:text-black space-x-2 px-4 py-3 hover:bg-gray-100">
 				<i class="fa-solid fa-{menuItemsData[item].icon}"></i>
 				<!-- Hiding the names of menu items when sidebar is closed -->
 				{#if state.sidebarOpen}
-				<div class="flex w-full justify-between">
+				<div class="flex w-full  justify-between">
 					<div class="flex" data-ix = {i}>{menuItemsData[item].name}</div>
-					<div class="px-3 flex text-black text-md text-bold">{menuItemsData[item].count}</div>
+					<div class="px-3 flex  text-md text-bold">{menuItemsData[item].count}</div>
 				</div>
 				{/if}
 			</a>

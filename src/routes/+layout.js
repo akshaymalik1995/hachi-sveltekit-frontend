@@ -78,12 +78,16 @@ export async function load({ fetch }) {
 
         // console.log(takenAt.toString())
 
-        if (takenAt) {
+        if (takenAt && takenAt !== "unknown") {
             const date = parseDate(takenAt) // Get date object 
             
             const title = getMonthYear(date) // Get December 2021
             if (!Object.keys(calendarImagesData).includes(title)) {
                 calendarImagesData[title] = initializeImageData()
+            }
+
+            if (title.includes(undefined)) {
+                console.log(takenAt)
             }
 
             calendarImagesData[title].data_hash.push(data["data_hash"][i])

@@ -69,6 +69,7 @@
   function onImageModalClick(index) {
     scaled_face_bboxes=[]
     imageCard = getImageMetaData(index);
+    console.log("image card", imageCard)
     modalImageIndex = index;
     imageModal = true;
     modalimagehash = getImageHash(index);
@@ -368,7 +369,7 @@
   </Modal>
 </div>
 
-<div class="px-4">
+<div class="">
   <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
     <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
       {#each images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
@@ -376,13 +377,13 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
           on:click={() => onImageModalClick(index)}
-          class="flex bg-gray-200 justify-center rounded-lg items-center"
+          class="flex bg-gray-900 justify-center rounded-lg items-center"
         >
           <div class="relative overflow-hidden rounded-lg shadow-md">
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
               loading="lazy"
-              class="w-full h-48 rounded-lg shadow-xl cursor-pointer"
+              class="w-48 h-48 rounded-lg shadow-xl cursor-pointer"
               src={DOMAIN +
                 "/getRawData/" +
                 images_data["data_hash"][scoreindex.ix]}
