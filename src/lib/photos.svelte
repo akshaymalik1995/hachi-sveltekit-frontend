@@ -217,156 +217,152 @@
 </script>
 
 <div class="flex justify-center items-center">
-  <Modal
-    dialogClass="fixed top-0 start-0 end-0 h-modal md:inset-0 md:h-full z-50 w-full flex"
-    bodyClass="bg-black h-full"
-    headerClass="hidden"
-    autoclose
-    class="h-screen"
-    title="Image"
-    size="xl"
-    bind:open={imageModal}
+  {#if imageModal }
+  <div
+  class="fixed z-50 bg-black inset-0"
+>
+  <div
+    bind:this={imageview}
+    class="w-full h-full items-center flex justify-center"
   >
-    <div
-      bind:this={imageview}
-      class="w-full h-full items-center flex justify-center"
-    >
-      <!-- svelte-ignore a11y-img-redundant-alt -->
-      <img
-        on:load={scale_face_bboxes}
-        class="w-auto h-full shadow-xl cursor-pointer"
-        src={DOMAIN + "/getRawDataFull/" + modalimagehash}
-        alt="image"
-      />
+    <!-- svelte-ignore a11y-img-redundant-alt -->
+    <img
+      on:load={scale_face_bboxes}
+      class="w-auto h-full shadow-xl cursor-pointer"
+      src={DOMAIN + "/getRawDataFull/" + modalimagehash}
+      alt="image"
+    />
 
-      <!-- TODO: calculate scale -->
-      {#each scaled_face_bboxes as box, i}
-        <!-- svelte-ignore missing-declaration -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div
-          on:click={(e) => {
-            tag_interface = { active: true, top: box.top - 28, left: box.left };
-            current_box_ix = Number(e.target.attributes["data-ix"].value);
-            console.log("current_box_ix",current_box_ix)
-            if (imageCard.person instanceof Object){
-              window.open("/search?person=" + imageCard.person[current_box_ix])
-            }
-          }}
-          data-ix={i}
-          class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
-          style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
-        ></div>
-      {/each}
+    <!-- TODO: calculate scale -->
+    {#each scaled_face_bboxes as box, i}
+      <!-- svelte-ignore missing-declaration -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div
+        on:click={(e) => {
+          tag_interface = { active: true, top: box.top - 28, left: box.left };
+          current_box_ix = Number(e.target.attributes["data-ix"].value);
+          console.log("current_box_ix",current_box_ix)
+          if (imageCard.person instanceof Object){
+            window.open("/search?person=" + imageCard.person[current_box_ix])
+          }
+        }}
+        data-ix={i}
+        class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
+        style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
+      ></div>
+    {/each}
 
-      <div class="absolute flex justify-center bottom-0">
-        <div class="flex gap-4">
-          {#if typeof imageCard.person === "string"}
-            {#if imageCard.person !== "no person detected"}
+    <div class="absolute flex justify-center bottom-0">
+      <div class="flex gap-4">
+        {#if typeof imageCard.person === "string"}
+          {#if imageCard.person !== "no person detected"}
+            <a
+              target="_blank"
+              href={"/search?person=" + imageCard.person}
+              class="flex items-center"
+            >
+              <img
+                loading="lazy"
+                src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
+                class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
+                alt=""
+              />
+            </a>
+          {/if}
+        {:else}
+          {#each imageCard.person as person}
+            {#if person !== "no person detected"}
               <a
                 target="_blank"
-                href={"/search?person=" + imageCard.person}
+                href={"/search?person=" + person}
                 class="flex items-center"
               >
                 <img
                   loading="lazy"
-                  src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
+                  src={DOMAIN + "/getPreviewPerson/" + person}
                   class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
                   alt=""
                 />
               </a>
             {/if}
-          {:else}
-            {#each imageCard.person as person}
-              {#if person !== "no person detected"}
-                <a
-                  target="_blank"
-                  href={"/search?person=" + person}
-                  class="flex items-center"
-                >
-                  <img
-                    loading="lazy"
-                    src={DOMAIN + "/getPreviewPerson/" + person}
-                    class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
-                    alt=""
-                  />
-                </a>
-              {/if}
-            {/each}
-          {/if}
-        </div>
-      </div>
-
-      <!-- Add navigation buttons -->
-      <button
-        class="absolute top-1/2 left-6 flex justify-center items-center z-10 -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
-        on:click={() => loadPrevImage(modalImageIndex - 1)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
-
-      <button
-        class="absolute top-1/2 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
-        on:click={() => loadNextImage(modalImageIndex + 1)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </button>
-
-      <!-- Add icons for fullscreen, edit, open in file, favorite -->
-      <div class="absolute inset-x-0 top-4 flex justify-center space-x-4">
-        <button
-          class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
-        >
-          <EditOutline />
-        </button>
-        <Tooltip>Edit Details</Tooltip>
-        <button
-          on:click={() => {
-            imageview.requestFullscreen();
-          }}
-          class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
-        >
-          <div><ZoomInSolid /></div>
-        </button>
-        <Tooltip>Fullscreen</Tooltip>
-        <button
-          on:click={() => {
-            imageModal = false;
-          }}
-          class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
-        >
-          <div><CloseCircleOutline /></div>
-        </button>
-        <Tooltip>Close</Tooltip>
+          {/each}
+        {/if}
       </div>
     </div>
-  </Modal>
+
+    <!-- Add navigation buttons -->
+    <button
+      class="absolute top-1/2 left-6 flex justify-center items-center z-10 -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
+      on:click={() => loadPrevImage(modalImageIndex - 1)}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+    </button>
+
+    <button
+      class="absolute top-1/2 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
+      on:click={() => loadNextImage(modalImageIndex + 1)}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
+    </button>
+
+    <!-- Add icons for fullscreen, edit, open in file, favorite -->
+    <div class="absolute inset-x-0 top-4 flex justify-center space-x-4">
+      <button
+        class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+      >
+        <EditOutline />
+      </button>
+      <Tooltip>Edit Details</Tooltip>
+      <button
+        on:click={() => {
+          imageview.requestFullscreen();
+        }}
+        class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+      >
+        <div><ZoomInSolid /></div>
+      </button>
+      <Tooltip>Fullscreen</Tooltip>
+      <button
+        on:click={() => {
+          imageModal = false;
+        }}
+        class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+      >
+        <div><CloseCircleOutline /></div>
+      </button>
+      <Tooltip>Close</Tooltip>
+    </div>
+  </div>
+</div>
+  {/if}
+  
 </div>
 
 <div class="">
