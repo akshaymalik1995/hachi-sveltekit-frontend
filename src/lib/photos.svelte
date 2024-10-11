@@ -1,6 +1,18 @@
 <script>
-  import { Modal, Tooltip } from "flowbite-svelte";
-  import { imagesDataStore, likedImagesStore } from "$lib/stores.js";
+  import {
+    Modal,
+    Tooltip,
+    Input,
+    Label,
+    Checkbox,
+    Button,
+    Spinner,
+  } from "flowbite-svelte";
+  import {
+    imagesDataStore,
+    likedImagesStore,
+    peopleListStore,
+  } from "$lib/stores.js";
   import {
     EditOutline,
     ZoomInSolid,
@@ -67,9 +79,9 @@
   }
 
   function onImageModalClick(index) {
-    scaled_face_bboxes=[]
+    scaled_face_bboxes = [];
     imageCard = getImageMetaData(index);
-    console.log("image card", imageCard)
+    console.log("image card", imageCard);
     modalImageIndex = index;
     imageModal = true;
     modalimagehash = getImageHash(index);
@@ -86,7 +98,7 @@
   let full_image_loaded = true;
 
   function scale_face_bboxes(node) {
-    console.log('scale_face_bboxes called');
+    console.log("scale_face_bboxes called");
     let card_rects = node.target.getClientRects()[0];
     let card_width = card_rects.width;
     let card_height = card_rects.height;
@@ -97,18 +109,22 @@
     let result = [];
     let original_bboxes = imageCard.face_bboxes;
     if (typeof original_bboxes === "string") {
-        original_bboxes = [original_bboxes.split(",").map(item => Number(item.trim()))]
+      original_bboxes = [
+        original_bboxes.split(",").map((item) => Number(item.trim())),
+      ];
     }
     if (original_bboxes) {
-      console.log('original_bboxes found', original_bboxes);
+      console.log("original_bboxes found", original_bboxes);
       let image_width = imageCard.width;
       let image_height = imageCard.height;
       console.log(`image_width: ${image_width}, image_height: ${image_height}`);
 
       if (card_width < card_height) {
         [image_width, image_height] = [image_height, image_width];
-        console.log('Image is in portrait mode, swapping dimensions');
-        console.log(`image_width: ${image_width}, image_height: ${image_height}`);
+        console.log("Image is in portrait mode, swapping dimensions");
+        console.log(
+          `image_width: ${image_width}, image_height: ${image_height}`
+        );
       }
 
       for (let i = 0; i < original_bboxes.length; i++) {
@@ -120,29 +136,29 @@
         console.log(`w_scale: ${w_scale}, h_scale: ${h_scale}`);
 
         if (image_height > image_width) {
-          [w_scale , h_scale] = [h_scale, w_scale]
+          [w_scale, h_scale] = [h_scale, w_scale];
         }
 
         temp_bbox.top = temp_bbox[1] * h_scale;
         temp_bbox.height = (temp_bbox[3] - temp_bbox[1]) * h_scale;
         temp_bbox.left = temp_bbox[0] * w_scale + offsetLeft;
         temp_bbox.width = (temp_bbox[2] - temp_bbox[0]) * w_scale;
-        console.log('Scaled bbox:', temp_bbox);
+        console.log("Scaled bbox:", temp_bbox);
 
         result.push(temp_bbox);
       }
     } else {
-      console.log('No original_bboxes present');
+      console.log("No original_bboxes present");
     }
     scaled_face_bboxes = result;
-    console.log('scaled_face_bboxes:', scaled_face_bboxes);
+    console.log("scaled_face_bboxes:", scaled_face_bboxes);
 
     if (loadTimeoutId) {
       clearTimeout(loadTimeoutId);
-      console.log('Cleared loadTimeoutId');
+      console.log("Cleared loadTimeoutId");
     }
     full_image_loaded = true;
-    console.log('full_image_loaded set to true');
+    console.log("full_image_loaded set to true");
   }
   //   let editForm = {}
 
@@ -214,156 +230,246 @@
       console.error("An error occurred during image like handling:", error);
     }
   }
+
+  // FORM MODAL
+  let formModal = false;
+  function handleImageSubmit(event) {
+    event.preventDefault();
+
+    let new_person_id = event.target["name"].value;
+    console.log(new_person_id);
+    if (!new_person_id) return;
+    let old_person_id = imageCard.person[current_box_ix];
+
+    let data = new FormData();
+    data.append("new_person_id", new_person_id);
+    data.append("old_person_id", old_person_id);
+    loading = true;
+    fetch(DOMAIN + "/tagPerson", {
+      method: "POST",
+      body: data,
+    }).then((response) => {
+      if (!response.ok) {
+        //  use a notification to display error/failure
+        throw new Error("Error occured");
+      } else {
+        // use a notification to display success.
+        $peopleListStore = $peopleListStore.map((item) => {
+          if (item === old_person_id) {
+            return new_person_id;
+          }
+          return item;
+        });
+        loading = false;
+        formModal = false;
+        const updateIndex = $imagesDataStore["meta_data"].findIndex(item => {
+          return item.absolute_path === imageCard.absolute_path
+        })
+        $imagesDataStore["meta_data"][updateIndex].person = imageCard.person.map((item) =>
+          item === old_person_id ? new_person_id : item
+        );
+        imageCard.person = imageCard.person.map((item) =>
+          item === old_person_id ? new_person_id : item
+        );
+        
+        alert("Success");
+      }
+    });
+  }
+
+  let loading = false;
 </script>
 
-<div class="flex justify-center items-center">
-  {#if imageModal }
-  <div
-  class="fixed z-50 bg-black inset-0"
->
-  <div
-    bind:this={imageview}
-    class="w-full h-full items-center flex justify-center"
+<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
+  <form
+    on:submit={handleImageSubmit}
+    id="imageForm"
+    class="flex flex-col space-y-6"
+    action="#"
   >
-    <!-- svelte-ignore a11y-img-redundant-alt -->
-    <img
-      on:load={scale_face_bboxes}
-      class="w-auto h-full shadow-xl cursor-pointer"
-      src={DOMAIN + "/getRawDataFull/" + modalimagehash}
-      alt="image"
-    />
+    <Label class="space-y-2">
+      <span>Name</span>
+      <Input
+        value={imageCard.person[current_box_ix]}
+        type="name"
+        name="name"
+        placeholder="Akshay..."
+        autocomplete
+        required
+      />
+    </Label>
 
-    <!-- TODO: calculate scale -->
-    {#each scaled_face_bboxes as box, i}
-      <!-- svelte-ignore missing-declaration -->
-      <!-- svelte-ignore a11y-no-static-element-interactions -->
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <button
+      type="submit"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+    >
+      {#if loading}
+        <Spinner color="white" size="4" />
+      {:else}
+        Save
+      {/if}
+    </button>
+    <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+      <a
+        href={"/search?person" + imageCard.person[current_box_ix] }
+        class="text-primary-700 hover:underline dark:text-primary-500"
+      >
+        See all pictures
+      </a>
+    </div>
+  </form>
+</Modal>
+
+<div class="flex justify-center items-center">
+  {#if imageModal}
+    <div class="fixed z-10 bg-black inset-0">
       <div
-        on:click={(e) => {
-          tag_interface = { active: true, top: box.top - 28, left: box.left };
-          current_box_ix = Number(e.target.attributes["data-ix"].value);
-          console.log("current_box_ix",current_box_ix)
-          if (imageCard.person instanceof Object){
-            window.open("/search?person=" + imageCard.person[current_box_ix])
-          }
-        }}
-        data-ix={i}
-        class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
-        style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
-      ></div>
-      <Tooltip>{imageCard.person[i]}</Tooltip>
-    {/each}
+        bind:this={imageview}
+        class="w-full h-full items-center flex justify-center"
+      >
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img
+          on:load={scale_face_bboxes}
+          class="w-auto h-full shadow-xl cursor-pointer"
+          src={DOMAIN + "/getRawDataFull/" + modalimagehash}
+          alt="image"
+        />
 
-    <div class="absolute flex justify-center bottom-0">
-      <div class="flex gap-4">
-        {#if typeof imageCard.person === "string"}
-          {#if imageCard.person !== "no person detected"}
-            <a
-              target="_blank"
-              href={"/search?person=" + imageCard.person}
-              class="flex items-center"
-            >
-              <img
-                loading="lazy"
-                src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
-                class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
-                alt=""
-              />
-            </a>
-          {/if}
-        {:else}
-          {#each imageCard.person as person}
-            {#if person !== "no person detected"}
-              <a
-                target="_blank"
-                href={"/search?person=" + person}
-                class="flex items-center"
-              >
-                <img
-                  loading="lazy"
-                  src={DOMAIN + "/getPreviewPerson/" + person}
-                  class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
-                  alt=""
-                />
-              </a>
+        <!-- TODO: calculate scale -->
+        {#each scaled_face_bboxes as box, i}
+          <!-- svelte-ignore missing-declaration -->
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <div
+            on:click={(e) => {
+              tag_interface = {
+                active: true,
+                top: box.top - 28,
+                left: box.left,
+              };
+              current_box_ix = Number(e.target.attributes["data-ix"].value);
+              console.log("current_box_ix", current_box_ix);
+              // if (imageCard.person instanceof Object){
+              //   window.open("/search?person=" + imageCard.person[current_box_ix])
+              // }
+              formModal = true;
+            }}
+            data-ix={i}
+            class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
+            style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
+          ></div>
+          <Tooltip>{imageCard.person[i]}</Tooltip>
+        {/each}
+
+        <div class="absolute flex justify-center bottom-0">
+          <div class="flex gap-4">
+            {#if typeof imageCard.person === "string"}
+              {#if imageCard.person !== "no person detected"}
+                <a
+                  target="_blank"
+                  href={"/search?person=" + imageCard.person}
+                  class="flex items-center"
+                >
+                  <img
+                    loading="lazy"
+                    src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
+                    class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
+                    alt=""
+                  />
+                </a>
+              {/if}
+            {:else}
+              {#each imageCard.person as person}
+                {#if person !== "no person detected"}
+                  <a
+                    target="_blank"
+                    href={"/search?person=" + person}
+                    class="flex items-center"
+                  >
+                    <img
+                      loading="lazy"
+                      src={DOMAIN + "/getPreviewPerson/" + person}
+                      class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
+                      alt=""
+                    />
+                  </a>
+                {/if}
+              {/each}
             {/if}
-          {/each}
-        {/if}
+          </div>
+        </div>
+
+        <!-- Add navigation buttons -->
+        <button
+          class="absolute top-1/2 left-6 flex justify-center items-center z-10 -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
+          on:click={() => loadPrevImage(modalImageIndex - 1)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
+        <button
+          class="absolute top-1/2 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
+          on:click={() => loadNextImage(modalImageIndex + 1)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+
+        <!-- Add icons for fullscreen, edit, open in file, favorite -->
+        <div class="absolute inset-x-0 top-4 flex justify-center space-x-4">
+          <button
+            class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+          >
+            <EditOutline />
+          </button>
+          <Tooltip>Edit Details</Tooltip>
+          <button
+            on:click={() => {
+              imageview.requestFullscreen();
+            }}
+            class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+          >
+            <div><ZoomInSolid /></div>
+          </button>
+          <Tooltip>Fullscreen</Tooltip>
+          <button
+            on:click={() => {
+              imageModal = false;
+            }}
+            class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+          >
+            <div><CloseCircleOutline /></div>
+          </button>
+          <Tooltip>Close</Tooltip>
+        </div>
       </div>
     </div>
-
-    <!-- Add navigation buttons -->
-    <button
-      class="absolute top-1/2 left-6 flex justify-center items-center z-10 -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
-      on:click={() => loadPrevImage(modalImageIndex - 1)}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        />
-      </svg>
-    </button>
-
-    <button
-      class="absolute top-1/2 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
-      on:click={() => loadNextImage(modalImageIndex + 1)}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"
-        />
-      </svg>
-    </button>
-
-    <!-- Add icons for fullscreen, edit, open in file, favorite -->
-    <div class="absolute inset-x-0 top-4 flex justify-center space-x-4">
-      <button
-        class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
-      >
-        <EditOutline />
-      </button>
-      <Tooltip>Edit Details</Tooltip>
-      <button
-        on:click={() => {
-          imageview.requestFullscreen();
-        }}
-        class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
-      >
-        <div><ZoomInSolid /></div>
-      </button>
-      <Tooltip>Fullscreen</Tooltip>
-      <button
-        on:click={() => {
-          imageModal = false;
-        }}
-        class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
-      >
-        <div><CloseCircleOutline /></div>
-      </button>
-      <Tooltip>Close</Tooltip>
-    </div>
-  </div>
-</div>
   {/if}
-  
 </div>
 
 <div class="">
@@ -387,9 +493,7 @@
               alt="image"
             />
             <!-- Add like icon at the bottom -->
-            <div
-              class="absolute flex bottom-0 left-0 right-0 m-2"
-            >
+            <div class="absolute flex bottom-0 left-0 right-0 m-2">
               {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
                 <div
                   on:click={(event) => handleImageLike(event, "false", index)}
