@@ -212,14 +212,14 @@
                     ? 'hidden'
                     : ''} w-full bg-white border rounded-md shadow-md mt-1"
             >
-                <ul class="divide-y max-h-36 overflow-y-auto divide-gray-200">
+                <ul class="divide-y bg-gray-800 text-white max-h-36 overflow-y-auto divide-gray-200">
                     {#each dropdownItems as item}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                         <li
                             on:click={() =>
                                 handleListItemClick(selectedOption, item)}
-                            class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                            class="px-4 py-2 hover:bg-gray-700 cursor-pointer"
                         >
                             {item}
                         </li>

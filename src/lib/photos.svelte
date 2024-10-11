@@ -251,6 +251,7 @@
         class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
         style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
       ></div>
+      <Tooltip>{imageCard.person[i]}</Tooltip>
     {/each}
 
     <div class="absolute flex justify-center bottom-0">
@@ -379,7 +380,7 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
               loading="lazy"
-              class="w-32 h-32 rounded shadow-xl cursor-pointer"
+              class="w-64 h-64 rounded shadow-xl cursor-pointer"
               src={DOMAIN +
                 "/getRawData/" +
                 images_data["data_hash"][scoreindex.ix]}
