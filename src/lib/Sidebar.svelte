@@ -87,7 +87,7 @@
 </script>
 
 
-<div class="flex sticky top-0 z-10 h-screen bg-gray-900 text-white">
+<div class="flex sticky top-0 z-10 h-screen bg-gray-800 text-white">
 	<aside  class="{state.sidebarOpen && 'w-64'}">
 		<div class="flex h-16 items-center justify-between font-semifold text-white">
 			{#if state.sidebarOpen}
@@ -107,7 +107,7 @@
 		</div>
 		<nav class="">
 			{#each menuItems as item,i}
-			<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-800' : ''} items-center text-white space-x-2 px-4 py-3 rounded hover:bg-gray-800">
+			<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-700' : ''} items-center text-white space-x-2 px-4 py-3 rounded hover:bg-gray-700">
 				<i class="fa-solid m-2 fa-{menuItemsData[item].icon}"></i>
 				<!-- Hiding the names of menu items when sidebar is closed -->
 				{#if state.sidebarOpen}

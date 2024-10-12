@@ -146,10 +146,10 @@
                                 on:click={() => handleOptionChange(option)}
                                 class="cursor-pointer"
                             >
-                                <span class="text-blue-800">
+                                <!-- <span class="text-blue-800">
                                     {option.charAt(0).toUpperCase() +
                                         option.slice(1)}
-                                </span>
+                                </span> -->
                                 {#each selectedFilters[option] as value}
                                     <span class="ml-1 p-2 ">{value + " "}</span>
                                 {/each}
@@ -161,7 +161,7 @@
                                 on:click={(e) =>
                                     clearFilter(e.currentTarget, option)}
                             >
-                                x
+                                <i class="fa fa-circle-minus"></i>
                             </div>
                         </div>
                     {/if}

@@ -5,12 +5,9 @@
   let index_cancel_button;
   let index_start_button;
 
-  let indexingOn = false;
-
   onMount(() => {
     current_statusEndpoint = localStorage.getItem("stored_indexing_endpoint");
     if (current_statusEndpoint !== null) {
-      indexingOn = true;
       let http_endpoint = "/getIndexStatus/" + current_statusEndpoint;
       index_cancel_button.disabled = false;
       index_start_button.disabled = true;
@@ -61,12 +58,10 @@
         });
 
         if (response.ok === false) {
-          indexingOn = false
           alert(
             "Some error on server side, after indexing is Completed. Contact administrator.."
           );
         } else {
-          indexingOn = false
           alert("Indexing Completed Successfully");
         }
 
@@ -122,7 +117,6 @@
     if (index_start_button && index_directory_path) {
       index_start_button.disabled = true;
       input_element.disabled = true;
-      indexingOn = true
       let form_data = new FormData();
 
       form_data.append("image_directory_path", index_directory_path);
@@ -142,12 +136,10 @@
         pollEndpointNew(endpoint); // keep polling that endpoint.
       } else {
         alert(data["reason"]);
-        indexingOn = false
         index_start_button.disabled = false;
         input_element.disabled = false;
       }
     } else {
-      indexingOn = false
       console.log("No index_start_button object found!!!");
     }
   }
@@ -199,7 +191,6 @@
     />
   </div>
 
-  {#if indexingOn}
     <div class="mb-5">
       <div class="h-3 rounded bg-gray-200 mb-2">
         <div
@@ -217,7 +208,6 @@
         Details: <span class="text-black">{extra_details}</span>
       </div>
     </div>
-  {/if}
 
   <div class="mb-5 flex items-center">
     <input
