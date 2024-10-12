@@ -22,7 +22,7 @@
 			icon: "search",
 			path: "/search",
 			name: "Search",
-			count: 0,
+			count: "",
 		},
 		albums : {
 			icon: "image",
@@ -48,7 +48,7 @@
 			icon: "book-atlas",
 			path: "/indexing",
 			name: "Index",
-			count: 0,
+			count: "",
 		},
 		people : {
 			icon: "user-tag",
@@ -87,7 +87,7 @@
 </script>
 
 
-<div class="flex sticky top-0 z-10 shadow h-screen bg-gray-900 text-white">
+<div class="flex sticky top-0 z-10 h-screen bg-gray-900 text-white">
 	<aside  class="{state.sidebarOpen && 'w-64'}">
 		<div class="flex h-16 items-center justify-between font-semifold text-white">
 			{#if state.sidebarOpen}
@@ -101,14 +101,14 @@
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<span on:click={openSidebar} class="px-4">
-				<i class="fa-solid fa-bars cursor-pointer"></i>
+				<i class="fa-solid m-2  fa-bars cursor-pointer"></i>
 			</span>
 			{/if}
 		</div>
 		<nav class="">
 			{#each menuItems as item,i}
-			<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-800' : ''} items-center text-white hover:text-black space-x-2 px-4 py-3 hover:bg-gray-100">
-				<i class="fa-solid fa-{menuItemsData[item].icon}"></i>
+			<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-800' : ''} items-center text-white space-x-2 px-4 py-3 rounded hover:bg-gray-800">
+				<i class="fa-solid m-2 fa-{menuItemsData[item].icon}"></i>
 				<!-- Hiding the names of menu items when sidebar is closed -->
 				{#if state.sidebarOpen}
 				<div class="flex w-full  justify-between">
