@@ -67,17 +67,17 @@
 <div class="p-4">
   <!-- I want to display months as folders -->
 
-  <div class="flex justify-center gap-2 flex-wrap">
+  <div class="flex justify-center gap-3 flex-wrap">
     {#each months as month}
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
-      <div class="flex w-64 flex-col justify-center rounded items-center">
-        <div class="relative overflow-hidden rounded shadow-md">
+      <div class="flex bg-gray-800 w-64 flex-col justify-center items-center">
+        <div class="relative overflow-hidden shadow-md">
           <!-- svelte-ignore a11y-img-redundant-alt -->
           <a href={`calendar/${month}`}>
             <img
               loading="lazy"
-              class="w-64 h-64 rounded shadow-xl cursor-pointer"
+              class="w-64 h-64 shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
               src={DOMAIN +
                 "/getRawData/" +
                 $calendarImagesStore[month]["data_hash"][0]}
@@ -85,7 +85,7 @@
             />
           </a>
         </div>
-        <div class="my-1 text-bold">{month}</div>
+        <div class="p-2 text-bold">{month}</div>
       </div>
     {/each}
   </div>

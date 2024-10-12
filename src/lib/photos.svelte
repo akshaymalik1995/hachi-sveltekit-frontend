@@ -486,7 +486,7 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
               loading="lazy"
-              class="w-64 h-64 rounded shadow-xl cursor-pointer"
+              class="w-64 h-64 shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
               src={DOMAIN +
                 "/getRawData/" +
                 images_data["data_hash"][scoreindex.ix]}
