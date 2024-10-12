@@ -67,7 +67,7 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       {#if id !== "no person detected"}
         <div
-          class="flex flex-col justify-center items-center cursor-pointer"
+          class="flex bg-gray-800 flex-col justify-center items-center cursor-pointer"
           on:click={(e) => {
             console.log("Person id is", id);
           }}
@@ -75,12 +75,12 @@
           <div>
             <a
               href={"/search?person=" + id}
-              class="flex items-center w-48 h-48 rounded bg-gray-800"
+              class="flex items-center w-48 h-48 bg-gray-800"
             >
               <img
                 loading="lazy"
                 src={DOMAIN + "/getPreviewPerson/" + id}
-                class="w-48 h-48 hover:rounded-none rounded w-full h-full bg-gray-100 border-gray-100 shadow-smr"
+                class="w-48 h-48 w-full h-full bg-gray-100 border-gray-100 shadow-smr"
                 alt=""
               />
               
@@ -88,7 +88,7 @@
             </a>
             <div
               id = {"parent-" + id}
-              class="flex text-black my-2 text-md text-white justify-center items-center"
+              class="flex py-1 text-md text-white justify-center items-center"
               on:click={(e) => {
                 if (
                   e.currentTarget.innerText ===
