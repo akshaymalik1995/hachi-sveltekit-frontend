@@ -14,7 +14,7 @@
         {#each directories as directory}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <!-- svelte-ignore a11y-no-static-element-interactions -->
-          <div class="flex bg-gray-800 w-64 flex-col justify-center items-center">
+          <div class="flex bg-gray-800 w-64 flex-col">
             <div class="relative overflow-hidden shadow-md">
               <!-- svelte-ignore a11y-img-redundant-alt -->
               <a href={`photos/${directory}`}>
@@ -28,7 +28,7 @@
                 />
               </a>
             </div>
-            <div class="p-2 text-bold">{directory}</div>
+            <div class="p-2 bg-yellow-800 text-center text-bold">{directory}</div>
           </div>
         {/each}
       </div>
