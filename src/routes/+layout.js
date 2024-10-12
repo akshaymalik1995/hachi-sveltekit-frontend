@@ -1,6 +1,6 @@
 export const ssr = false
 export const csr = true
-export const prerender = true
+// export const prerender = true
 import { imagesDataStore } from '../lib/stores'
 import { convertPathString } from '../lib/utils'
 
