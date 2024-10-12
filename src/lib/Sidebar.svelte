@@ -26,7 +26,7 @@
 		},
 		albums : {
 			icon: "image",
-			path: "/photos",
+			path: "/albums",
 			name: "Albums",
 			count: albumsCount,
 		},

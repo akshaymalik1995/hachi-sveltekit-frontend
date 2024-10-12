@@ -22,6 +22,7 @@
   } from "flowbite-svelte-icons";
   import InfiniteScroll from "./InfiniteScroll.svelte";
   import { DOMAIN } from "$lib/stores";
+  import { getMonthYear, parseDate, getDateString} from "$lib/utils"
 
   export let images_data;
   console.log("IMAGES DATA", images_data);
@@ -493,8 +494,9 @@
               alt="image"
             />
             <!-- Add like icon at the bottom -->
-            <div class="absolute flex bottom-0 left-0 right-0 m-2">
-              {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
+            <div class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2">
+              <div>
+                {#if $likedImagesStore["data_hash"].includes($imagesDataStore["data_hash"][scoreindex.ix])}
                 <div
                   on:click={(event) => handleImageLike(event, "false", index)}
                   class={"cursor-pointer"}
@@ -509,6 +511,12 @@
                   <HeartOutline />
                 </div>
               {/if}
+              </div>
+
+              <div>
+                {getDateString(parseDate(getImageMetaData(index).taken_at))}
+              </div>
+              
             </div>
           </div>
         </div>

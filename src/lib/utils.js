@@ -58,4 +58,34 @@ export function convertPathString(path) {
     return path
 }
 
+export function getMonthYear(date) {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${month} ${year}`;
+}
 
+export function getDateString(date) {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+    const day = date.getDate()
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+}
+
+
+export function parseDate(dateString) {
+    // Split the date string into date and time parts
+    const [date, time] = dateString.split(' ');
+
+    // Replace the colons with dashes in the date part
+    const formattedDate = date.replace(/:/g, '-');
+
+    // Concatenate the date and time parts with a space in between
+    const formattedDateString = `${formattedDate} ${time}`;
+
+    // Parse the formatted date string
+    return new Date(formattedDateString);
+}

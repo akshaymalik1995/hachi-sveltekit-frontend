@@ -17,7 +17,7 @@
           <div class="flex bg-gray-800 w-64 flex-col">
             <div class="relative overflow-hidden shadow-md">
               <!-- svelte-ignore a11y-img-redundant-alt -->
-              <a href={`photos/${directory}`}>
+              <a href={`albums/${directory}`}>
                 <img
                   loading="lazy"
                   class="w-64 h-64 shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
