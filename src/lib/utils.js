@@ -90,7 +90,7 @@ export function parseDate(dateString) {
     return new Date(formattedDateString);
 }
 
-export function sortImageDataByDate(data) {
+export function sortImageDataByDate(data, descending = true) {
     const combinedData = data.meta_data.map((meta_data, index) => ({
         meta_data: meta_data,
         data_hash: data.data_hash[index],
@@ -98,7 +98,12 @@ export function sortImageDataByDate(data) {
         scoreIndex: {ix: index, score : data.score[index]}
     }));
 
-    combinedData.sort((a, b) => parseDate(b.meta_data.taken_at).getTime() - parseDate(a.meta_data.taken_at));
+    if (descending) {
+        combinedData.sort((a, b) => parseDate(b.meta_data.taken_at).getTime() - parseDate(a.meta_data.taken_at));
+    } else {
+        combinedData.sort((a, b) => parseDate(a.meta_data.taken_at).getTime() - parseDate(b.meta_data.taken_at));
+    }
+    
 
     const sortedData = {
         meta_data: combinedData.map(item => item.meta_data),

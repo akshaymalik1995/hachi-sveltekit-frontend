@@ -298,6 +298,7 @@
   let loading = false;
   let showFaceDetection = false;
   let photoDetailsModal = false;
+  let sortDescending = true;
 </script>
 
 <Modal bind:open={photoDetailsModal} size="md">
@@ -513,8 +514,21 @@
   {/if}
 </div>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div
+  on:click={() => {
+    sortDescending = !sortDescending;
+    images_data = sortImageDataByDate(images_data, sortDescending);
+  }}
+  class="flex cursor-pointer items-center gap-2 mb-4"
+>
+  <span>Sort</span>
+  <i class="fa fa-sort"></i>
+</div>
+
 <div class="">
-  <div class="flex justify-center gap-1 flex-wrap mx-auto">
+  <div class="flex justify-space-between gap-1 flex-wrap mx-auto">
     <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
       {#each images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -556,7 +570,7 @@
               </div>
 
               <div>
-                {getDateString(parseDate(getImageMetaData(index).taken_at))}
+                {getDateString(parseDate(images_data["meta_data"][scoreindex.ix].taken_at))}
               </div>
             </div>
           </div>
