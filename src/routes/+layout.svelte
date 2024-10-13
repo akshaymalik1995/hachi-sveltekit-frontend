@@ -1,6 +1,7 @@
 <script>
     import Sidebar from "$lib/Sidebar.svelte"
     import {imagesDataStore, likedImagesStore, calendarImagesStore, peopleListStore, directoriesDataStore} from "$lib/stores.js"
+  import TopLoading from "../lib/TopLoading.svelte";
     export let data
     const {images_data, likedImagesData, calendarImagesData, people_list, directories_data} = data
 
@@ -22,7 +23,6 @@
         $directoriesDataStore = directories_data
     }
 </script>
-
 
 <div class="flex">
     <Sidebar />

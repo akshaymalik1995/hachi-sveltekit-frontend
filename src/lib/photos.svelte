@@ -29,6 +29,8 @@
     sortImageDataByDate,
   } from "$lib/utils";
   import PhotoDetail from "./PhotoDetail.svelte";
+  import TopLoading from "./TopLoading.svelte";
+  import { onDestroy, onMount } from "svelte";
 
   export let images_data;
   export let isSearch = false;
@@ -36,6 +38,16 @@
   if (!isSearch) {
     images_data = sortImageDataByDate(images_data);
   }
+
+  let imageModalContainer;
+
+  onMount(() => {
+    document.addEventListener("keydown", handlekeydown);
+  });
+
+  onDestroy(() => {
+    document.removeEventListener("keydown", handlekeydown);
+  });
 
   $: {
     imagesloadedcount = 50;
@@ -77,6 +89,7 @@
     // update_image_card_previous();
     modalImageIndex = index;
     modalimagehash = getImageHash(index);
+    // imageLoading = true;
   }
 
   function loadNextImage(index) {
@@ -86,15 +99,16 @@
     // update_image_card_next();
     modalImageIndex = index;
     modalimagehash = getImageHash(index);
+    // imageLoading = true;
   }
 
   function getImageHash(index) {
     const { ix } = images_data.scoreIndex[index];
-    console.log();
     return images_data.data_hash[ix];
   }
 
   function onImageModalClick(index) {
+    // imageLoading = true;
     scaled_face_bboxes = [];
     imageCard = getImageMetaData(index);
     console.log("image card", imageCard);
@@ -299,6 +313,16 @@
   let showFaceDetection = false;
   let photoDetailsModal = false;
   let sortDescending = true;
+  let imageLoading = false;
+
+  function handlekeydown(event) {
+    if (!imageModal) return;
+    if (event.key === "ArrowRight") {
+      loadNextImage(modalImageIndex + 1);
+    } else if (event.key === "ArrowLeft") {
+      loadPrevImage(modalImageIndex - 1);
+    }
+  }
 </script>
 
 <Modal bind:open={photoDetailsModal} size="md">
@@ -345,20 +369,38 @@
   </form>
 </Modal>
 
-<div class="flex justify-center items-center">
+<div bind:this={imageModalContainer} class="flex justify-center items-center">
   {#if imageModal}
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="fixed z-10 bg-black inset-0">
+      <!-- {#if imageLoading}
+        <TopLoading />
+      {/if} -->
       <div
         bind:this={imageview}
         class="w-full h-full items-center flex justify-center"
       >
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img
-          on:load={scale_face_bboxes}
+          on:load={(event) => {
+            scale_face_bboxes(event);
+            // imageLoading = false;
+          }}
           class="w-auto h-full shadow-xl cursor-pointer"
           src={DOMAIN + "/getRawDataFull/" + modalimagehash}
           alt="image"
         />
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <!-- <img
+          on:load={(event) => {
+            scale_face_bboxes(event);
+          }}
+          class=" {!imageLoading
+            ? 'w-0 h-0'
+            : 'w-auto h-full'} shadow-xl cursor-pointer"
+          src={DOMAIN + "/getRawData/" + modalimagehash}
+          alt="image"
+        /> -->
 
         {#if showFaceDetection}
           <!-- TODO: calculate scale -->
@@ -570,7 +612,9 @@
               </div>
 
               <div>
-                {getDateString(parseDate(images_data["meta_data"][scoreindex.ix].taken_at))}
+                {getDateString(
+                  parseDate(images_data["meta_data"][scoreindex.ix].taken_at)
+                )}
               </div>
             </div>
           </div>
