@@ -292,6 +292,7 @@
   }
 
   let loading = false;
+  let showFaceDetection = false
 </script>
 
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
@@ -349,6 +350,7 @@
           alt="image"
         />
 
+        {#if showFaceDetection}
         <!-- TODO: calculate scale -->
         {#each scaled_face_bboxes as box, i}
           <!-- svelte-ignore missing-declaration -->
@@ -375,7 +377,9 @@
           <Tooltip>{imageCard.person[i]}</Tooltip>
         {/each}
 
-        <div class="absolute flex justify-center bottom-0">
+        {/if}
+
+        <!-- <div class="absolute flex justify-center bottom-0">
           <div class="flex gap-4">
             {#if typeof imageCard.person === "string"}
               {#if imageCard.person !== "no person detected"}
@@ -411,7 +415,7 @@
               {/each}
             {/if}
           </div>
-        </div>
+        </div> -->
 
         <!-- Add navigation buttons -->
         <button
@@ -473,6 +477,16 @@
           <Tooltip>Fullscreen</Tooltip>
           <button
             on:click={() => {
+              showFaceDetection = !showFaceDetection
+            }}
+            class="rounded {showFaceDetection ? 'bg-yellow-500' : ''} w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+          >
+            <i class="fa fa-face-smile"></i>
+          </button>
+          <Tooltip>Face Detection</Tooltip>
+          <button
+            on:click={() => {
+              showFaceDetection = false
               imageModal = false;
             }}
             class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
