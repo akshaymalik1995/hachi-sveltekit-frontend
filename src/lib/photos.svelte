@@ -32,11 +32,12 @@
   import TopLoading from "./TopLoading.svelte";
   import { onDestroy, onMount } from "svelte";
 
+  export let sortDescending = false;
   export let images_data;
   export let isSearch = false;
   console.log("IMAGES DATA", images_data);
   if (!isSearch) {
-    images_data = sortImageDataByDate(images_data);
+    images_data = sortImageDataByDate(images_data, sortDescending);
   }
 
   let imageModalContainer;
@@ -52,7 +53,7 @@
   $: {
     imagesloadedcount = 50;
     if (!isSearch) {
-      images_data = sortImageDataByDate(images_data);
+      images_data = sortImageDataByDate(images_data, sortDescending);
     } else {
       images_data = images_data;
     }
@@ -312,8 +313,17 @@
   let loading = false;
   let showFaceDetection = false;
   let photoDetailsModal = false;
-  let sortDescending = true;
+  let filterModal = false;
   let imageLoading = false;
+
+  let filterFormData = {
+    startDate: null,
+    endDate: null,
+  };
+
+  function handleFilterSubmit(event) {
+    console.log(filterFormData)
+  }
 
   function handlekeydown(event) {
     if (!imageModal) return;
@@ -327,6 +337,49 @@
 
 <Modal bind:open={photoDetailsModal} size="md">
   <PhotoDetail photoDetails={imageCard} />
+</Modal>
+
+<Modal
+  bodyClass="p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain min-h-[75vh]"
+  bind:open={filterModal}
+  size="md"
+  autoclose={false}
+  class="w-full"
+>
+  <form
+    on:submit={handleFilterSubmit}
+    id="filterForm"
+    class="flex flex-col space-y-6"
+    action="#"
+  >
+    <div class="grid grid-cols-2 gap-2">
+      <Label class="space-y-2">
+        <span>Start Date</span>
+        <Input
+          type="date"
+          bind:value={filterFormData.startDate}
+          class="w-full border border-gray-300 p-2 rounded-md"
+        />
+      </Label>
+      <Label class="space-y-2">
+        <span>End Date</span>
+        <Input
+          type="date"
+          bind:value={filterFormData.endDate}
+          class="w-full border border-gray-300 p-2 rounded-md"
+        />
+      </Label>
+    </div>
+
+    <button
+      type="submit"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+    >
+      
+        Filter
+      
+    </button>
+  </form>
 </Modal>
 
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
@@ -509,6 +562,17 @@
           </svg>
         </button>
 
+        <button
+          on:click={() => {
+            showFaceDetection = false;
+            imageModal = false;
+          }}
+          class="absolute top-9 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+        >
+          <i class="fa fa-xmark"></i>
+        </button>
+        <Tooltip>Close</Tooltip>
+
         <!-- Add icons for fullscreen, edit, open in file, favorite -->
         <div class="absolute inset-x-0 top-4 flex justify-center space-x-4">
           <button
@@ -540,16 +604,6 @@
             <i class="fa fa-face-smile"></i>
           </button>
           <Tooltip>Face Detection</Tooltip>
-          <button
-            on:click={() => {
-              showFaceDetection = false;
-              imageModal = false;
-            }}
-            class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
-          >
-            <div><CloseCircleOutline /></div>
-          </button>
-          <Tooltip>Close</Tooltip>
         </div>
       </div>
     </div>
@@ -558,15 +612,26 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div
-  on:click={() => {
-    sortDescending = !sortDescending;
-    images_data = sortImageDataByDate(images_data, sortDescending);
-  }}
-  class="flex cursor-pointer items-center gap-2 mb-4"
->
-  <span>Sort</span>
-  <i class="fa fa-sort"></i>
+<div class="flex justify-between my-8">
+  {#if !isSearch}
+    <div
+      on:click={() => {
+        sortDescending = !sortDescending;
+        images_data = sortImageDataByDate(images_data, sortDescending);
+      }}
+      class="flex cursor-pointer items-center gap-2"
+    >
+      <span>Sort</span>
+      <i class="fa fa-sort"></i>
+    </div>
+  {/if}
+  <div
+    on:click={() => {
+      filterModal = true;
+    }}
+  >
+    <button>Filter <i class="fa fa-filter"></i></button>
+  </div>
 </div>
 
 <div class="">
@@ -583,7 +648,7 @@
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
               loading="lazy"
-              class="w-64 h-64 shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
+              class="w-[19vw] h-[19vw] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
               src={DOMAIN +
                 "/getRawData/" +
                 images_data["data_hash"][scoreindex.ix]}
@@ -594,7 +659,7 @@
               class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
             >
               <div>
-                {#if $likedImagesStore["data_hash"].includes($imagesDataStore["data_hash"][scoreindex.ix])}
+                {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
                   <div
                     on:click={(event) => handleImageLike(event, "false", index)}
                     class={"cursor-pointer"}

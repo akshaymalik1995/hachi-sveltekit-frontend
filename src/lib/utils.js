@@ -90,7 +90,7 @@ export function parseDate(dateString) {
     return new Date(formattedDateString);
 }
 
-export function sortImageDataByDate(data, descending = true) {
+export function sortImageDataByDate(data, descending = false) {
     const combinedData = data.meta_data.map((meta_data, index) => ({
         meta_data: meta_data,
         data_hash: data.data_hash[index],

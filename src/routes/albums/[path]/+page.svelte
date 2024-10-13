@@ -11,10 +11,10 @@
 
 
 
-<div class="px-16">
+<div class="">
 <div class="flex justify-center items-center">
     <button class="bg-gray-800 hover:bg-gray-700 text-gray-500 font-bold py-2 px-4 rounded" onclick="window.history.back()">Back</button>
-    <div class="text-4xl grow py-8 text-center">{path}</div>
+    <div class="text-4xl grow p-8">{path}</div>
 </div>
 <Photos images_data={imagesdata} />
 </div>

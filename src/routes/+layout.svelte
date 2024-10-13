@@ -27,7 +27,7 @@
 <div class="flex">
     <Sidebar />
     <div class='grow  w-full bg-gray-900 text-white mx-auto'>
-        <div class='relative max-w-[1600px] w-full  mx-auto'>
+        <div class='relative px-8 max-w-[1600px] w-full  mx-auto'>
             <slot />
         </div>
         
