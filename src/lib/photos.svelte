@@ -22,15 +22,27 @@
   } from "flowbite-svelte-icons";
   import InfiniteScroll from "./InfiniteScroll.svelte";
   import { DOMAIN } from "$lib/stores";
-  import { getMonthYear, parseDate, getDateString} from "$lib/utils"
+  import {
+    getMonthYear,
+    parseDate,
+    getDateString,
+    sortImageDataByDate,
+  } from "$lib/utils";
 
   export let images_data;
+  export let isSearch = false;
   console.log("IMAGES DATA", images_data);
+  if (!isSearch) {
+    images_data = sortImageDataByDate(images_data);
+  }
 
   $: {
-    console.log($imagesDataStore);
     imagesloadedcount = 50;
-    images_data = images_data;
+    if (!isSearch) {
+      images_data = sortImageDataByDate(images_data);
+    } else {
+      images_data = images_data;
+    }
   }
 
   let imagesloadedcount = 50;
@@ -263,16 +275,17 @@
         });
         loading = false;
         formModal = false;
-        const updateIndex = $imagesDataStore["meta_data"].findIndex(item => {
-          return item.absolute_path === imageCard.absolute_path
-        })
-        $imagesDataStore["meta_data"][updateIndex].person = imageCard.person.map((item) =>
-          item === old_person_id ? new_person_id : item
-        );
+        const updateIndex = $imagesDataStore["meta_data"].findIndex((item) => {
+          return item.absolute_path === imageCard.absolute_path;
+        });
+        $imagesDataStore["meta_data"][updateIndex].person =
+          imageCard.person.map((item) =>
+            item === old_person_id ? new_person_id : item
+          );
         imageCard.person = imageCard.person.map((item) =>
           item === old_person_id ? new_person_id : item
         );
-        
+
         alert("Success");
       }
     });
@@ -312,7 +325,7 @@
     </button>
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       <a
-        href={"/search?person" + imageCard.person[current_box_ix] }
+        href={"/search?person" + imageCard.person[current_box_ix]}
         class="text-primary-700 hover:underline dark:text-primary-500"
       >
         See all pictures
@@ -494,29 +507,30 @@
               alt="image"
             />
             <!-- Add like icon at the bottom -->
-            <div class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2">
+            <div
+              class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
+            >
               <div>
                 {#if $likedImagesStore["data_hash"].includes($imagesDataStore["data_hash"][scoreindex.ix])}
-                <div
-                  on:click={(event) => handleImageLike(event, "false", index)}
-                  class={"cursor-pointer"}
-                >
-                  <HeartSolid color="white" />
-                </div>
-              {:else}
-                <div
-                  on:click={(event) => handleImageLike(event, "true", index)}
-                  class={"cursor-pointer"}
-                >
-                  <HeartOutline />
-                </div>
-              {/if}
+                  <div
+                    on:click={(event) => handleImageLike(event, "false", index)}
+                    class={"cursor-pointer"}
+                  >
+                    <HeartSolid color="white" />
+                  </div>
+                {:else}
+                  <div
+                    on:click={(event) => handleImageLike(event, "true", index)}
+                    class={"cursor-pointer"}
+                  >
+                    <HeartOutline />
+                  </div>
+                {/if}
               </div>
 
               <div>
                 {getDateString(parseDate(getImageMetaData(index).taken_at))}
               </div>
-              
             </div>
           </div>
         </div>

@@ -35,8 +35,8 @@ export function argSort(originalScoreIndex, new_scores, mask = [1], key = null) 
         }
     }
 
-     // If there are remaining elements in sortedArray, add them
-     while (i < originalScoreIndex.length) {
+    // If there are remaining elements in sortedArray, add them
+    while (i < originalScoreIndex.length) {
         mergedScores.push(originalScoreIndex[i]);
         i++;
     }
@@ -88,4 +88,25 @@ export function parseDate(dateString) {
 
     // Parse the formatted date string
     return new Date(formattedDateString);
+}
+
+export function sortImageDataByDate(data) {
+    const combinedData = data.meta_data.map((meta_data, index) => ({
+        meta_data: meta_data,
+        data_hash: data.data_hash[index],
+        score: data.score[index],
+        scoreIndex: {ix: index, score : data.score[index]}
+    }));
+
+    combinedData.sort((a, b) => parseDate(b.meta_data.taken_at).getTime() - parseDate(a.meta_data.taken_at));
+
+    const sortedData = {
+        meta_data: combinedData.map(item => item.meta_data),
+        data_hash: combinedData.map(item => item.data_hash),
+        score: combinedData.map(item => item.score),
+        scoreIndex: combinedData.map(item => item.scoreIndex),
+        
+    };
+
+    return sortedData
 }
