@@ -28,6 +28,7 @@
     getDateString,
     sortImageDataByDate,
   } from "$lib/utils";
+  import PhotoDetail from "./PhotoDetail.svelte";
 
   export let images_data;
   export let isSearch = false;
@@ -71,6 +72,7 @@
   }
 
   function loadPrevImage(index) {
+    scaled_face_bboxes = [];
     imageCard = getImageMetaData(index);
     // update_image_card_previous();
     modalImageIndex = index;
@@ -78,6 +80,7 @@
   }
 
   function loadNextImage(index) {
+    scaled_face_bboxes = [];
     imageCard = getImageMetaData(index);
     console.log(imageCard);
     // update_image_card_next();
@@ -111,6 +114,7 @@
   let full_image_loaded = true;
 
   function scale_face_bboxes(node) {
+    if (imageCard.person === "no person detected") return;
     console.log("scale_face_bboxes called");
     let card_rects = node.target.getClientRects()[0];
     let card_width = card_rects.width;
@@ -292,8 +296,13 @@
   }
 
   let loading = false;
-  let showFaceDetection = false
+  let showFaceDetection = false;
+  let photoDetailsModal = false;
 </script>
+
+<Modal bind:open={photoDetailsModal} size="md">
+  <PhotoDetail photoDetails={imageCard} />
+</Modal>
 
 <Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
   <form
@@ -326,7 +335,7 @@
     </button>
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       <a
-        href={"/search?person" + imageCard.person[current_box_ix]}
+        href={"/search?person=" + imageCard.person[current_box_ix]}
         class="text-primary-700 hover:underline dark:text-primary-500"
       >
         See all pictures
@@ -351,32 +360,31 @@
         />
 
         {#if showFaceDetection}
-        <!-- TODO: calculate scale -->
-        {#each scaled_face_bboxes as box, i}
-          <!-- svelte-ignore missing-declaration -->
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div
-            on:click={(e) => {
-              tag_interface = {
-                active: true,
-                top: box.top - 28,
-                left: box.left,
-              };
-              current_box_ix = Number(e.target.attributes["data-ix"].value);
-              console.log("current_box_ix", current_box_ix);
-              // if (imageCard.person instanceof Object){
-              //   window.open("/search?person=" + imageCard.person[current_box_ix])
-              // }
-              formModal = true;
-            }}
-            data-ix={i}
-            class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
-            style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
-          ></div>
-          <Tooltip>{imageCard.person[i]}</Tooltip>
-        {/each}
-
+          <!-- TODO: calculate scale -->
+          {#each scaled_face_bboxes as box, i}
+            <!-- svelte-ignore missing-declaration -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div
+              on:click={(e) => {
+                tag_interface = {
+                  active: true,
+                  top: box.top - 28,
+                  left: box.left,
+                };
+                current_box_ix = Number(e.target.attributes["data-ix"].value);
+                console.log("current_box_ix", current_box_ix);
+                // if (imageCard.person instanceof Object){
+                //   window.open("/search?person=" + imageCard.person[current_box_ix])
+                // }
+                formModal = true;
+              }}
+              data-ix={i}
+              class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
+              style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
+            ></div>
+            <Tooltip>{imageCard.person[i]}</Tooltip>
+          {/each}
         {/if}
 
         <!-- <div class="absolute flex justify-center bottom-0">
@@ -461,11 +469,14 @@
         <!-- Add icons for fullscreen, edit, open in file, favorite -->
         <div class="absolute inset-x-0 top-4 flex justify-center space-x-4">
           <button
+            on:click={() => {
+              photoDetailsModal = true;
+            }}
             class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
           >
             <EditOutline />
           </button>
-          <Tooltip>Edit Details</Tooltip>
+          <Tooltip>Details</Tooltip>
           <button
             on:click={() => {
               imageview.requestFullscreen();
@@ -477,16 +488,18 @@
           <Tooltip>Fullscreen</Tooltip>
           <button
             on:click={() => {
-              showFaceDetection = !showFaceDetection
+              showFaceDetection = !showFaceDetection;
             }}
-            class="rounded {showFaceDetection ? 'bg-yellow-500' : ''} w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+            class="rounded {showFaceDetection
+              ? 'bg-yellow-500'
+              : ''} w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
           >
             <i class="fa fa-face-smile"></i>
           </button>
           <Tooltip>Face Detection</Tooltip>
           <button
             on:click={() => {
-              showFaceDetection = false
+              showFaceDetection = false;
               imageModal = false;
             }}
             class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
