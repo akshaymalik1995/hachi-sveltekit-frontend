@@ -612,26 +612,26 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="flex justify-between my-8">
+<div class="flex justify-between my-4">
   {#if !isSearch}
     <div
       on:click={() => {
         sortDescending = !sortDescending;
         images_data = sortImageDataByDate(images_data, sortDescending);
       }}
-      class="flex cursor-pointer items-center gap-2"
+      class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-base font-medium p-2 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
     >
       <span>Sort</span>
-      <i class="fa fa-sort"></i>
+      <i class="fa fa-sort ml-2"></i>
     </div>
   {/if}
-  <div
+  <!-- <div
     on:click={() => {
       filterModal = true;
     }}
   >
     <button>Filter <i class="fa fa-filter"></i></button>
-  </div>
+  </div> -->
 </div>
 
 <div class="">
