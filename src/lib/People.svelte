@@ -41,11 +41,11 @@
   }
 
   $: {
-    imagesloadedcount = 20;
+    imagesloadedcount = 40;
   }
-  let imagesloadedcount = 20;
+  let imagesloadedcount = 40;
   function loadMoreImages() {
-    imagesloadedcount += 20;
+    imagesloadedcount += 40;
   }
 </script>
 

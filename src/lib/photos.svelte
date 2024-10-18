@@ -31,7 +31,7 @@
   import PhotoDetail from "./PhotoDetail.svelte";
   import TopLoading from "./TopLoading.svelte";
   import { onDestroy, onMount } from "svelte";
-
+  console.log("people", $peopleListStore)
   export let sortDescending = false;
   export let images_data;
   let filtered_images_data = structuredClone(
@@ -328,21 +328,27 @@
     day: null,
     month: null,
     year: null,
+    person: null
   };
 
   function filterImages(images_data){
     const selectedmonth = filterFormData.month;
     const selectedday = filterFormData.day;
     const selectedyear = filterFormData.year;
+    const selectedperson = filterFormData.person
     if (!filterOn) return images_data
     filtered_images_data.scoreIndex = images_data.scoreIndex.filter(
       (scoreIndex) => {
         let monthmatched = true;
         let daymatched = true;
         let yearmatched = true;
+        let personmatched = true
         const ix = scoreIndex.ix;
         const metadata = images_data.meta_data[ix];
         const metadatadate = parseDate(metadata.taken_at);
+        if (selectedperson) {
+          personmatched = metadata.person.includes(selectedperson)
+        }
         if (selectedmonth) {
           monthmatched = metadatadate.getMonth() === +selectedmonth;
         }
@@ -355,7 +361,7 @@
           yearmatched = metadatadate.getFullYear() === +selectedyear;
         }
         filterModal = false;
-        return monthmatched && daymatched && yearmatched;
+        return monthmatched && daymatched && yearmatched && personmatched;
       }
     );
     return filtered_images_data
@@ -380,6 +386,7 @@
     filterFormData.day = null;
     filterFormData.month = null;
     filterFormData.year = null;
+    filterFormData.person = null
     filtered_images_data = structuredClone(images_data);
     filterOn = false;
   }
@@ -445,6 +452,23 @@
         </select>
       </Label>
     </div>
+
+    <Label class="space-y-2">
+      <span>Person</span>
+      <select
+        bind:value={filterFormData.person}
+        class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+      >
+        {#each $peopleListStore as person}
+         {#if (!person.startsWith("no") && !person.startsWith("id"))}
+          <option>{person}</option>
+          {/if}
+        {/each}
+      </select>
+    </Label>
+   
+  
+    
 
     <div class="grid grid-cols-1 gap-4">
       <button
