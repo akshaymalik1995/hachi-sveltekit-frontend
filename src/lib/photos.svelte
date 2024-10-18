@@ -317,8 +317,9 @@
   let imageLoading = false;
 
   let filterFormData = {
-    startDate: null,
-    endDate: null,
+    day: null,
+    month: null,
+    year: null
   };
 
   function handleFilterSubmit(event) {
@@ -354,7 +355,7 @@
     <div class="grid grid-cols-3 gap-2">
       <Label class="space-y-2">
         <span>Day</span>
-        <select class="w-full border bg-gray-800 border-gray-300 p-2 rounded-md">
+        <select bind:value={filterFormData.day} class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md">
           {#each Array.from({ length: 31 }, (_, i) => i + 1) as day}
             <option>{day}</option>
           {/each}
@@ -362,7 +363,7 @@
       </Label>
       <Label class="space-y-2">
         <span>Month</span>
-        <select class="w-full border bg-gray-800 border-gray-300 p-2 rounded-md">
+        <select bind:value={filterFormData.month} class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md">
           <option>January</option>
           <option>February</option>
           <option>March</option>
@@ -379,7 +380,7 @@
       </Label>
       <Label class="space-y-2">
         <span>Year</span>
-        <select class="w-full border bg-gray-800 border-gray-300 p-2 rounded-md">
+        <select bind:value={filterFormData.year} class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md">
           {#each Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i) as year}
             <option>{year}</option>
           {/each}
