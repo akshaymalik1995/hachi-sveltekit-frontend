@@ -334,6 +334,7 @@
 
   function handleFilterSubmit(event) {
     event.preventDefault();
+    filterOn = true
     const selectedmonth = filterFormData.month;
     const selectedday = filterFormData.day;
     const selectedyear = filterFormData.year;
@@ -696,7 +697,6 @@
     <div
       class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
       on:click={() => {
-        filterOn = true;
         filterModal = true;
       }}
     >
