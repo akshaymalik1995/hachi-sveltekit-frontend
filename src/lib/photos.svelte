@@ -500,7 +500,7 @@
     <Label class="space-y-2">
       <span>Name</span>
       <Input
-        value={imageCard.person[current_box_ix]}
+        value={typeof imageCard.person === "string" ? imageCard.person : imageCard.person[current_box_ix]}
         type="name"
         name="name"
         placeholder="Akshay..."
@@ -521,7 +521,7 @@
     </button>
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       <a
-        href={"/search?person=" + imageCard.person[current_box_ix]}
+        href={"/search?person=" +  (imageCard.person === "string" ? imageCard.person : imageCard.person[current_box_ix])}
         class="text-primary-700 hover:underline dark:text-primary-500"
       >
         See all pictures
@@ -587,7 +587,7 @@
               class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
               style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
             ></div>
-            <Tooltip>{imageCard.person[i]}</Tooltip>
+            <Tooltip>{typeof imageCard.person === "string" ? imageCard.person : imageCard.person[i]}</Tooltip>
           {/each}
         {/if}
 
