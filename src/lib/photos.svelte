@@ -34,7 +34,9 @@
 
   export let sortDescending = false;
   export let images_data;
-  let filtered_images_data = structuredClone(sortImageDataByDate(images_data, sortDescending));
+  let filtered_images_data = structuredClone(
+    sortImageDataByDate(images_data, sortDescending)
+  );
   export let isSearch = false;
   console.log("IMAGES DATA", images_data);
   if (!isSearch) {
@@ -53,20 +55,22 @@
 
   $: {
     imagesloadedcount = 50;
-    console.log("DATA CHANGES")
+    console.log("DATA CHANGES");
     if (!isSearch) {
-      filtered_images_data = sortImageDataByDate(filtered_images_data, sortDescending);
-    } 
-    else {
+      filtered_images_data = sortImageDataByDate(
+        filtered_images_data,
+        sortDescending
+      );
+    } else {
       if (!filterOn) {
-        console.log("Resetting images data")
-        filtered_images_data = structuredClone(images_data)
+        console.log("Resetting images data");
+        filtered_images_data = structuredClone(images_data);
       }
     }
   }
 
   let imagesloadedcount = 50;
-  let filterOn = false
+  let filterOn = false;
   let imageModal = false;
 
   let imageCard = {};
@@ -325,35 +329,37 @@
   let filterFormData = {
     day: null,
     month: null,
-    year: null
+    year: null,
   };
 
   function handleFilterSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
     const selectedmonth = filterFormData.month;
     const selectedday = filterFormData.day;
     const selectedyear = filterFormData.year;
-    filtered_images_data.scoreIndex = images_data.scoreIndex.filter((scoreIndex) => {
-      let monthmatched = true
-      let daymatched = true
-      let yearmatched = true
-      const ix = scoreIndex.ix;
-      const metadata = images_data.meta_data[ix];
-      const metadatadate = parseDate(metadata.taken_at);
-      if (selectedmonth) {
-        monthmatched = metadatadate.getMonth() === +selectedmonth;
-      }
-      
-      if (selectedday){
-        daymatched = metadatadate.getDate() === +selectedday;
-      }
+    filtered_images_data.scoreIndex = images_data.scoreIndex.filter(
+      (scoreIndex) => {
+        let monthmatched = true;
+        let daymatched = true;
+        let yearmatched = true;
+        const ix = scoreIndex.ix;
+        const metadata = images_data.meta_data[ix];
+        const metadatadate = parseDate(metadata.taken_at);
+        if (selectedmonth) {
+          monthmatched = metadatadate.getMonth() === +selectedmonth;
+        }
 
-      if (selectedyear){
-        yearmatched = metadatadate.getFullYear() === +selectedyear
+        if (selectedday) {
+          daymatched = metadatadate.getDate() === +selectedday;
+        }
+
+        if (selectedyear) {
+          yearmatched = metadatadate.getFullYear() === +selectedyear;
+        }
+        filterModal = false;
+        return monthmatched && daymatched && yearmatched;
       }
-      filterModal = false
-      return monthmatched && daymatched && yearmatched;
-    });
+    );
   }
 
   function handlekeydown(event) {
@@ -365,12 +371,12 @@
     }
   }
 
-  function clearFilters(){
+  function clearFilters() {
     filterFormData.day = null;
     filterFormData.month = null;
     filterFormData.year = null;
     filtered_images_data = structuredClone(images_data);
-    filterOn = false
+    filterOn = false;
   }
 </script>
 
@@ -393,7 +399,10 @@
     <div class="grid grid-cols-3 gap-2">
       <Label class="space-y-2">
         <span>Day</span>
-        <select bind:value={filterFormData.day} class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md">
+        <select
+          bind:value={filterFormData.day}
+          class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+        >
           {#each Array.from({ length: 31 }, (_, i) => i + 1) as day}
             <option>{day}</option>
           {/each}
@@ -401,7 +410,10 @@
       </Label>
       <Label class="space-y-2">
         <span>Month</span>
-        <select bind:value={filterFormData.month} class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md">
+        <select
+          bind:value={filterFormData.month}
+          class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+        >
           <option value="0">January</option>
           <option value="1">February</option>
           <option value="2">March</option>
@@ -418,7 +430,10 @@
       </Label>
       <Label class="space-y-2">
         <span>Year</span>
-        <select bind:value={filterFormData.year} class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md">
+        <select
+          bind:value={filterFormData.year}
+          class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+        >
           {#each Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i) as year}
             <option>{year}</option>
           {/each}
@@ -437,7 +452,7 @@
         type="button"
         class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
         on:click={() => {
-          clearFilters()
+          clearFilters();
         }}
       >
         Clear
@@ -676,27 +691,41 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="flex justify-between my-4">
+<div class="flex justify-between items-center my-4">
+  <div class="flex items-center gap-2" >
+    <div
+      class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+      on:click={() => {
+        filterOn = true;
+        filterModal = true;
+      }}
+    >
+      <button>Filter <i class="fa fa-filter ml-2"></i></button>
+    </div>
+    {#if filterOn}
+      <div>
+        <button
+          class="ml-2 bg-red-500 hover:bg-red-700 text-white text-sm py-1 px-2 rounded"
+          on:click={clearFilters}
+        >
+          Clear
+        </button>
+      </div>
+    {/if}
+  </div>
+
   {#if !isSearch}
     <div
       on:click={() => {
         sortDescending = !sortDescending;
         images_data = sortImageDataByDate(images_data, sortDescending);
       }}
-      class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-base font-medium p-2 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+      class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm text-xs p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
     >
       <span>Sort</span>
       <i class="fa fa-sort ml-2"></i>
     </div>
   {/if}
-  <div
-    on:click={() => {
-      filterOn = true
-      filterModal = true;
-    }}
-  >
-    <button>Filter <i class="fa fa-filter"></i></button>
-  </div>
 </div>
 
 <div class="">
