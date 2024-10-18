@@ -34,6 +34,7 @@
 
   export let sortDescending = false;
   export let images_data;
+  let filtered_images_data = structuredClone(sortImageDataByDate(images_data, sortDescending));
   export let isSearch = false;
   console.log("IMAGES DATA", images_data);
   if (!isSearch) {
@@ -52,11 +53,13 @@
 
   $: {
     imagesloadedcount = 50;
+    console.log("DATA CHANGES")
     if (!isSearch) {
-      images_data = sortImageDataByDate(images_data, sortDescending);
-    } else {
-      images_data = images_data;
-    }
+      filtered_images_data = sortImageDataByDate(filtered_images_data, sortDescending);
+    } 
+    // else {
+    //   filtered_images_data = images_data
+    // }
   }
 
   let imagesloadedcount = 50;
@@ -66,12 +69,12 @@
   let imageCard = {};
 
   function getImageMetaData(index) {
-    const { ix } = images_data.scoreIndex[index];
+    const { ix } = filtered_images_data.scoreIndex[index];
     return images_data.meta_data[ix];
   }
 
   function getImageData(index) {
-    const { ix } = images_data.scoreIndex[index];
+    const { ix } = filtered_images_data.scoreIndex[index];
     return {
       meta_data: images_data.meta_data[ix],
       data_hash: images_data.data_hash[ix],
@@ -104,7 +107,7 @@
   }
 
   function getImageHash(index) {
-    const { ix } = images_data.scoreIndex[index];
+    const { ix } = filtered_images_data.scoreIndex[index];
     return images_data.data_hash[ix];
   }
 
@@ -323,7 +326,32 @@
   };
 
   function handleFilterSubmit(event) {
-    console.log(filterFormData)
+    event.preventDefault()
+    filterModal = false
+    const selectedmonth = filterFormData.month;
+    const selectedday = filterFormData.day;
+    const selectedyear = filterFormData.year;
+    filtered_images_data.scoreIndex = images_data.scoreIndex.filter((scoreIndex) => {
+      let monthmatched = true
+      let daymatched = true
+      let yearmatched = true
+      const ix = scoreIndex.ix;
+      const metadata = images_data.meta_data[ix];
+      const metadatadate = parseDate(metadata.taken_at);
+      if (selectedmonth) {
+        monthmatched = metadatadate.getMonth() === +selectedmonth;
+      }
+      
+      if (selectedday){
+        daymatched = metadatadate.getDate() === +selectedday;
+      }
+
+      if (selectedyear){
+        yearmatched = metadatadate.getFullYear() === +selectedyear
+      }
+      
+      return monthmatched && daymatched && yearmatched;
+    });
   }
 
   function handlekeydown(event) {
@@ -364,18 +392,18 @@
       <Label class="space-y-2">
         <span>Month</span>
         <select bind:value={filterFormData.month} class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md">
-          <option>January</option>
-          <option>February</option>
-          <option>March</option>
-          <option>April</option>
-          <option>May</option>
-          <option>June</option>
-          <option>July</option>
-          <option>August</option>
-          <option>September</option>
-          <option>October</option>
-          <option>November</option>
-          <option>December</option>
+          <option value="0">January</option>
+          <option value="1">February</option>
+          <option value="2">March</option>
+          <option value="3">April</option>
+          <option value="4">May</option>
+          <option value="5">June</option>
+          <option value="6">July</option>
+          <option value="7">August</option>
+          <option value="8">September</option>
+          <option value="9">October</option>
+          <option value="10">November</option>
+          <option value="11">December</option>
         </select>
       </Label>
       <Label class="space-y-2">
@@ -654,7 +682,7 @@
 <div class="">
   <div class="flex justify-space-between gap-1 flex-wrap mx-auto">
     <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
-      {#each images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
+      {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
