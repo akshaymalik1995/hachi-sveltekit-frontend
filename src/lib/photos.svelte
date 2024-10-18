@@ -350,24 +350,40 @@
     on:submit={handleFilterSubmit}
     id="filterForm"
     class="flex flex-col space-y-6"
-    action="#"
   >
-    <div class="grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-3 gap-2">
       <Label class="space-y-2">
-        <span>Start Date</span>
-        <Input
-          type="date"
-          bind:value={filterFormData.startDate}
-          class="w-full border border-gray-300 p-2 rounded-md"
-        />
+        <span>Day</span>
+        <select class="w-full border bg-gray-800 border-gray-300 p-2 rounded-md">
+          {#each Array.from({ length: 31 }, (_, i) => i + 1) as day}
+            <option>{day}</option>
+          {/each}
+        </select>
       </Label>
       <Label class="space-y-2">
-        <span>End Date</span>
-        <Input
-          type="date"
-          bind:value={filterFormData.endDate}
-          class="w-full border border-gray-300 p-2 rounded-md"
-        />
+        <span>Month</span>
+        <select class="w-full border bg-gray-800 border-gray-300 p-2 rounded-md">
+          <option>January</option>
+          <option>February</option>
+          <option>March</option>
+          <option>April</option>
+          <option>May</option>
+          <option>June</option>
+          <option>July</option>
+          <option>August</option>
+          <option>September</option>
+          <option>October</option>
+          <option>November</option>
+          <option>December</option>
+        </select>
+      </Label>
+      <Label class="space-y-2">
+        <span>Year</span>
+        <select class="w-full border bg-gray-800 border-gray-300 p-2 rounded-md">
+          {#each Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i) as year}
+            <option>{year}</option>
+          {/each}
+        </select>
       </Label>
     </div>
 
@@ -625,13 +641,13 @@
       <i class="fa fa-sort ml-2"></i>
     </div>
   {/if}
-  <!-- <div
+  <div
     on:click={() => {
       filterModal = true;
     }}
   >
     <button>Filter <i class="fa fa-filter"></i></button>
-  </div> -->
+  </div>
 </div>
 
 <div class="">
