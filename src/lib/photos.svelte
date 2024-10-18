@@ -62,10 +62,8 @@
         sortDescending
       );
     } else {
-      if (!filterOn) {
         console.log("Resetting images data");
-        filtered_images_data = structuredClone(images_data);
-      }
+        filtered_images_data = structuredClone(filterImages(images_data));
     }
   }
 
@@ -332,12 +330,11 @@
     year: null,
   };
 
-  function handleFilterSubmit(event) {
-    event.preventDefault();
-    filterOn = true
+  function filterImages(images_data){
     const selectedmonth = filterFormData.month;
     const selectedday = filterFormData.day;
     const selectedyear = filterFormData.year;
+    if (!filterOn) return images_data
     filtered_images_data.scoreIndex = images_data.scoreIndex.filter(
       (scoreIndex) => {
         let monthmatched = true;
@@ -361,6 +358,13 @@
         return monthmatched && daymatched && yearmatched;
       }
     );
+    return filtered_images_data
+  }
+
+  function handleFilterSubmit(event) {
+    event.preventDefault();
+    filterOn = true
+    filterImages(images_data)
   }
 
   function handlekeydown(event) {
@@ -386,7 +390,7 @@
 </Modal>
 
 <Modal
-  bodyClass="p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain min-h-[75vh]"
+  bodyClass="p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain"
   bind:open={filterModal}
   size="md"
   autoclose={false}
@@ -442,14 +446,14 @@
       </Label>
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-4">
       <button
         type="submit"
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >
         Filter
       </button>
-      <button
+      <!-- <button
         type="button"
         class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
         on:click={() => {
@@ -457,7 +461,7 @@
         }}
       >
         Clear
-      </button>
+      </button> -->
     </div>
   </form>
 </Modal>
