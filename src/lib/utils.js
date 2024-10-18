@@ -91,27 +91,11 @@ export function parseDate(dateString) {
 }
 
 export function sortImageDataByDate(data, descending = false) {
-    const combinedData = data.meta_data.map((meta_data, index) => ({
-        meta_data: meta_data,
-        data_hash: data.data_hash[index],
-        score: data.score[index],
-        scoreIndex: {ix: index, score : data.score[index]}
-    }));
-
-    if (descending) {
-        combinedData.sort((a, b) => parseDate(b.meta_data.taken_at).getTime() - parseDate(a.meta_data.taken_at));
-    } else {
-        combinedData.sort((a, b) => parseDate(a.meta_data.taken_at).getTime() - parseDate(b.meta_data.taken_at));
-    }
-    
-
-    const sortedData = {
-        meta_data: combinedData.map(item => item.meta_data),
-        data_hash: combinedData.map(item => item.data_hash),
-        score: combinedData.map(item => item.score),
-        scoreIndex: combinedData.map(item => item.scoreIndex),
-        
-    };
-
-    return sortedData
+    data.scoreIndex.sort((a, b, index) => {
+        const time1 = parseDate(data.meta_data[a.ix].taken_at).getTime();
+        const time2 = parseDate(data.meta_data[b.ix].taken_at).getTime();
+        const diff = descending ? time2 - time1 : time1 - time2;
+        return diff
+    });
+    return data;
 }
