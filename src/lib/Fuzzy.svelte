@@ -130,7 +130,7 @@
     }
 </script>
 
-<div class="w-full p-4 mx-auto">
+<div class="w-full py-4 mx-auto">
     <div class="w-full relative place-content-center">
         <!-- A select input -->
         <form class="w-full" on:submit={handleFormSubmit} action="">

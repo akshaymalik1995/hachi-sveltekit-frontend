@@ -57,13 +57,16 @@
     if (!isSearch) {
       filtered_images_data = sortImageDataByDate(filtered_images_data, sortDescending);
     } 
-    // else {
-    //   filtered_images_data = images_data
-    // }
+    else {
+      if (!filterOn) {
+        console.log("Resetting images data")
+        filtered_images_data = structuredClone(images_data)
+      }
+    }
   }
 
   let imagesloadedcount = 50;
-
+  let filterOn = false
   let imageModal = false;
 
   let imageCard = {};
@@ -327,7 +330,6 @@
 
   function handleFilterSubmit(event) {
     event.preventDefault()
-    filterModal = false
     const selectedmonth = filterFormData.month;
     const selectedday = filterFormData.day;
     const selectedyear = filterFormData.year;
@@ -349,7 +351,7 @@
       if (selectedyear){
         yearmatched = metadatadate.getFullYear() === +selectedyear
       }
-      
+      filterModal = false
       return monthmatched && daymatched && yearmatched;
     });
   }
@@ -361,6 +363,14 @@
     } else if (event.key === "ArrowLeft") {
       loadPrevImage(modalImageIndex - 1);
     }
+  }
+
+  function clearFilters(){
+    filterFormData.day = null;
+    filterFormData.month = null;
+    filterFormData.year = null;
+    filtered_images_data = structuredClone(images_data);
+    filterOn = false
   }
 </script>
 
@@ -427,10 +437,7 @@
         type="button"
         class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
         on:click={() => {
-          filterFormData.day = null;
-          filterFormData.month = null;
-          filterFormData.year = null;
-          filtered_images_data = structuredClone(images_data);
+          clearFilters()
         }}
       >
         Clear
@@ -684,6 +691,7 @@
   {/if}
   <div
     on:click={() => {
+      filterOn = true
       filterModal = true;
     }}
   >
