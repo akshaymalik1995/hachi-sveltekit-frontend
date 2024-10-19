@@ -10,6 +10,7 @@ export const likedImagesStore = writable({})
 export const calendarImagesStore = writable({})
 export const peopleListStore = writable([])
 export const directoriesDataStore = writable({})
+export const peopleDataStore = writable({})
 
 
 

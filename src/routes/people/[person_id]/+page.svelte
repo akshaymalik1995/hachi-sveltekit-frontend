@@ -1,23 +1,21 @@
 <script>
     import Photos from "$lib/photos.svelte";
-    import {argSort} from "$lib/utils"
+    import {peopleDataStore} from "$lib/stores.js";
     import { page } from '$app/stores';
-    export let data;
-    const people_data = data.people_data
-    const person_id = $page.params.person_id
-    const imageData = people_data[person_id]
-    imageData['sortedScoreIndex'] = argSort(imageData.list_score)
-    const imagesOnAPage = 100;
-    let currentPage = 1;
-    let totalPages = Math.ceil(imageData.list_dataHash.length / imagesOnAPage);
-    let lowerIndex = (currentPage - 1) * imagesOnAPage;
-    let upperIndex = imagesOnAPage * currentPage;
-    console.log(imageData)
-    $: {
-        currentPage = Number($page.url.searchParams.get("page")) || 1;
-        lowerIndex = (currentPage - 1) * imagesOnAPage;
-        upperIndex = imagesOnAPage * currentPage;
-    }
+
+    const id = $page.params.person_id;
+    console.log(id)
+    const imagesdata = $peopleDataStore[id];
+    console.log("people data", imagesdata)
+
 </script>
 
-<Photos imageData={imageData} pageSize = {{lowerIndex : lowerIndex, upperIndex : upperIndex}} />
+
+
+<div class="">
+<div class="flex justify-center items-center">
+    <button class="bg-gray-800 hover:bg-gray-700 text-gray-500 font-bold py-2 px-4 rounded" onclick="window.history.back()">Back</button>
+    <div class="text-4xl grow p-8">{id}</div>
+</div>
+<Photos images_data={imagesdata} />
+</div>

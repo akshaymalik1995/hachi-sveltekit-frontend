@@ -48,16 +48,21 @@ export async function load({ fetch }) {
     console.log("DATA", data)
     const people_list = data.person
     for (let i = 0; i < data["meta_data"].length; i++) {
-        let personList = data['meta_data'][i]['person']
+        let personList = typeof data['meta_data'][i]['person'] === "string" ? [data['meta_data'][i]['person'] === "string"] : data['meta_data'][i]['person']
         for (let p = 0; p < personList.length; p++) {
             const person = personList[p]
 
             if (!(person in people_data)) {
                 people_data[person] = {
+                    ...initializeImageData(),
                     numOfPhotos: 0
                 }
             }
             people_data[person].numOfPhotos += 1
+            people_data[person].data_hash.push(data["data_hash"][i])
+            people_data[person].score.push(data["score"][i])
+            people_data[person].meta_data.push(data["meta_data"][i])
+            people_data[person].scoreIndex.push({ ix: people_data[person].scoreIndex.length, score: data['score'] })
 
         }
 

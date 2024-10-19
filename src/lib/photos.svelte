@@ -521,7 +521,7 @@
     </button>
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       <a
-        href={"/search?person=" +  (imageCard.person === "string" ? imageCard.person : imageCard.person[current_box_ix])}
+        href={"/people/" +  (imageCard.person === "string" ? imageCard.person : imageCard.person[current_box_ix])}
         class="text-primary-700 hover:underline dark:text-primary-500"
       >
         See all pictures
