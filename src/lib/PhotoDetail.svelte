@@ -32,7 +32,7 @@
           </li>
           <li>
             <span class="font-bold">Taken at:</span>
-            {parseDate(photoDetails.taken_at).toLocaleString("en-US", {
+            {parseDate(photoDetails).toLocaleString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",

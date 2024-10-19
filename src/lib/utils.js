@@ -76,9 +76,10 @@ export function getDateString(date) {
 }
 
 
-export function parseDate(dateString) {
+export function parseDate(metadata) {
+    let datestring = metadata.taken_at
     // Split the date string into date and time parts
-    const [date, time] = dateString.split(' ');
+    const [date, time] = datestring.split(' ');
 
     // Replace the colons with dashes in the date part
     const formattedDate = date.replace(/:/g, '-');
@@ -87,13 +88,23 @@ export function parseDate(dateString) {
     const formattedDateString = `${formattedDate} ${time}`;
 
     // Parse the formatted date string
-    return new Date(formattedDateString);
+    let parsedDate = new Date(formattedDateString);
+
+    // Check if date parsing succeeded
+    if (!isNaN(parsedDate)) {
+        return parsedDate;
+    }
+    // If parsing fails or datestring was "unknown", return empty string
+    const modified_at = metadata.modified_at
+    const modifiedDate = new Date(modified_at)
+    return modifiedDate
+
 }
 
 export function sortImageDataByDate(data, descending = false) {
     data.scoreIndex.sort((a, b, index) => {
-        const time1 = parseDate(data.meta_data[a.ix].taken_at).getTime();
-        const time2 = parseDate(data.meta_data[b.ix].taken_at).getTime();
+        const time1 = parseDate(data.meta_data[a.ix]).getTime();
+        const time2 = parseDate(data.meta_data[b.ix]).getTime();
         const diff = descending ? time2 - time1 : time1 - time2;
         return diff
     });

@@ -2,21 +2,9 @@ export const ssr = false
 export const csr = true
 // export const prerender = true
 import { imagesDataStore } from '../lib/stores'
-import { convertPathString } from '../lib/utils'
+import { convertPathString, parseDate } from '../lib/utils'
 
-function parseDate(dateString) {
-    // Split the date string into date and time parts
-    const [date, time] = dateString.split(' ');
 
-    // Replace the colons with dashes in the date part
-    const formattedDate = date.replace(/:/g, '-');
-
-    // Concatenate the date and time parts with a space in between
-    const formattedDateString = `${formattedDate} ${time}`;
-
-    // Parse the formatted date string
-    return new Date(formattedDateString);
-}
 
 function getMonthYear(date) {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -75,32 +63,37 @@ export async function load({ fetch }) {
 
         // CALENDER IMAGES DATA
         const metadata = data['meta_data'][i] // Get meta data
-        const takenAt = metadata.taken_at // Get the date
 
         // console.log(takenAt.toString())
 
-        if (takenAt && takenAt !== "unknown") {
-            const date = parseDate(takenAt) // Get date object 
-            
-            const title = getMonthYear(date) // Get December 2021
-            if (!Object.keys(calendarImagesData).includes(title)) {
-                calendarImagesData[title] = initializeImageData()
-            }
+        const date = parseDate(metadata) // Get date object 
 
-            if (title.includes(undefined)) {
-                console.log(takenAt)
-            }
-
-            calendarImagesData[title].data_hash.push(data["data_hash"][i])
-            calendarImagesData[title].score.push(data["score"][i])
-            calendarImagesData[title].meta_data.push(data["meta_data"][i])
-            calendarImagesData[title].scoreIndex.push({ ix: calendarImagesData[title].scoreIndex.length, score: data['score'][i] })
+        const title = getMonthYear(date) // Get December 2021
+        if (!Object.keys(calendarImagesData).includes(title)) {
+            calendarImagesData[title] = initializeImageData()
         }
+
+        if (title.includes(undefined)) {
+            console.log(takenAt)
+        }
+
+        calendarImagesData[title].data_hash.push(data["data_hash"][i])
+        calendarImagesData[title].score.push(data["score"][i])
+        calendarImagesData[title].meta_data.push(data["meta_data"][i])
+        calendarImagesData[title].scoreIndex.push({ ix: calendarImagesData[title].scoreIndex.length, score: data['score'][i] })
 
 
         let path = data['meta_data'][i]['absolute_path']
         let directory = path.match(/^.*[\/\\](?=[^\/\\]+$)/);
-        directory = convertPathString(directory[0])
+        if (directory) {
+            directory = convertPathString(directory[0])
+        } else {
+            let resource_directory = data['meta_data'][i]['resource_directory']
+            if (resource_directory) {
+                directory = resource_directory
+            }
+        }
+
 
         if (!(directory in directories_data)) {
             directories_data[directory] = {

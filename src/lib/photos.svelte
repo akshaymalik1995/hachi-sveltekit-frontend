@@ -345,7 +345,7 @@
         let personmatched = true
         const ix = scoreIndex.ix;
         const metadata = images_data.meta_data[ix];
-        const metadatadate = parseDate(metadata.taken_at);
+        const metadatadate = parseDate(metadata);
         if (selectedperson) {
           personmatched = metadata.person.includes(selectedperson)
         }
@@ -800,7 +800,7 @@
 
               <div>
                 {getDateString(
-                  parseDate(images_data["meta_data"][scoreindex.ix].taken_at)
+                  parseDate(images_data["meta_data"][scoreindex.ix])
                 )}
               </div>
             </div>
