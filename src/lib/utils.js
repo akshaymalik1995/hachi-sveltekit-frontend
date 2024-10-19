@@ -110,3 +110,15 @@ export function sortImageDataByDate(data, descending = true) {
     });
     return data;
 }
+
+export function parsePersonList(personList) {
+    if (typeof personList === "string") {
+        if (personList.includes(",")) {
+            personList = personList.split(",")
+        } else {
+            personList = [personList]
+        }
+    }
+    return personList
+}
+

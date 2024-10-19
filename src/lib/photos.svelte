@@ -28,6 +28,7 @@
     parseDate,
     getDateString,
     sortImageDataByDate,
+    parsePersonList,
   } from "$lib/utils";
   import PhotoDetail from "./PhotoDetail.svelte";
   import TopLoading from "./TopLoading.svelte";
@@ -280,7 +281,7 @@
     let new_person_id = event.target["name"].value;
     console.log(new_person_id);
     if (!new_person_id) return;
-    let old_person_id = imageCard.person[current_box_ix];
+    let old_person_id = parsePersonList(imageCard.person)[current_box_ix];
 
     let data = new FormData();
     data.append("new_person_id", new_person_id);
@@ -307,10 +308,10 @@
           return item.absolute_path === imageCard.absolute_path;
         });
         $imagesDataStore["meta_data"][updateIndex].person =
-          imageCard.person.map((item) =>
+        parsePersonList(imageCard.person).map((item) =>
             item === old_person_id ? new_person_id : item
           );
-        imageCard.person = imageCard.person.map((item) =>
+        imageCard.person = parsePersonList(imageCard.person).map((item) =>
           item === old_person_id ? new_person_id : item
         );
 
@@ -490,9 +491,7 @@
     <Label class="space-y-2">
       <span>Name</span>
       <Input
-        value={typeof imageCard.person === "string"
-          ? imageCard.person
-          : imageCard.person[current_box_ix]}
+        value={parsePersonList(imageCard.person)[current_box_ix]}
         type="name"
         name="name"
         placeholder="Akshay..."
@@ -514,9 +513,7 @@
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       <a
         href={"/people/" +
-          (imageCard.person === "string"
-            ? imageCard.person
-            : imageCard.person[current_box_ix])}
+          (parsePersonList(imageCard.person)[current_box_ix])}
         class="text-primary-700 hover:underline dark:text-primary-500"
       >
         See all pictures
@@ -572,10 +569,6 @@
                   left: box.left,
                 };
                 current_box_ix = Number(e.target.attributes["data-ix"].value);
-                console.log("current_box_ix", current_box_ix);
-                // if (imageCard.person instanceof Object){
-                //   window.open("/search?person=" + imageCard.person[current_box_ix])
-                // }
                 formModal = true;
               }}
               data-ix={i}
@@ -583,9 +576,7 @@
               style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
             ></div>
             <Tooltip
-              >{typeof imageCard.person === "string"
-                ? imageCard.person
-                : imageCard.person[i]}</Tooltip
+              >{parsePersonList(imageCard.person)[i]}</Tooltip
             >
           {/each}
         {/if}
@@ -779,16 +770,16 @@
 </div>
 
 <div class="">
-  <div class="flex justify-space-between gap-1 flex-wrap mx-auto">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 mx-auto">
     <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
       {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div
           on:click={() => onImageModalClick(index)}
-          class="flex bg-gray-900 justify-center rounded items-center"
+          class="flex bg-gray-900 justify-center  items-center"
         >
-          <div class="relative overflow-hidden rounded shadow-md">
+          <div class="relative overflow-hidden shadow-md">
             <!-- svelte-ignore a11y-img-redundant-alt -->
             <img
               loading="lazy"
