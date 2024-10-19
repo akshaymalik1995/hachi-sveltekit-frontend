@@ -12,6 +12,7 @@
     imagesDataStore,
     likedImagesStore,
     peopleListStore,
+    MonthNames,
   } from "$lib/stores.js";
   import {
     EditOutline,
@@ -31,7 +32,7 @@
   import PhotoDetail from "./PhotoDetail.svelte";
   import TopLoading from "./TopLoading.svelte";
   import { onDestroy, onMount } from "svelte";
-  console.log("people", $peopleListStore)
+  console.log("people", $peopleListStore);
   export let sortDescending = false;
   export let images_data;
   let filtered_images_data = structuredClone(
@@ -62,8 +63,8 @@
         sortDescending
       );
     } else {
-        console.log("Resetting images data");
-        filtered_images_data = structuredClone(filterImages(images_data));
+      console.log("Resetting images data");
+      filtered_images_data = structuredClone(filterImages(images_data));
     }
   }
 
@@ -328,29 +329,30 @@
     day: null,
     month: null,
     year: null,
-    person: null
+    person: null,
   };
 
-  function filterImages(images_data){
+  function filterImages(images_data) {
     const selectedmonth = filterFormData.month;
+    const selectedmonthindex = MonthNames.indexOf(selectedmonth);
     const selectedday = filterFormData.day;
     const selectedyear = filterFormData.year;
-    const selectedperson = filterFormData.person
-    if (!filterOn) return images_data
+    const selectedperson = filterFormData.person;
+    if (!filterOn) return images_data;
     filtered_images_data.scoreIndex = images_data.scoreIndex.filter(
       (scoreIndex) => {
         let monthmatched = true;
         let daymatched = true;
         let yearmatched = true;
-        let personmatched = true
+        let personmatched = true;
         const ix = scoreIndex.ix;
         const metadata = images_data.meta_data[ix];
         const metadatadate = parseDate(metadata);
         if (selectedperson) {
-          personmatched = metadata.person.includes(selectedperson)
+          personmatched = metadata.person.includes(selectedperson);
         }
         if (selectedmonth) {
-          monthmatched = metadatadate.getMonth() === +selectedmonth;
+          monthmatched = metadatadate.getMonth() === +selectedmonthindex;
         }
 
         if (selectedday) {
@@ -364,13 +366,13 @@
         return monthmatched && daymatched && yearmatched && personmatched;
       }
     );
-    return filtered_images_data
+    return filtered_images_data;
   }
 
   function handleFilterSubmit(event) {
     event.preventDefault();
-    filterOn = true
-    filterImages(images_data)
+    filterOn = true;
+    filterImages(images_data);
   }
 
   function handlekeydown(event) {
@@ -386,7 +388,7 @@
     filterFormData.day = null;
     filterFormData.month = null;
     filterFormData.year = null;
-    filterFormData.person = null
+    filterFormData.person = null;
     filtered_images_data = structuredClone(images_data);
     filterOn = false;
   }
@@ -426,18 +428,9 @@
           bind:value={filterFormData.month}
           class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
         >
-          <option value="0">January</option>
-          <option value="1">February</option>
-          <option value="2">March</option>
-          <option value="3">April</option>
-          <option value="4">May</option>
-          <option value="5">June</option>
-          <option value="6">July</option>
-          <option value="7">August</option>
-          <option value="8">September</option>
-          <option value="9">October</option>
-          <option value="10">November</option>
-          <option value="11">December</option>
+          {#each MonthNames as month}
+            <option value={month}>{month}</option>
+          {/each}
         </select>
       </Label>
       <Label class="space-y-2">
@@ -460,15 +453,12 @@
         class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
       >
         {#each $peopleListStore as person}
-         {#if (!person.startsWith("no") && !person.startsWith("id"))}
-          <option>{person}</option>
+          {#if !person.startsWith("no") && !person.startsWith("id")}
+            <option>{person}</option>
           {/if}
         {/each}
       </select>
     </Label>
-   
-  
-    
 
     <div class="grid grid-cols-1 gap-4">
       <button
@@ -500,7 +490,9 @@
     <Label class="space-y-2">
       <span>Name</span>
       <Input
-        value={typeof imageCard.person === "string" ? imageCard.person : imageCard.person[current_box_ix]}
+        value={typeof imageCard.person === "string"
+          ? imageCard.person
+          : imageCard.person[current_box_ix]}
         type="name"
         name="name"
         placeholder="Akshay..."
@@ -521,7 +513,10 @@
     </button>
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       <a
-        href={"/people/" +  (imageCard.person === "string" ? imageCard.person : imageCard.person[current_box_ix])}
+        href={"/people/" +
+          (imageCard.person === "string"
+            ? imageCard.person
+            : imageCard.person[current_box_ix])}
         class="text-primary-700 hover:underline dark:text-primary-500"
       >
         See all pictures
@@ -587,7 +582,11 @@
               class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
               style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
             ></div>
-            <Tooltip>{typeof imageCard.person === "string" ? imageCard.person : imageCard.person[i]}</Tooltip>
+            <Tooltip
+              >{typeof imageCard.person === "string"
+                ? imageCard.person
+                : imageCard.person[i]}</Tooltip
+            >
           {/each}
         {/if}
 
@@ -721,7 +720,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="flex justify-between items-center my-4">
-  <div class="flex items-center gap-2" >
+  <div class="flex items-center gap-2">
     <div
       class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
       on:click={() => {
@@ -730,13 +729,36 @@
     >
       <button>Filter <i class="fa fa-filter ml-2"></i></button>
     </div>
-    {#if filterOn}
+    {#if Object.values(filterFormData).filter((item) => item).length && filterOn}
+      {#each Object.entries(filterFormData) as [key, value]}
+        {#if value}
+          <div
+            class="flex items-center gap-2 text-white text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+          >
+            <span><span class="text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</span> <span>{value}</span></span>
+            <button
+              class="text-white text-sm rounded"
+              on:click={() => {
+                filterFormData[key] = null;
+                filtered_images_data = structuredClone(
+                  filterImages(images_data)
+                );
+                if (Object.values(filterFormData).filter((item) => item).length === 0) {
+                  filterOn = false;
+                }
+              }}
+            >
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        {/if}
+      {/each}
       <div>
         <button
-          class="ml-2 bg-red-500 hover:bg-red-700 text-white text-sm py-1 px-2 rounded"
+          class="ml-2 bg-gray-800 transition duration-300 ease-in-out hover:bg-gray-700 text-white text-sm py-2 px-2 rounded"
           on:click={clearFilters}
         >
-          Clear
+          Clear All
         </button>
       </div>
     {/if}
