@@ -710,116 +710,119 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="flex justify-between items-center my-4">
-  <div class="flex items-center gap-2">
-    <div
-      class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
-      on:click={() => {
-        filterModal = true;
-      }}
-    >
-      <button>Filter <i class="fa fa-filter ml-2"></i></button>
-    </div>
-    {#if Object.values(filterFormData).filter((item) => item).length && filterOn}
-      {#each Object.entries(filterFormData) as [key, value]}
-        {#if value}
-          <div
-            class="flex items-center gap-2 text-white text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
-          >
-            <span><span class="text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</span> <span>{value}</span></span>
-            <button
-              class="text-white text-sm rounded"
-              on:click={() => {
-                filterFormData[key] = null;
-                filtered_images_data = structuredClone(
-                  filterImages(images_data)
-                );
-                if (Object.values(filterFormData).filter((item) => item).length === 0) {
-                  filterOn = false;
-                }
-              }}
+{#if filtered_images_data.scoreIndex.length !== 0}
+  <div class="flex justify-between items-center my-4">
+    <div class="flex items-center gap-2">
+      <div
+        class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+        on:click={() => {
+          filterModal = true;
+        }}
+      >
+        <button>Filter <i class="fa fa-filter ml-2"></i></button>
+      </div>
+      {#if Object.values(filterFormData).filter((item) => item).length && filterOn}
+        {#each Object.entries(filterFormData) as [key, value]}
+          {#if value}
+            <div
+              class="flex items-center gap-2 text-white text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
             >
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-        {/if}
-      {/each}
-      <div>
-        <button
-          class="ml-2 bg-gray-800 transition duration-300 ease-in-out hover:bg-gray-700 text-white text-sm py-2 px-2 rounded"
-          on:click={clearFilters}
-        >
-          Clear All
-        </button>
+              <span><span class="text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</span> <span>{value}</span></span>
+              <button
+                class="text-white text-sm rounded"
+                on:click={() => {
+                  filterFormData[key] = null;
+                  filtered_images_data = structuredClone(
+                    filterImages(images_data)
+                  );
+                  if (Object.values(filterFormData).filter((item) => item).length === 0) {
+                    filterOn = false;
+                  }
+                }}
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+          {/if}
+        {/each}
+        <div>
+          <button
+            class="ml-2 bg-gray-800 transition duration-300 ease-in-out hover:bg-gray-700 text-white text-sm py-2 px-2 rounded"
+            on:click={clearFilters}
+          >
+            Clear All
+          </button>
+        </div>
+      {/if}
+    </div>
+  
+    {#if !isSearch}
+      <div
+        on:click={() => {
+          sortDescending = !sortDescending;
+          images_data = sortImageDataByDate(images_data, sortDescending);
+        }}
+        class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm text-xs p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+      >
+        <span>Sort</span>
+        <i class="fa fa-sort ml-2"></i>
       </div>
     {/if}
   </div>
-
-  {#if !isSearch}
-    <div
-      on:click={() => {
-        sortDescending = !sortDescending;
-        images_data = sortImageDataByDate(images_data, sortDescending);
-      }}
-      class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm text-xs p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
-    >
-      <span>Sort</span>
-      <i class="fa fa-sort ml-2"></i>
-    </div>
-  {/if}
-</div>
-
-<div class="">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 mx-auto">
-    <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
-      {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div
-          on:click={() => onImageModalClick(index)}
-          class="flex bg-gray-900 justify-center  items-center"
-        >
-          <div class="relative overflow-hidden shadow-md">
-            <!-- svelte-ignore a11y-img-redundant-alt -->
-            <img
-              loading="lazy"
-              class="w-[19vw] h-[19vw] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
-              src={DOMAIN +
-                "/getRawData/" +
-                images_data["data_hash"][scoreindex.ix]}
-              alt="image"
-            />
-            <!-- Add like icon at the bottom -->
-            <div
-              class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
-            >
-              <div>
-                {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
-                  <div
-                    on:click={(event) => handleImageLike(event, "false", index)}
-                    class={"cursor-pointer"}
-                  >
-                    <HeartSolid color="white" />
-                  </div>
-                {:else}
-                  <div
-                    on:click={(event) => handleImageLike(event, "true", index)}
-                    class={"cursor-pointer"}
-                  >
-                    <HeartOutline />
-                  </div>
-                {/if}
-              </div>
-
-              <div>
-                {getDateString(
-                  parseDate(images_data["meta_data"][scoreindex.ix])
-                )}
+  
+  <div class="">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 mx-auto">
+      <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
+        {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <div
+            on:click={() => onImageModalClick(index)}
+            class="flex bg-gray-900 justify-center  items-center"
+          >
+            <div class="relative overflow-hidden shadow-md">
+              <!-- svelte-ignore a11y-img-redundant-alt -->
+              <img
+                loading="lazy"
+                class="w-[19vw] h-[19vw] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
+                src={DOMAIN +
+                  "/getRawData/" +
+                  images_data["data_hash"][scoreindex.ix]}
+                alt="image"
+              />
+              <!-- Add like icon at the bottom -->
+              <div
+                class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
+              >
+                <div>
+                  {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
+                    <div
+                      on:click={(event) => handleImageLike(event, "false", index)}
+                      class={"cursor-pointer"}
+                    >
+                      <HeartSolid color="white" />
+                    </div>
+                  {:else}
+                    <div
+                      on:click={(event) => handleImageLike(event, "true", index)}
+                      class={"cursor-pointer"}
+                    >
+                      <HeartOutline />
+                    </div>
+                  {/if}
+                </div>
+  
+                <div>
+                  {getDateString(
+                    parseDate(images_data["meta_data"][scoreindex.ix])
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      {/each}
-    </InfiniteScroll>
+        {/each}
+      </InfiniteScroll>
+    </div>
   </div>
-</div>
+{/if}
+
