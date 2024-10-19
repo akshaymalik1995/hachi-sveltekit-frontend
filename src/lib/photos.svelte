@@ -33,7 +33,7 @@
   import TopLoading from "./TopLoading.svelte";
   import { onDestroy, onMount } from "svelte";
   console.log("people", $peopleListStore);
-  export let sortDescending = false;
+  export let sortDescending = true;
   export let images_data;
   let filtered_images_data = structuredClone(
     sortImageDataByDate(images_data, sortDescending)

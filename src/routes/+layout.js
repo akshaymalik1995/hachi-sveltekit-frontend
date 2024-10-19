@@ -48,7 +48,14 @@ export async function load({ fetch }) {
     console.log("DATA", data)
     const people_list = data.person
     for (let i = 0; i < data["meta_data"].length; i++) {
-        let personList = typeof data['meta_data'][i]['person'] === "string" ? [data['meta_data'][i]['person'] === "string"] : data['meta_data'][i]['person']
+        let personList = data['meta_data'][i]['person']
+        if (typeof personList === "string") {
+            if (personList.includes(",")) {
+                personList = personList.split(",")
+            } else {
+                personList = [personList]
+            }
+        }
         for (let p = 0; p < personList.length; p++) {
             const person = personList[p]
 

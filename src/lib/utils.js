@@ -102,11 +102,11 @@ export function parseDate(metadata) {
 }
 
 export function sortImageDataByDate(data, descending = true) {
-    data.scoreIndex.sort((a, b, index) => {
+    data.scoreIndex.sort((a, b) => {
         const time1 = parseDate(data.meta_data[a.ix]).getTime();
         const time2 = parseDate(data.meta_data[b.ix]).getTime();
-        const diff = descending ? time1 - time2 : time2 - time1;
-        return diff
+        const diff = descending ? time2 - time1 : time1 - time2;
+        return diff;
     });
     return data;
 }
