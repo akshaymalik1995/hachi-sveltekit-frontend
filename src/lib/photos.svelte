@@ -537,10 +537,13 @@
         <img
           on:load={(event) => {
             scale_face_bboxes(event);
-            // imageLoading = false;
+            event.target.src = DOMAIN + "/getRawDataFull/" + modalimagehash;
+          }}
+          on:error={(event) => {
+            event.target.src = DOMAIN + "/getRawData/" + modalimagehash;
           }}
           class="w-auto h-full shadow-xl cursor-pointer"
-          src={DOMAIN + "/getRawDataFull/" + modalimagehash}
+          src={DOMAIN + "/getRawData/" + modalimagehash}
           alt="image"
         />
         <!-- svelte-ignore a11y-img-redundant-alt -->
@@ -581,12 +584,12 @@
           {/each}
         {/if}
 
-        <!-- <div class="absolute flex justify-center bottom-0">
+        <div class="absolute flex justify-center bottom-0">
           <div class="flex gap-4">
             {#if typeof imageCard.person === "string"}
               {#if imageCard.person !== "no person detected"}
                 <a
-                  target="_blank"
+                  
                   href={"/search?person=" + imageCard.person}
                   class="flex items-center"
                 >
@@ -602,7 +605,7 @@
               {#each imageCard.person as person}
                 {#if person !== "no person detected"}
                   <a
-                    target="_blank"
+                    
                     href={"/search?person=" + person}
                     class="flex items-center"
                   >
@@ -617,7 +620,7 @@
               {/each}
             {/if}
           </div>
-        </div> -->
+        </div>
 
         <!-- Add navigation buttons -->
         <button
