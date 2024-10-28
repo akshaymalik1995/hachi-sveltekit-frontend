@@ -9,7 +9,19 @@
 
   let loading = false;
 
-  let currentUrl = $page.url; // Get the current URL of the page. Does the current url changes automatically everytime the url changes ? And if yes what is its utility? Ideally the component will rerender only if the currentUrl is directly used in the UI
+  
+
+  let currentUrl = $page.url;
+
+  $ : {
+    console.log("URL CHANGED", $page.url);
+    currentUrl = $page.url;
+    if (currentUrl.searchParams.get("query") || currentUrl.searchParams.get("person")) {
+      console.log("Query is present");
+      text_query = createQueryFromUrl();
+      handleQuery();
+    }
+  }
 
   let filtersList = ["person", "query", "filename", "place"]; // These are the filter options we used. But why do we need it both in the Fuzzy component and here as well.
 

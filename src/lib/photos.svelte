@@ -33,6 +33,7 @@
   import PhotoDetail from "./PhotoDetail.svelte";
   import TopLoading from "./TopLoading.svelte";
   import { onDestroy, onMount } from "svelte";
+  import { goto } from "$app/navigation";
   console.log("people", $peopleListStore);
   export let sortDescending = true;
   export let images_data;
@@ -398,6 +399,8 @@
     formModal = false;
     filterModal = false;
     photoDetailsModal = false;
+    imageModalContainer = false;
+    imageModal = false;
   }
 </script>
 
@@ -597,34 +600,39 @@
           <div class="flex gap-4">
             {#if typeof imageCard.person === "string"}
               {#if imageCard.person !== "no person detected"}
-                <a
-                  
-                  href={"/search?person=" + imageCard.person}
-                  class="flex items-center"
-                >
+                
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
+                  <!-- svelte-ignore missing-declaration -->
+                  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                   <img
+                  on:click={() => {
+                    dismissAllModals();
+                    goto("/search?person=" + person);
+                  }}
                     loading="lazy"
                     src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
-                    class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
+                    class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
                     alt=""
                   />
-                </a>
+          
               {/if}
             {:else}
               {#each imageCard.person as person}
                 {#if person !== "no person detected"}
-                  <a
-                    
-                    href={"/search?person=" + person}
-                    class="flex items-center"
-                  >
+                  
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <img
+                    on:click={() => {
+                      dismissAllModals();
+                      goto("/search?person=" + person);
+                    }}
                       loading="lazy"
                       src={DOMAIN + "/getPreviewPerson/" + person}
-                      class="object-strech border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
+                      class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
                       alt=""
                     />
-                  </a>
+            
                 {/if}
               {/each}
             {/if}
