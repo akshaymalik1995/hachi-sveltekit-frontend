@@ -542,11 +542,14 @@
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img
           on:load={(event) => {
+            if (event.target.src.includes("/getRawDataFull/")) return;
             scale_face_bboxes(event);
             event.target.src = DOMAIN + "/getRawDataFull/" + modalimagehash;
           }}
           on:error={(event) => {
-            event.target.src = DOMAIN + "/getRawData/" + modalimagehash;
+            if (event.target.src.includes("/getRawDataFull/")) {
+              event.target.src = DOMAIN + "/getRawData/" + modalimagehash;
+            }
           }}
           class="w-auto h-full shadow-xl cursor-pointer"
           src={DOMAIN + "/getRawData/" + modalimagehash}
