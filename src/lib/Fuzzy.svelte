@@ -16,7 +16,10 @@
         const searchParams = currentUrl.searchParams; // Get the searchParams from the url
         const person = searchParams.get("person"); // Get the person from the searchParams
         const query = searchParams.get("query"); // Get the query from the searchParams
-        valueInput = `${person ? `@${person}` : ""} ${query ? query : ""}`; // Set the value of the search input
+        if (person || query) {
+            valueInput = `${person ? `@${person}` : ""} ${query ? query : ""}`; // Set the value of the search input
+        }
+        
     }
 
     $: {
@@ -64,7 +67,7 @@
                         on:input={handleValueChange}
                         class="px-4 py-4 bg-gray-800 text-white border rounded-md focus:outline-none h-full w-full"
                         type="search"
-                        placeholder= "Search for images"
+                        placeholder="Type @username to search by person or enter keywords"
                     />
                 </div>
 
