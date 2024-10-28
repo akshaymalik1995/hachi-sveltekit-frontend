@@ -393,6 +393,12 @@
     filtered_images_data = structuredClone(images_data);
     filterOn = false;
   }
+
+  function dismissAllModals() {
+    formModal = false;
+    filterModal = false;
+    photoDetailsModal = false;
+  }
 </script>
 
 <Modal bind:open={photoDetailsModal} size="md">
