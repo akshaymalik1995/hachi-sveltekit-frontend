@@ -61,8 +61,8 @@
   <!-- A single div element -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
-    {#each $peopleListStore.slice(0, imagesloadedcount) as id}
+  <!-- <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}> -->
+    {#each $peopleListStore as id}
       <!-- person => ['person_id', {}] -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       {#if id !== "no person detected"}
@@ -119,5 +119,5 @@
         </div>
       {/if}
     {/each}
-  </InfiniteScroll>
+  <!-- </InfiniteScroll> -->
 </div>
