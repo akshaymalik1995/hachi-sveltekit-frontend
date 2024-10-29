@@ -40,13 +40,16 @@
 
     async function handleFormSubmit(e) {
         e.preventDefault();
-        // Extract the value after @ from the input using regex and store it as person
-        // For example, if the input is "@akshay mountain", then person will be "akshay" and query will be "mountain"
+        // Extract the values after @ from the input using regex and store them as persons
+        // For example, if the input is "@akshay mountain", then persons will be ["akshay"] and query will be "mountain"
+        // The persons should be a list to allow for multiple people to be searched
+        // For example, "@akshay @john mountain" will be split into persons = ["akshay", "john"] and query = "mountain"
         const value = valueInput;
-        const person = value.match(/@(\w+)/);
-        const query = value.replace(/@(\w+)/, "").trim();
+        const persons = [...value.matchAll(/@(\w+)/g)].map(match => match[1]);
+        const query = value.replace(/@\w+/g, "").trim();
 
-        finalQuery = `person=${person ? person[1] : ""}&query=${query}`;
+        // Multiple values are separated by &
+        finalQuery = `person=${persons.join("?")}&query=${query}`;
 
         dispatch("queryReady", { query: finalQuery });
         goto("/search");
