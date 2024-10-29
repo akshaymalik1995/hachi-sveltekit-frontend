@@ -1,221 +1,205 @@
 <script>
-
-
+    import { onMount, onDestroy } from "svelte";
+    import { MonthNames } from "$lib/stores";
     
-    import {filter_metaData_store, DOMAIN} from "$lib/stores.js"
-    import {createEventDispatcher, onMount} from "svelte";
+    export let filterImages;
 
-    let filter_metaData = [];
-    export let filter_button_disabled = true;
-    filter_metaData_store.subscribe((value) =>{
-        filter_button_disabled = false;
-        filter_metaData = value;
-    })
-    const dispatch = createEventDispatcher();  // attach dispatch to this instance. 
+    let dates = [];
+    let months = [];
+    let years = [];
+    let selectedDates = [];
+    let selectedMonths = [];
+    let selectedYears = [];
+    let showDates = false;
+    let showMonths = false;
+    let showYears = false;
 
+    onMount(() => {
+        dates = Array.from({ length: 31 }, (_, i) => i + 1);
+        months = Array.from({ length: 12 }, (_, i) => i);
+        years = Array.from({ length: 25 }, (_, i) => new Date().getFullYear() - i);
 
-      const state = {
-        selectFilterActive : "",
-        
-        date : "",        
-        selectFilters : {
-          place : {
-            name : "place",
-            values : [],
-            options : [],
+        document.addEventListener('click', handleClickOutside);
+    });
 
-          }, 
-          people : {
-            name : "people",
-            values : [],  // have to add or remove to this.
-            options : [],
-          }, 
-         
-        }, 
-      }
-    
-      
+    onDestroy(() => {
+        document.removeEventListener('click', handleClickOutside);
+    });
 
-    $: if (filter_metaData){
-
-        let temp_places = filter_metaData.map((v,i) => {if(v && v.place) {return v.place}});
-        let temp_person = [];
-        filter_metaData.map((v, i) => {
-            if(v && v.person)
-                {v.person.forEach((x) => temp_person.push(x))}
-        })
-
-        let places_array = [];
-        new Set(temp_places).forEach((x) => places_array.push(x));
-
-        let person_array = [];
-        new Set(temp_person).forEach((x) => person_array.push(x));
-
-        // update the selectFilters.
-        state.selectFilters.place.values = places_array;
-        state.selectFilters.place.options = places_array;
-
-        state.selectFilters.people.values = person_array;
-        state.selectFilters.people.options = person_array;
-
-    }
-    
-      onMount(() => {
-        document.addEventListener("mouseup", resetSelectDropdown) 
-        // document.removeEventListener("mouseup", resetSelectDropdown); // should i call this on destroy ??
-      })
-    
-      function resetSelectDropdown(e) {
-        state.selectFilterActive = ""
-      }
-    
-      function handleSelectChange(filter , option) {
-        if (state.selectFilters[filter].values.includes(option)) {
-          state.selectFilters[filter].values =state.selectFilters[filter].values.filter((p) => p !== option)
-          return
-        }
-        state.selectFilters[filter].values = [option, ...state.selectFilters[filter].values]
-      }
-    
-      function changeFilterDropdown(filter){
-        if (state.selectFilterActive === filter) {
-          state.selectFilterActive = ""
-          return
-        }
-        state.selectFilterActive = filter
-      }
-
-
-function filter_base(data, value_to_compare, key = null, compare_function = ((a, b) =>{return(a === b)})){
-
-    let temp_mask = [];
-    for(let i = 0; i < data.length; i++){
-
-        if (key){
-            if (compare_function(data[i].key, value_to_compare)){
-                temp_mask.push(1);
-            }
-            else{
-                temp_mask.push(0);
-          }}
-        else{
-
-            if (compare_function(data[i], value_to_compare)){
-                temp_mask.push(1);
-            }else{
-                temp_mask.push(0)
-            }
-        }
-    }
-    return temp_mask
-}
-
-    function apply_places_filter(places_array, places_selected = []){
-        let default_mask = []
-        for(let i = 0; i < places_array.length; i++){
-            default_mask.push(0);
-        }
-        for (let i = 0; i<places_selected.length; i++){
-            let temp_indices = filter_base(places_array, places_selected[i]);
-            for(let i = 0; i < default_mask.length; i++){
-                default_mask[i] = Number(Boolean(default_mask[i]) || Boolean(temp_indices[i])); // or operation
-            }
-    }
-    return default_mask
-    }
-
-    function apply_person_filter(person_array, person_selected = []){
-        
-        let default_mask = []
-        for(let i = 0; i < person_array.length; i++){
-            default_mask.push(0);
-        }
-        for (let i = 0; i<person_selected.length; i++){
-            // compare function checks if a person id is included in the meta-data["person"] which can be null or an array .
-            let temp_indices = filter_base(person_array, person_selected[i], null, ((a,b) => {
-                                                            if(a){
-                                                                return a.includes(b);
-                                                            }
-                                                            else{
-                                                                return false;
-                                                            }
-                                                            }));
-            for(let i = 0; i < default_mask.length; i++){
-                default_mask[i] = Number(Boolean(default_mask[i]) || Boolean(temp_indices[i])); // or operation
-            }
-        }
-    return default_mask
-    }
-    
-    function apply_and_operation(mask_array){
-        let count = mask_array[0].length
-        let final_mask = mask_array[0];
-
-        mask_array.forEach((mask, i) => {
-            if(i > 0){
-                if(mask.length !== count){
-                    throw new Error("all mask must be of same length!!");
-                }
-                mask.forEach((value,j) => {final_mask[j] = Number(Boolean(final_mask[j]) && Boolean(value))})
-            }       
-        })
-        return final_mask;
-
-    }
-    function handleFiltering(){
-        
-        if (filter_metaData){
-            console.log(filter_metaData);
-
-            let places_array = [];
-            let person_array = [];
-            filter_metaData.map((v,i) => {places_array.push(v.place); person_array.push(v.person)});
-            let places_selected = state.selectFilters.place.values;
-
-            let place_mask = apply_places_filter(places_array, places_selected);
-            
-            let person_selected = state.selectFilters.people.values;
-            let people_mask = apply_person_filter(person_array, person_selected);
-
-            let final_mask = apply_and_operation([place_mask, people_mask]);
-
-            dispatch("filterApplied",{"mask":final_mask});  //send this event to parent along with filter mask, so that parent can actually apply filter.
-
+    function toggleSelection(array, value, type) {
+        let newArray;
+        if (array.includes(value)) {
+            newArray = array.filter((item) => item !== value);
+        } else {
+            newArray = [...array, value];
         }
 
+        if (type === 'dates') {
+            selectedDates = newArray;
+            showDates = false;
+        } else if (type === 'months') {
+            selectedMonths = newArray;
+            showMonths = false;
+        } else if (type === 'years') {
+            selectedYears = newArray;
+            showYears = false;
+        }
+
+        filterImages({
+            days: selectedDates,
+            months: selectedMonths,
+            years: selectedYears
+        });
+
+        return newArray;
     }
-    </script>
 
+    function toggleDropdown(type) {
+        showDates = type === 'dates' ? !showDates : false;
+        showMonths = type === 'months' ? !showMonths : false;
+        showYears = type === 'years' ? !showYears : false;
+    }
 
-<div class="flex text-white container mx-auto max-w-4xl">
-    <div class="flex justify-center items-center gap-8 p-4 flex-wrap">
+    function handleClickOutside(event) {
+        if (!event.target.closest('.dropdown')) {
+            showDates = false;
+            showMonths = false;
+            showYears = false;
+        }
+    }
 
-        <!--  data input/filter -->
-        <span class="flex items-center text-md">From: <input class="mx-2 px-2 py-1 cursor-pointer border rounded hover:bg-blue-400 bg-blue-300 text-gray-600" type="date"></span>
-        <span class="flex items-center text-md">To: <input class="mx-2 px-2 py-1 cursor-pointer border rounded hover:bg-blue-400 bg-blue-300 text-gray-600" type="date"></span>
-        
-        <!-- select filters -->
-        {#each Object.keys(state.selectFilters) as filter}
-            <div on:mouseup={(e) => e.stopPropagation()} class="relative">
-                <!-- filter name/heading -->
-                <div class="px-4 py-1 flex items-center gap-2 text-gray-600 cursor-pointer border rounded bg-blue-300 hover:bg-blue-400" on:click={() => changeFilterDropdown(filter)}>{filter} <i class="fa {state.selectFilterActive === filter ? "fa-caret-up" : "fa-caret-down"}"></i></div>
-                
-                
-                <!-- fiter values, dropdown menu thing -->
-                <div  class="{state.selectFilterActive !== filter && "hidden"} absolute flex flex-col z-10 max-w-50  p-4 rounded  bg-gray-700 text-gray-300 left-0  top-10 max-h-60 overflow-auto">
-                {#each state.selectFilters[filter].options as option}
-                    <div on:click={() => handleSelectChange(filter, option)} class="my-2 flex gap-2 items-center cursor-pointer">
-                        <div class=" flex justify-center items-center w-4 h-4 min-w-4 min-h-4 border {state.selectFilters[filter].values.includes(option) && "bg-green-400 border-none"}">
-                        {#if state.selectFilters[filter].values.includes(option)}
-                            <i class="fa fa-plus text-xs text-black"></i>
-                        {/if}
-                        </div> 
-                        <span> {option}</span>
+    function clearSelections(type) {
+        if (type === 'dates') {
+            selectedDates = [];
+        } else if (type === 'months') {
+            selectedMonths = [];
+        } else if (type === 'years') {
+            selectedYears = [];
+        } else {
+            selectedDates = [];
+            selectedMonths = [];
+            selectedYears = [];
+        }
+
+        filterImages({
+            days: selectedDates,
+            months: selectedMonths,
+            years: selectedYears
+        });
+    }
+</script>
+
+<div class="flex space-x-4">
+    <!-- Date Filter -->
+    <div class="relative inline-block dropdown">
+        <button
+            class="bg-gray-800 text-white px-4 text-sm py-2 rounded flex items-center space-x-2"
+            on:click={() => toggleDropdown('dates')}>
+            {#if selectedDates.length > 0}
+                <span>{selectedDates.join(', ')}</span>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <span
+                    class="ml-2 bg-red-600 text-white px-2 rounded cursor-pointer"
+                    on:click={(event) => {
+                        event.stopPropagation();
+                        clearSelections("dates");
+                    }}>
+                    &times;
+                </span>
+            {:else}
+                <span>Select Dates</span>
+            {/if}
+        </button>
+        {#if showDates}
+            <div class="absolute z-[100] w-64 grid grid-cols-5 gap-2 bg-gray-800 shadow-lg rounded-md mt-1 p-2">
+                {#each dates as date}
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                    <div
+                        class="px-4 py-2 {selectedDates.includes(date) ? 'bg-gray-600 rounded' : 'bg-gray-800'} cursor-pointer"
+                        on:click={() =>
+                            (selectedDates = toggleSelection(selectedDates, date, 'dates'))}>
+                        {date}
                     </div>
                 {/each}
-                </div>
             </div>
-        {/each}
-      <button disabled = "{filter_button_disabled}" on:click={handleFiltering} class="px-4 py-1 text-white rounded bg-blue-600 disabled:bg-blue-200 {filter_button_disabled === true ? "disabled": ""}">Filter</button>
+        {/if}
+    </div>
+
+    <!-- Month Filter -->
+    <div class="relative inline-block dropdown">
+        <button
+        class="bg-gray-800 text-white px-4 text-sm py-2 rounded flex items-center space-x-2"
+        on:click={() => toggleDropdown('months')}>
+        {#if selectedMonths.length > 0}
+            <span>{selectedMonths.map((item) => MonthNames[item].slice(0,3)).join(', ')}</span>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <span
+                class="ml-2 bg-red-600 text-white px-2 rounded cursor-pointer"
+                on:click={(event) => {
+                    event.stopPropagation();
+                    clearSelections("months");
+
+                }}>
+                &times;
+            </span>
+        {:else}
+            <span>Select Months</span>
+        {/if}
+    </button>
+        {#if showMonths}
+            <div class="absolute z-[100] w-96 grid grid-cols-3 gap-2 bg-gray-800 shadow-lg rounded-md mt-1 p-2">
+                {#each months as month}
+                 <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                    <div
+                        class="px-4 py-2 cursor-pointer {selectedMonths.includes(month) ? 'bg-gray-600 rounded' : 'bg-gray-800'}"
+                        on:click={() =>
+                            (selectedMonths = toggleSelection(selectedMonths, month, 'months'))}>
+                        {MonthNames[month]}
+                    </div>
+                {/each}
+            </div>
+        {/if}
+    </div>
+
+    <!-- Year Filter -->
+    <div class="relative inline-block dropdown">
+        <button
+            class="bg-gray-800 text-white px-4 text-sm py-2 rounded flex items-center space-x-2"
+            on:click={() => toggleDropdown('years')}>
+            {#if selectedYears.length > 0}
+                <span>{selectedYears.join(', ')}</span>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <span
+                    class="ml-2 bg-red-600 text-white px-2 rounded cursor-pointer"
+                    on:click={(event) => {
+                        event.stopPropagation();
+                        clearSelections("years");
+                    }}>
+                    &times;
+                </span>
+            {:else}
+                <span>Select Years</span>
+            {/if}
+        </button>
+        {#if showYears}
+            <div class="absolute z-[100] w-72 grid grid-cols-4 gap-2 bg-gray-800 shadow-lg rounded-md mt-1 p-2">
+                {#each years as year}
+                 <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- svelte-ignore a11y-no-static-element-interactions -->
+                    <div
+                        class="px-4 py-2 cursor-pointer {selectedYears.includes(year) ? 'bg-gray-600 rounded' : 'bg-gray-800'}"
+                        on:click={() =>
+                            (selectedYears = toggleSelection(selectedYears, year, 'years'))}>
+                        {year}
+                    </div>
+                {/each}
+            </div>
+        {/if}
     </div>
 </div>
+
