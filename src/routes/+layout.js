@@ -41,7 +41,7 @@ export async function load({ fetch }) {
 
     let calendarImagesData = {}
 
-    const people_data = []
+    const people_data = {}
     const directories_data = []
     const response = await fetch(DOMAIN + "/getGroup/person")
     const data = await response.json()

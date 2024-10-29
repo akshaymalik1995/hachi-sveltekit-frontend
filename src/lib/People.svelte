@@ -1,9 +1,32 @@
 <script>
   import { DOMAIN } from "$lib/stores";
   import InfiniteScroll from "$lib/InfiniteScroll.svelte";
-  import { peopleListStore } from "$lib/stores";
+  import { peopleListStore, peopleDataStore } from "$lib/stores";
   import Loading from "./Loading.svelte";
   console.log("PEOPLE LIST 2", $peopleListStore);
+
+  console.log("PEOPLE LIST 3", $peopleDataStore);
+
+  function sortPeopleList() {
+    console.log("Inside sortPeopleList");
+    let peopleList = $peopleListStore;
+    let peopleData = $peopleDataStore;
+    let sortedPeopleList = peopleList.sort((a, b) => {
+      if (!peopleData[a] || !peopleData[b]) {
+        return 0;
+      }
+      if (peopleData[a].numOfPhotos && peopleData[b].numOfPhotos){
+        return peopleData[b].numOfPhotos - peopleData[a].numOfPhotos;
+      }
+      if (peopleData[a].numOfPhotos && !peopleData[b].numOfPhotos){
+        return -1;
+      }
+      if (!peopleData[a].numOfPhotos && peopleData[b].numOfPhotos){
+        return 1;
+      }
+    });
+    return sortedPeopleList;
+  }
 
   let loading = false
 
@@ -62,7 +85,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}> -->
-    {#each $peopleListStore as id}
+    {#each sortPeopleList() as id}
       <!-- person => ['person_id', {}] -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       {#if id !== "no person detected"}
