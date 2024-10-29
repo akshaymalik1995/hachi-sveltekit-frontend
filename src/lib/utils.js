@@ -1,6 +1,5 @@
 
 export function argSort(originalScoreIndex, new_scores, mask = [1], key = null) {
-    let mergedScores = [];
     let newScoreIndex = []
     if (mask.length != 1 && mask.length != new_scores.length) {
         throw new Error("Assertion failed");
@@ -19,35 +18,13 @@ export function argSort(originalScoreIndex, new_scores, mask = [1], key = null) 
         }
     }
 
-    newScoreIndex.sort((a, b) => b.score - a.score);
+    const mergedIndex = [...originalScoreIndex, ...newScoreIndex];
 
-    let i = 0; // pointer for sortedArray
-    let j = 0; // pointer for newArray
+    mergedIndex.sort((a, b) => +b.score - +a.score);
 
-    // Merge two arrays
-    while (i < originalScoreIndex.length && j < newScoreIndex.length) {
-        if (originalScoreIndex[i].score >= newScoreIndex[j].score) {
-            mergedScores.push(originalScoreIndex[i]);
-            i++;
-        } else {
-            mergedScores.push(newScoreIndex[j]);
-            j++;
-        }
-    }
+    console.log("Merged index", mergedIndex);
 
-    // If there are remaining elements in sortedArray, add them
-    while (i < originalScoreIndex.length) {
-        mergedScores.push(originalScoreIndex[i]);
-        i++;
-    }
-
-    // If there are remaining elements in newArray, add them
-    while (j < newScoreIndex.length) {
-        mergedScores.push(newScoreIndex[j]);
-        j++;
-    }
-    console.log('merged scores', mergedScores)
-    return mergedScores;
+    return mergedIndex;
 }
 
 export function convertPathString(path) {
