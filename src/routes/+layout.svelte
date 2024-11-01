@@ -1,5 +1,6 @@
 <script>
   import Sidebar from "$lib/Sidebar.svelte";
+  import "../app.css";
   import {
     imagesDataStore,
     likedImagesStore,
@@ -43,14 +44,14 @@
 
   let drawerHidden = window.innerWidth > 1024 ? false : true;
 
-//   $: {
-//     console.log("DRAWER HIDDEN", drawerHidden);
-//     if (innerWidth > 1024) {
-//       drawerHidden = false;
-//     } else {
-//       drawerHidden = true;
-//     }
-//   }
+  function toggleDarkMode() {
+    console.log("TOGGLE DARK MODE");
+    if (document.documentElement.classList.contains("dark")) {
+      document.documentElement.classList.remove("dark");
+    } else {
+      document.documentElement.classList.add("dark");
+    }
+}
 
 </script>
 
@@ -100,16 +101,17 @@
         class="ms-auto flex items-center text-gray-500 dark:text-gray-400 sm:order-2"
       >
         <button
-          aria-label="Dark mode"
-          type="button"
-          class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
+            aria-label="Dark mode"
+            type="button"
+            class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm p-2.5"
+            on:click={toggleDarkMode}
         >
-          <span class="hidden dark:block">
-            <i class="fas fa-moon w-5 h-5"></i>
-          </span>
-          <span class="block dark:hidden">
-            <i class="fas fa-sun w-5 h-5"></i>
-          </span>
+            <span class="hidden dark:block">
+                <i class="fas fa-moon w-5 h-5"></i>
+            </span>
+            <span class="block dark:hidden">
+                <i class="fas fa-sun w-5 h-5"></i>
+            </span>
         </button>
       </div>
     </div>
