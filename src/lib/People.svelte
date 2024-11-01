@@ -79,18 +79,18 @@
 
 <!-- Display each value in group as a clickable div, later on click we would use the PHOTOS component -->
 <div
-  class="flex justify-center items-center gap-2 mb-16 py-2 flex-wrap"
+  class="flex justify-center items-center gap-5 mb-16 py-2 flex-wrap"
 >
   <!-- A single div element -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <!-- <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}> -->
-    {#each sortPeopleList() as id}
+  <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
+    {#each sortPeopleList().slice(0, imagesloadedcount) as id}
       <!-- person => ['person_id', {}] -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      {#if id !== "no person detected"}
+      {#if id !== "no_person_detected" && id !== "no-categorical-info"}
         <div
-          class="flex bg-gray-800 flex-col justify-center items-center cursor-pointer"
+          class="flex flex-col rounded-lg shadow-xl justify-center items-center cursor-pointer"
           on:click={(e) => {
             console.log("Person id is", id);
           }}
@@ -98,18 +98,19 @@
           <div>
             <a
               href={"/search?person=" + id}
-              class="flex items-center w-48 h-48 bg-gray-800"
+              class="flex rounded-lg items-center w-48 h-48 "
             >
               <img
+                
                 loading="lazy"
                 src={DOMAIN + "/getPreviewPerson/" + id}
-                class="w-48 h-48 w-full h-full bg-gray-100 border-gray-100 shadow-smr"
-                alt=""
+                class="w-48 h-48 rounded-lg bg-gray-100 shadow-sm"
+                alt={id}
               />
               
 
             </a>
-            <div
+            <!-- <div
               id = {"parent-" + id}
               class="flex py-1 text-md text-white justify-center items-center"
               on:click={(e) => {
@@ -137,10 +138,10 @@
               }}
             >
               {id.slice(0, 1).toUpperCase() + id.slice(1).toLowerCase()}
-            </div>
+            </div> -->
           </div>
         </div>
       {/if}
     {/each}
-  <!-- </InfiniteScroll> -->
+  </InfiniteScroll>
 </div>
