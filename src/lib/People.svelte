@@ -118,7 +118,7 @@
             class="p-1"
           >
            
-            <div>{id}</div>
+            <div class="dark:text-white">{id}</div>
           </a>
             
           </div>
