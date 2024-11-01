@@ -402,6 +402,16 @@
     imageModalContainer = false;
     imageModal = false;
   }
+
+  $: {
+    if (imageModal){
+      // disable scroll on body
+      document.body.style.overflow = "hidden";
+    } else {
+      // enable scroll on body
+      document.body.style.overflow = "auto";
+    }
+  }
 </script>
 
 <Modal bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
