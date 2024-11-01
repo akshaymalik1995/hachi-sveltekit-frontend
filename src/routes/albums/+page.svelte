@@ -13,7 +13,7 @@
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <div class="flex shadow-xl rounded-lg bg-gray-100 dark:bg-gray-900 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 flex-col">
-      <div class="relative rounded-t-lg overflow-hidden">
+      <div class="relative rounded-lg overflow-hidden">
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <a href={`albums/${directory}`}>
         <img

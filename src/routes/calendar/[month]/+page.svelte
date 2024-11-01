@@ -17,13 +17,9 @@
 
 <div class="">
     <div class="flex justify-center items-center">
-        <button
-          class="bg-gray-800 hover:bg-gray-700 text-gray-500 font-bold py-2 px-4 rounded"
-          onclick="window.history.back()">Back</button
-        >
-        <div class="grow text-center">
-          <div class="text-4xl -translate-x-1/2 inline-block p-8">{month.toUpperCase()}</div>
-        </div>
-      </div>
+    <div class="grow text-center">
+      <div class="text-lg sm:text-xl lg:text-4xl inline-block p-2 text-black dark:text-white">{month.toUpperCase()}</div>
+    </div>
+  </div>
     <Photos images_data={imagesdata} />
 </div>
