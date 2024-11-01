@@ -404,7 +404,7 @@
   }
 </script>
 
-<Modal bind:open={photoDetailsModal} size="md" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+<Modal bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
   <PhotoDetail photoDetails={imageCard} />
 </Modal>
 
@@ -525,7 +525,7 @@
 
 <div bind:this={imageModalContainer} class="flex justify-center items-center">
   {#if imageModal}
-    <div class="fixed z-50 bg-black inset-0">
+    <div class="fixed z-40 bg-black inset-0">
       <div
         bind:this={imageview}
         class="w-full h-full items-center flex justify-center"
