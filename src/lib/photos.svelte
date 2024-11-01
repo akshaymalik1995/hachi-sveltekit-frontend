@@ -781,21 +781,21 @@
                   {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
                     <div
                       on:click={(event) => handleImageLike(event, "false", index)}
-                      class={"cursor-pointer"}
+                      class={"text-white cursor-pointer"}
                     >
                       <HeartSolid color="white" />
                     </div>
                   {:else}
                     <div
                       on:click={(event) => handleImageLike(event, "true", index)}
-                      class={"cursor-pointer"}
+                      class={"text-white cursor-pointer"}
                     >
                       <HeartOutline />
                     </div>
                   {/if}
                 </div>
   
-                <div>
+                <div class="text-white text-xs sm:text-sm lg:text-base">
                   {getDateString(
                     parseDate(images_data["meta_data"][scoreindex.ix])
                   )}
