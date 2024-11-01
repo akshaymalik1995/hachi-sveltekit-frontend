@@ -1,5 +1,6 @@
 <script>
   import Sidebar from "$lib/Sidebar.svelte";
+  import {goto} from "$app/navigation";
   import "../app.css";
   import {
     imagesDataStore,
@@ -40,6 +41,24 @@
     $peopleDataStore = people_data;
   }
 
+  let searchInput = "";
+
+  async function handleFormSubmit(e) {
+        e.preventDefault();
+        // Extract the values after @ from the input using regex and store them as persons
+        // For example, if the input is "@akshay mountain", then persons will be ["akshay"] and query will be "mountain"
+        // The persons should be a list to allow for multiple people to be searched
+        // For example, "@akshay @john mountain" will be split into persons = ["akshay", "john"] and query = "mountain"
+        const value = searchInput.trim();
+        const persons = [...value.matchAll(/@(\w+)/g)].map(match => match[1]);
+        const query = value.replace(/@\w+/g, "").trim();
+
+        // Multiple values are separated by &
+        let finalQuery = `person=${persons.join("?")}&query=${query}`;
+        searchInput = "";
+        goto("/search?" + finalQuery);
+    }
+
   let innerWidth = window.innerWidth;
 
   let drawerHidden = window.innerWidth > 1024 ? false : true;
@@ -79,7 +98,7 @@
         >
       </a>
       <div class="hidden lg:block lg:ps-3">
-        <form>
+        <form on:submit={handleFormSubmit}>
           <div
             class="flex items-center w-full bg-gray-50 text-gray-900 dark:bg-gray-600 dark:text-white border-gray-300 dark:border-gray-500 text-sm rounded-lg mt-1 border focus-within:ring-primary-500 focus-within:border-primary-500"
           >
@@ -93,6 +112,7 @@
               class="block w-full disabled:cursor-not-allowed disabled:opacity-50 rtl:text-right p-2.5 ps-2.5 bg-transparent focus:outline-none"
               placeholder="Search"
               type="search"
+              bind:value={searchInput}
             />
           </div>
         </form>
