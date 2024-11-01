@@ -414,11 +414,13 @@
   }
 </script>
 
-<Modal bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+<Modal placement="center" title={imageCard.filename} bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
   <PhotoDetail photoDetails={imageCard} />
 </Modal>
 
 <Modal
+  placement="center"
+  title="Filter Images"
   bodyClass="p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain"
   bind:open={filterModal}
   size="md"
