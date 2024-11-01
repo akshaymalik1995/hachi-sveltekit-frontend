@@ -45,7 +45,7 @@
 		console.log('DRAWER HIDDEN INSIDE SIDEBAR', drawerHidden);
 	}
 
-	const menuItems = ["albums", 'photos' , 'search', "calendar", 'favourites', "indexing", "people" ]
+	const menuItems = ["albums", 'photos' , "people", "calendar", 'favourites','search', "indexing",  ]
 	const menuItemsData = {
 		search : {
 			icon: "search",
