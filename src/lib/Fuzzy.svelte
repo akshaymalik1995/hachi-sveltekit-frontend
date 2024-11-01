@@ -15,9 +15,11 @@
         const currentUrl = url // Get the current url
         const searchParams = currentUrl.searchParams; // Get the searchParams from the url
         const person = searchParams.get("person"); // Get the person from the searchParams
+        // Split the person by ? to get the list of persons
+        let persons = person ? person.split("?") : [];
         const query = searchParams.get("query"); // Get the query from the searchParams
         if (person || query) {
-            valueInput = `${person ? `@${person}` : ""} ${query ? query : ""}`; // Set the value of the search input
+            valueInput = `${person ? persons.map(item => `@${item}`).join(" ") : ""} ${query ? query : ""}`; // Set the value of the search input
         }
         
     }
