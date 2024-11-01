@@ -668,7 +668,7 @@
             on:click={() => {
               photoDetailsModal = true;
             }}
-            class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+            class="rounded w-8 h-8 text-white flex items-center justify-center bg-gray-800 focus:outline-none"
           >
             <EditOutline />
           </button>
@@ -677,7 +677,7 @@
             on:click={() => {
               imageview.requestFullscreen();
             }}
-            class="rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+            class="rounded w-8 h-8 text-white items-center justify-center bg-gray-800 focus:outline-none"
           >
             <div><ZoomInSolid /></div>
           </button>
@@ -686,7 +686,7 @@
             on:click={() => {
               showFaceDetection = !showFaceDetection;
             }}
-            class="rounded {showFaceDetection ? 'bg-yellow-500' : ''} w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+            class="rounded {showFaceDetection ? 'bg-yellow-500' : ''} w-8 h-8 text-white flex items-center justify-center bg-gray-800 focus:outline-none"
           >
             <i class="fa fa-face-smile"></i>
           </button>
