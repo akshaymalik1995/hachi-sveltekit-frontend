@@ -1,131 +1,115 @@
 <script>
 	import { onMount } from "svelte";
-	import {DOMAIN, likedImagesStore, calendarImagesStore, directoriesDataStore, imagesDataStore} from "$lib/stores.js"
-	import {page} from "$app/stores"
+	import { DOMAIN, likedImagesStore, calendarImagesStore, directoriesDataStore, imagesDataStore } from "$lib/stores.js";
+	import { page } from "$app/stores";
 	export const sidebarOpen = true;
 
-	let likedPhotosCount = $likedImagesStore['meta_data'].length
-	let calendarCount = Object.keys($calendarImagesStore).length
-	let albumsCount = Object.keys($directoriesDataStore).length
-	let photosCount = $imagesDataStore['meta_data'].length
+	let likedPhotosCount = $likedImagesStore['meta_data'].length;
+	let calendarCount = Object.keys($calendarImagesStore).length;
+	let albumsCount = Object.keys($directoriesDataStore).length;
+	let photosCount = $imagesDataStore['meta_data'].length;
 
-	$ : {
-		console.log($likedImagesStore)
-		menuItemsData["favourites"].count = $likedImagesStore['meta_data'].length
+	$: {
+		console.log($likedImagesStore);
+		menuItemsData["favourites"].count = $likedImagesStore['meta_data'].length;
 	}
-	
+
 	const state = {
 		sidebarOpen: sidebarOpen,
 	};
-	const menuItems = ["albums", 'photos' , 'search', "calendar", 'favourites', "indexing", "people" ]
+	const menuItems = ["albums", 'photos', 'search', "calendar", 'favourites', "indexing", "people"];
 	const menuItemsData = {
-		search : {
+		search: {
 			icon: "search",
 			path: "/search",
 			name: "Search",
 			count: "",
 		},
-		albums : {
+		albums: {
 			icon: "image",
 			path: "/albums",
 			name: "Albums",
 			count: albumsCount,
 		},
-		
-		photos : {
+		photos: {
 			icon: "image",
 			path: "/photos",
 			name: "Photos",
 			count: photosCount,
 		},
-
-		favourites : {
+		favourites: {
 			icon: "heart",
 			path: "/favourites",
 			name: "Favourites",
 			count: likedPhotosCount,
 		},
-		calendar : {
+		calendar: {
 			icon: "calendar",
 			path: "/calendar",
 			name: "Calendar",
 			count: calendarCount,
 		},
-	
-		indexing : {
+		indexing: {
 			icon: "book-atlas",
 			path: "/indexing",
 			name: "Index",
 			count: "",
 		},
-		people : {
+		people: {
 			icon: "user-tag",
 			path: "/people",
 			name: "People",
 			count: 0,
 		}
-		
-	}
+	};
 
-	let countData
+	let countData;
 
 	function openSidebar() {
-			state.sidebarOpen = true;
-		}
-		function closeSidebar() {
-			state.sidebarOpen = false;
-		}
+		state.sidebarOpen = true;
+	}
+	function closeSidebar() {
+		state.sidebarOpen = false;
+	}
 
-		async function updateMetaStats(){
-			const response = await fetch(DOMAIN + "/getMetaStats")
-			const data = await response.json()
-			console.log("DATA FETCHED TO PROVIDE IMAGES COUNT IMAGES")
-			menuItemsData.people.count = data.image.unique_people_count
-		}
+	async function updateMetaStats() {
+		const response = await fetch(DOMAIN + "/getMetaStats");
+		const data = await response.json();
+		console.log("DATA FETCHED TO PROVIDE IMAGES COUNT IMAGES");
+		menuItemsData.people.count = data.image.unique_people_count;
+	}
 
-		onMount(()=> {
-			updateMetaStats()
-		})
-
-		
-
-		
-
-	
+	onMount(() => {
+		updateMetaStats();
+	});
 </script>
 
-
-<div class="flex sticky top-0 z-10 h-screen bg-gray-800 text-white">
-	<aside  class="{state.sidebarOpen && 'w-64'}">
-		<div class="flex h-16 items-center justify-between font-semifold text-white">
-			{#if state.sidebarOpen}
-			<a href="/" class="px-4 text-3xl">Hachi</a>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<span on:click={closeSidebar} class="cursor-pointer px-4">
-				<i class="fa-solid fa-arrow-left"></i>
-			</span>
-			{:else}
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<span on:click={openSidebar} class="px-4">
-				<i class="fa-solid m-2  fa-bars cursor-pointer"></i>
-			</span>
-			{/if}
-		</div>
-		<nav class="">
-			{#each menuItems as item,i}
-			<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-700' : ''} items-center text-white space-x-2 px-4 py-3 rounded hover:bg-gray-700">
-				<i class="fa-solid m-2 fa-{menuItemsData[item].icon}"></i>
-				<!-- Hiding the names of menu items when sidebar is closed -->
-				{#if state.sidebarOpen}
-				<div class="flex w-full  justify-between">
-					<div class="flex" data-ix = {i}>{menuItemsData[item].name}</div>
-					<div class="px-3 flex  text-md text-bold">{menuItemsData[item].count}</div>
-				</div>
-				{/if}
-			</a>
-			{/each}
+<aside
+	class="fixed inset-0 z-30 flex-none h-full w-64 lg:h-auto border-e border-gray-200 dark:border-gray-600 lg:overflow-y-visible lg:pt-16 lg:block hidden"
+	aria-label="Sidebar"
+>
+	<h4 class="sr-only">Main menu</h4>
+	<div
+		class="overflow-y-auto px-3 pt-20 lg:pt-5 h-full bg-white scrolling-touch max-w-2xs lg:h-[calc(100vh-4rem)] lg:block dark:bg-gray-800 lg:me-0 lg:sticky top-2"
+	>
+	
+		<nav class="divide-y divide-gray-200 dark:divide-gray-700">
+			<ul class="pt-2 space-y-2 mb-3">
+				{#each menuItems as item, i}
+				<li>
+					<a href="{menuItemsData[item].path}" class="font-normal flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
+						<i class="fa-solid m-2 fa-{menuItemsData[item].icon}"></i>
+						<!-- Hiding the names of menu items when sidebar is closed -->
+						{#if state.sidebarOpen}
+						<div class="flex w-full justify-between">
+							<span class="ml-3">{menuItemsData[item].name}</span>
+							<span class="px-3 flex text-md text-bold">{menuItemsData[item].count}</span>
+						</div>
+						{/if}
+					</a>
+				</li>
+				{/each}
+			</ul>
 		</nav>
-	</aside>
-</div>
+	</div>
+</aside>
