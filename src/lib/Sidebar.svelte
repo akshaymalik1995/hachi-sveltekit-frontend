@@ -127,13 +127,6 @@
 		activeMainSidebar = navigation.to?.url.pathname ?? '';
 	});
 
-	let posts = [
-		{ name: 'Dashboard', icon: ChartPieOutline, href: '/dashboard' },
-	];
-
-	let links = [
-		
-	];
 
 </script>
 
@@ -145,20 +138,18 @@
 >
 	<h4 class="sr-only">Main menu</h4>
 	<SidebarWrapper
-		divClass="overflow-y-auto px-3 pt-20 lg:pt-5 h-full bg-white scrolling-touch max-w-2xs lg:h-[calc(100vh-4rem)] lg:block dark:bg-gray-800 lg:me-0 lg:sticky top-2"
+		divClass="overflow-y-auto px-3 pt-20 lg:pt-5 h-full bg-white dark:bg-gray-800 scrolling-touch max-w-2xs lg:h-[calc(100vh-4rem)] lg:block lg:me-0 lg:sticky top-2"
 	>
 		<nav class="divide-y divide-gray-200 dark:divide-gray-700">
 			<SidebarGroup ulClass={groupClass} class="mb-3">
 				{#each menuItems as item, i}
-				<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-700' : ''} items-center text-white space-x-2 px-4 py-3 rounded hover:bg-gray-700">
-					<i class="fa-solid m-2 fa-{menuItemsData[item].icon}"></i>
+				<a href="{menuItemsData[item].path}" class="flex {$page.url.pathname === menuItemsData[item].path ? 'bg-gray-200 dark:bg-gray-900' : ''} items-center text-gray-900 dark:text-gray-200 space-x-2 px-4 py-3 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+					<i class="fa-solid m-2 fa-{menuItemsData[item].icon} text-gray-500 dark:text-gray-400"></i>
 					<!-- Hiding the names of menu items when sidebar is closed -->
-					
-					<div class="flex w-full  justify-between">
-						<div class="flex" data-ix = {i}>{menuItemsData[item].name}</div>
-						<div class="px-3 flex  text-md text-bold">{menuItemsData[item].count}</div>
+					<div class="flex w-full justify-between">
+						<div class="flex" data-ix={i}>{menuItemsData[item].name}</div>
+						<div class="px-3 flex text-md text-bold text-gray-900 dark:text-gray-200">{menuItemsData[item].count}</div>
 					</div>
-					
 				</a>
 				{/each}
 			</SidebarGroup>
