@@ -525,7 +525,7 @@
 
 <div bind:this={imageModalContainer} class="flex justify-center items-center">
   {#if imageModal}
-    <div class="fixed z-10 bg-black inset-0">
+    <div class="fixed z-50 bg-black inset-0">
       <div
         bind:this={imageview}
         class="w-full h-full items-center flex justify-center"
@@ -566,6 +566,7 @@
           {/each}
         {/if}
 
+        {#if showFaceDetection}
         <div class="absolute flex justify-center bottom-0">
           <div class="flex gap-4">
             {#if typeof imageCard.person === "string"}
@@ -599,6 +600,7 @@
             {/if}
           </div>
         </div>
+        {/if}
 
         <button
           class="absolute top-1/2 left-6 flex justify-center items-center z-10 -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
