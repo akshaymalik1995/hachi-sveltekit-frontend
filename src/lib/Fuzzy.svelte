@@ -62,13 +62,13 @@
         <!-- A select input -->
         <form class="w-full" on:submit={handleFormSubmit} action="">
 
-            <div class="flex space-x-2">
-                <div class="grow bg-blue-200 rounded-md h-10">
+            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                <div class="grow bg-blue-200 dark:bg-blue-800 rounded-md h-10">
                     <input
                         bind:this={inputElement}
                         bind:value={valueInput}
                         on:input={handleValueChange}
-                        class="px-4 py-4 bg-gray-800 text-white border rounded-md focus:outline-none h-full w-full"
+                        class="px-4 py-2 md:py-4 dark:bg-gray-800 bg-gray-100 dark:text-white  border rounded-md focus:outline-none h-full w-full"
                         type="search"
                         placeholder="Type @username to search by person or enter keywords"
                     />
@@ -77,7 +77,7 @@
                 <div class="flex">
                     <button
                         type="submit"
-                        class="bg-blue-600 hover:bg-blue-800 disabled:bg-blue-400 text-white font-semibold px-4 rounded"
+                        class="bg-blue-600 hover:bg-blue-800 disabled:bg-blue-400 dark:bg-blue-400 dark:hover:bg-blue-600 dark:disabled:bg-blue-200 text-white dark:text-black font-semibold px-4 rounded"
                         bind:this={queryButton}>Search</button
                     >
                 </div>
