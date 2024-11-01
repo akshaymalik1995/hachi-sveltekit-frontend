@@ -158,7 +158,7 @@
 </script>
 
 
-<Modal title="Label" placement="center" bind:open={formModal} size="xs" autoclose={false} class="w-full z-30 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+<Modal dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex' title="Label" placement="center" bind:open={formModal} size="xs" autoclose={false} class="w-full z-30 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
   <form
     on:submit={handleFormSubmit}
     id="imageForm"
