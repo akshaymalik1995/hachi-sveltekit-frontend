@@ -7,11 +7,19 @@
 
   console.log("PEOPLE LIST 3", $peopleDataStore);
 
+  const labelledPeople = $peopleListStore.filter((item) => {
+    return item !== "no_person_detected" && item !== "no-categorical-info" && !item.startsWith("cluster");
+  });
+
+  const unlabelledPeople = $peopleListStore.filter((item) => {
+    return item.startsWith("cluster");
+  });
+
   function sortPeopleList() {
     console.log("Inside sortPeopleList");
     let peopleList = $peopleListStore;
     let peopleData = $peopleDataStore;
-    let sortedPeopleList = peopleList.sort((a, b) => {
+    let sortedPeopleList = unlabelledPeople.sort((a, b) => {
       if (!peopleData[a] || !peopleData[b]) {
         return 0;
       }
@@ -76,10 +84,53 @@
 <Loading />
 {/if}
 
+<div
+  class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-16 py-2"
+>
+    {#each labelledPeople as id}
+      <!-- person => ['person_id', {}] -->
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <div
+          class="flex flex-col rounded-lg border justify-center items-center cursor-pointer"
+          on:click={(e) => {
+            console.log("Person id is", id);
+          }}
+        >
+          <div>
+            <!-- <a
+              href={"/search?person=" + id}
+              class="flex rounded-lg items-center w-48 h-48 "
+            >
+              <img
+                
+                loading="lazy"
+                src={DOMAIN + "/getPreviewPerson/" + id}
+                class="w-48 h-48 rounded-lg bg-gray-100 shadow-sm"
+                alt={id}
+              />
+              
+
+            </a> -->
+            <a
+            href={"/search?person=" + id}
+            class="p-1"
+          >
+           
+            <div>{id}</div>
+          </a>
+            
+          </div>
+        </div>
+
+    {/each}
+</div>
+
 
 <!-- Display each value in group as a clickable div, later on click we would use the PHOTOS component -->
 <div
-  class="flex justify-center items-center gap-5 mb-16 py-2 flex-wrap"
+  class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-16 py-2"
 >
   <!-- A single div element -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
