@@ -404,7 +404,7 @@
   }
 </script>
 
-<Modal bind:open={photoDetailsModal} size="md">
+<Modal bind:open={photoDetailsModal} size="md" class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
   <PhotoDetail photoDetails={imageCard} />
 </Modal>
 
@@ -413,7 +413,7 @@
   bind:open={filterModal}
   size="md"
   autoclose={false}
-  class="w-full"
+  class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
 >
   <form
     on:submit={handleFilterSubmit}
@@ -425,7 +425,7 @@
         <span>Day</span>
         <select
           bind:value={filterFormData.day}
-          class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+          class="w-full text-gray-900 dark:text-gray-100 border bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 p-2 rounded-md"
         >
           {#each Array.from({ length: 31 }, (_, i) => i + 1) as day}
             <option>{day}</option>
@@ -436,7 +436,7 @@
         <span>Month</span>
         <select
           bind:value={filterFormData.month}
-          class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+          class="w-full text-gray-900 dark:text-gray-100 border bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 p-2 rounded-md"
         >
           {#each MonthNames as month}
             <option value={month}>{month}</option>
@@ -447,7 +447,7 @@
         <span>Year</span>
         <select
           bind:value={filterFormData.year}
-          class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+          class="w-full text-gray-900 dark:text-gray-100 border bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 p-2 rounded-md"
         >
           {#each Array.from({ length: 101 }, (_, i) => new Date().getFullYear() - i) as year}
             <option>{year}</option>
@@ -460,7 +460,7 @@
       <span>Person</span>
       <select
         bind:value={filterFormData.person}
-        class="w-full text-white border bg-gray-800 border-gray-300 p-2 rounded-md"
+        class="w-full text-gray-900 dark:text-gray-100 border bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 p-2 rounded-md"
       >
         {#each $peopleListStore as person}
           {#if !person.startsWith("no") && !person.startsWith("id")}
@@ -477,20 +477,11 @@
       >
         Filter
       </button>
-      <!-- <button
-        type="button"
-        class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-        on:click={() => {
-          clearFilters();
-        }}
-      >
-        Clear
-      </button> -->
     </div>
   </form>
 </Modal>
 
-<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full">
+<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
   <form
     on:submit={handleImageSubmit}
     id="imageForm"
@@ -506,6 +497,7 @@
         placeholder="Akshay..."
         autocomplete
         required
+        class="text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600"
       />
     </Label>
 
@@ -533,16 +525,11 @@
 
 <div bind:this={imageModalContainer} class="flex justify-center items-center">
   {#if imageModal}
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="fixed z-10 bg-black inset-0">
-      <!-- {#if imageLoading}
-        <TopLoading />
-      {/if} -->
       <div
         bind:this={imageview}
         class="w-full h-full items-center flex justify-center"
       >
-        <!-- svelte-ignore a11y-img-redundant-alt -->
         <img
           on:load={(event) => {
             if (event.target.src.includes("/getRawDataFull/")) return;
@@ -558,24 +545,9 @@
           src={DOMAIN + "/getRawData/" + modalimagehash}
           alt="image"
         />
-        <!-- svelte-ignore a11y-img-redundant-alt -->
-        <!-- <img
-          on:load={(event) => {
-            scale_face_bboxes(event);
-          }}
-          class=" {!imageLoading
-            ? 'w-0 h-0'
-            : 'w-auto h-full'} shadow-xl cursor-pointer"
-          src={DOMAIN + "/getRawData/" + modalimagehash}
-          alt="image"
-        /> -->
 
         {#if showFaceDetection}
-          <!-- TODO: calculate scale -->
           {#each scaled_face_bboxes as box, i}
-            <!-- svelte-ignore missing-declaration -->
-            <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
               on:click={(e) => {
                 tag_interface = {
@@ -590,9 +562,7 @@
               class="absolute text-white cursor-pointer border-solid border-2 border-white hover:opacity-40 hover:bg-green-300 bg-transparent"
               style="top: {box.top}px ; left: {box.left}px; width: {box.width}px; height: {box.height}px"
             ></div>
-            <Tooltip
-              >{parsePersonList(imageCard.person)[i]}</Tooltip
-            >
+            <Tooltip>{parsePersonList(imageCard.person)[i]}</Tooltip>
           {/each}
         {/if}
 
@@ -600,46 +570,36 @@
           <div class="flex gap-4">
             {#if typeof imageCard.person === "string"}
               {#if imageCard.person !== "no person detected"}
-                
-                  <!-- svelte-ignore a11y-click-events-have-key-events -->
-                  <!-- svelte-ignore missing-declaration -->
-                  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                  <img
+                <img
                   on:click={() => {
                     dismissAllModals();
                     goto("/search?person=" + person);
                   }}
-                    loading="lazy"
-                    src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
-                    class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
-                    alt=""
-                  />
-          
+                  loading="lazy"
+                  src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
+                  class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-sm"
+                  alt=""
+                />
               {/if}
             {:else}
               {#each imageCard.person as person}
                 {#if person !== "no person detected"}
-                  
-                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <img
+                  <img
                     on:click={() => {
                       dismissAllModals();
                       goto("/search?person=" + person);
                     }}
-                      loading="lazy"
-                      src={DOMAIN + "/getPreviewPerson/" + person}
-                      class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-smr"
-                      alt=""
-                    />
-            
+                    loading="lazy"
+                    src={DOMAIN + "/getPreviewPerson/" + person}
+                    class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-sm"
+                    alt=""
+                  />
                 {/if}
               {/each}
             {/if}
           </div>
         </div>
 
-        <!-- Add navigation buttons -->
         <button
           class="absolute top-1/2 left-6 flex justify-center items-center z-10 -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
           on:click={() => loadPrevImage(modalImageIndex - 1)}
@@ -685,13 +645,12 @@
             showFaceDetection = false;
             imageModal = false;
           }}
-          class="absolute top-9 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none rounded w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+          class="absolute top-9 right-6 z-10 flex justify-center items-center -mt-5 w-10 h-10 bg-gray-800 text-white rounded-full focus:outline-none"
         >
           <i class="fa fa-xmark"></i>
         </button>
         <Tooltip>Close</Tooltip>
 
-        <!-- Add icons for fullscreen, edit, open in file, favorite -->
         <div class="absolute inset-x-0 top-4 flex justify-center space-x-4">
           <button
             on:click={() => {
@@ -715,9 +674,7 @@
             on:click={() => {
               showFaceDetection = !showFaceDetection;
             }}
-            class="rounded {showFaceDetection
-              ? 'bg-yellow-500'
-              : ''} w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
+            class="rounded {showFaceDetection ? 'bg-yellow-500' : ''} w-8 h-8 flex items-center justify-center bg-gray-800 focus:outline-none"
           >
             <i class="fa fa-face-smile"></i>
           </button>
@@ -728,13 +685,11 @@
   {/if}
 </div>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if filtered_images_data.scoreIndex.length !== 0}
   <div class="flex justify-between items-center my-4">
     <div class="flex items-center gap-2">
       <div
-        class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+        class="flex cursor-pointer items-center gap-2 text-gray-900 dark:text-gray-100 hover:text-gray-400 text-sm p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
         on:click={() => {
           filterModal = true;
         }}
@@ -745,11 +700,11 @@
         {#each Object.entries(filterFormData) as [key, value]}
           {#if value}
             <div
-              class="flex items-center gap-2 text-white text-sm p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+              class="flex items-center gap-2 text-gray-900 dark:text-gray-100 text-sm p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
             >
               <span><span class="text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</span> <span>{value}</span></span>
               <button
-                class="text-white text-sm rounded"
+                class="text-gray-900 dark:text-gray-100 text-sm rounded"
                 on:click={() => {
                   filterFormData[key] = null;
                   filtered_images_data = structuredClone(
@@ -767,7 +722,7 @@
         {/each}
         <div>
           <button
-            class="ml-2 bg-gray-800 transition duration-300 ease-in-out hover:bg-gray-700 text-white text-sm py-2 px-2 rounded"
+            class="ml-2 bg-gray-100 dark:bg-gray-700 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm py-2 px-2 rounded"
             on:click={clearFilters}
           >
             Clear All
@@ -782,7 +737,7 @@
           sortDescending = !sortDescending;
           images_data = sortImageDataByDate(images_data, sortDescending);
         }}
-        class="flex cursor-pointer items-center gap-2 text-white hover:text-gray-400 text-sm text-xs p-2 px-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-300 ease-in-out"
+        class="flex cursor-pointer items-center gap-2 text-gray-900 dark:text-gray-100 hover:text-gray-400 text-sm text-xs p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
       >
         <span>Sort</span>
         <i class="fa fa-sort ml-2"></i>
@@ -791,26 +746,22 @@
   </div>
   
   <div class="">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-1 mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mx-auto">
       <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
         {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
           <div
             on:click={() => onImageModalClick(index)}
-            class="flex bg-gray-900 justify-center  items-center"
+            class="flex bg-gray-100 dark:bg-gray-700 rounded-lg shadow-xl justify-center items-center"
           >
-            <div class="relative overflow-hidden shadow-md">
-              <!-- svelte-ignore a11y-img-redundant-alt -->
+            <div class="relative rounded-lg overflow-hidden shadow-md">
               <img
                 loading="lazy"
-                class="w-[19vw] h-[19vw] shadow-xl cursor-pointer transform transition-transform duration-500 hover:scale-110"
+                class="lg:w-64 bg-gray-100 dark:bg-gray-700 lg:h-64 cursor-pointer transform transition-transform duration-500 hover:scale-110"
                 src={DOMAIN +
                   "/getRawData/" +
                   images_data["data_hash"][scoreindex.ix]}
                 alt="image"
               />
-              <!-- Add like icon at the bottom -->
               <div
                 class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
               >
@@ -845,4 +796,3 @@
     </div>
   </div>
 {/if}
-
