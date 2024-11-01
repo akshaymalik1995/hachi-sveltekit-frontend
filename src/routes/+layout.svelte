@@ -38,6 +38,20 @@
   $: {
     $peopleDataStore = people_data;
   }
+
+  let innerWidth = window.innerWidth;
+
+  let drawerHidden = window.innerWidth > 1024 ? false : true;
+
+//   $: {
+//     console.log("DRAWER HIDDEN", drawerHidden);
+//     if (innerWidth > 1024) {
+//       drawerHidden = false;
+//     } else {
+//       drawerHidden = true;
+//     }
+//   }
+
 </script>
 
 <header
@@ -48,6 +62,7 @@
   >
     <div class="mx-auto flex flex-wrap justify-between items-center w-full">
       <button
+        on:click={() => (drawerHidden = !drawerHidden)}
         type="button"
         class="focus:outline-none whitespace-normal rounded-lg focus:ring-2 p-1.5 focus:ring-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 m-0 me-3 md:block lg:hidden"
         aria-label="Open main menu"
@@ -102,7 +117,7 @@
 </header>
 
 <div class="overflow-hidden lg:flex">
-  <Sidebar />
+  <Sidebar drawerHidden={drawerHidden} />
   <!-- <div
     class="fixed inset-0 z-20 bg-gray-900/50 dark:bg-gray-900/60"
     role="presentation"
