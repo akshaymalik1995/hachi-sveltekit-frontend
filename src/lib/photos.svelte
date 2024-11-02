@@ -469,19 +469,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
       </Label>
     </div>
 
-    <Label class="space-y-2">
-      <span>Person</span>
-      <select
-        bind:value={filterFormData.person}
-        class="w-full text-gray-900 dark:text-gray-100 border bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 p-2 rounded-md"
-      >
-        {#each $peopleListStore as person}
-          {#if !person.startsWith("no") && !person.startsWith("id")}
-            <option>{person}</option>
-          {/if}
-        {/each}
-      </select>
-    </Label>
+    
 
     <div class="grid grid-cols-1 gap-4">
       <button
@@ -765,6 +753,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
       <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
         {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
           <div
+
             on:click={() => onImageModalClick(index)}
             class="flex justify-center items-center"
           >
