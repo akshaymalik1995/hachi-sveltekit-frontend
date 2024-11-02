@@ -554,7 +554,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
               event.target.src = DOMAIN + "/getRawData/" + modalimagehash;
             }
           }}
-          class="w-auto h-full shadow-xl cursor-pointer"
+          class="w-auto h-full max-h-[100vw] shadow-xl cursor-pointer"
           src={DOMAIN + "/getRawData/" + modalimagehash}
           alt="image"
         />
