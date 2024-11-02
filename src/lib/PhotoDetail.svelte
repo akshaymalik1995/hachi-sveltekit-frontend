@@ -14,7 +14,7 @@
   };
 </script>
 
-<div class="text-black dark:text-white max-w-4xl mx-auto">
+<div class="text-black overflow-auto max-h-[75vh] dark:text-white max-w-4xl mx-auto">
   <!-- <h2 class="text-3xl font-bold mb-6 border-b pb-2">
     {photoDetails.filename}
   </h2> -->

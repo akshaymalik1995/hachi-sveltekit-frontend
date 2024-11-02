@@ -414,7 +414,7 @@
   }
 </script>
 
-<Modal dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex' placement="center" title={imageCard.filename} bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+<Modal dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex' placement="center" title={imageCard.filename} bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 overflow-auto dark:text-gray-100">
   <PhotoDetail photoDetails={imageCard} />
 </Modal>
 
