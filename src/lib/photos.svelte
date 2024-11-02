@@ -414,11 +414,12 @@
   }
 </script>
 
-<Modal placement="center" title={imageCard.filename} bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+<Modal dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex' placement="center" title={imageCard.filename} bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
   <PhotoDetail photoDetails={imageCard} />
 </Modal>
 
 <Modal
+dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
   placement="center"
   title="Filter Images"
   bodyClass="p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain"
@@ -493,7 +494,7 @@
   </form>
 </Modal>
 
-<Modal bind:open={formModal} size="xs" autoclose={false} class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+<Modal dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex' bind:open={formModal} size="xs" autoclose={false} class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
   <form
     on:submit={handleImageSubmit}
     id="imageForm"
