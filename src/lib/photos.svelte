@@ -581,9 +581,9 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
 
         {#if showFaceDetection}
         <div class="absolute flex justify-center bottom-0">
-          <div class="flex gap-4">
+          <div class="flex overflow-auto gap-4">
             {#if typeof imageCard.person === "string"}
-              {#if imageCard.person !== "no person detected"}
+              {#if imageCard.person !== "no_person_detected" && imageCard.person !== "no-categorical-info"}
                 <img
                   on:click={() => {
                     dismissAllModals();
@@ -592,12 +592,12 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
                   loading="lazy"
                   src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
                   class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-sm"
-                  alt=""
+                  alt="{imageCard.person}"
                 />
               {/if}
             {:else}
               {#each imageCard.person as person}
-                {#if person !== "no person detected"}
+                {#if person !== "no_person_detected" && person !== "no-categorical-info"}
                   <img
                     on:click={() => {
                       dismissAllModals();
@@ -606,7 +606,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
                     loading="lazy"
                     src={DOMAIN + "/getPreviewPerson/" + person}
                     class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-sm"
-                    alt=""
+                    alt="{person}"
                   />
                 {/if}
               {/each}

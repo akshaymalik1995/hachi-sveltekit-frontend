@@ -79,7 +79,7 @@
                 <div class="flex">
                     <button
                         type="submit"
-                        class="bg-blue-600 hover:bg-blue-800 disabled:bg-blue-400 dark:bg-blue-400 dark:hover:bg-blue-600 dark:disabled:bg-blue-200 text-white dark:text-black font-semibold px-4 rounded"
+                        class="bg-gray-600 hover:bg-gray-800 disabled:bg-gray-400 dark:bg-gray-400 dark:hover:bg-gray-600 py-2 dark:disabled:bg-blue-200 text-white dark:text-black font-semibold px-4 rounded"
                         bind:this={queryButton}>Search</button
                     >
                 </div>
