@@ -749,7 +749,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
   </div>
   
   <div class="">
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mx-auto">
       <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
         {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
           <div
@@ -760,13 +760,13 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
             <div class="relative rounded-lg overflow-hidden shadow-md">
               <img
                 loading="lazy"
-                class="lg:h-64 bg-gray-100 dark:bg-gray-700  cursor-pointer transform transition-transform duration-500 hover:scale-110"
+                class="lg:h-64 lg:w-64 bg-gray-100 dark:bg-gray-700  cursor-pointer transform transition-transform duration-500 hover:scale-110"
                 src={DOMAIN +
                   "/getRawData/" +
                   images_data["data_hash"][scoreindex.ix]}
                 alt="image"
               />
-              <!-- <div
+              <div
                 class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
               >
                 <div>
@@ -792,7 +792,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
                     parseDate(images_data["meta_data"][scoreindex.ix])
                   )}
                 </div>
-              </div> -->
+              </div>
             </div>
           </div>
         {/each}
