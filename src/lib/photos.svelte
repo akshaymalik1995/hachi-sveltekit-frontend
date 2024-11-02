@@ -700,11 +700,11 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
   {/if}
 </div>
 
-{#if filtered_images_data.scoreIndex.length !== 0}
-  <div class="flex justify-between items-center my-4">
-    <div class="flex items-center gap-2">
+{#if filtered_images_data.scoreIndex.length !== 0 || true}
+  <div class="flex flex-wrap justify-between items-center my-4">
+    <div class="flex my-2 flex-wrap items-center gap-2">
       <div
-        class="flex cursor-pointer items-center gap-2 text-gray-900 dark:text-gray-100 hover:text-gray-400 text-sm p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
+        class="flex flex-wrap cursor-pointer items-center gap-2 text-gray-900 dark:text-gray-100 hover:text-gray-400 text-sm p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
         on:click={() => {
           filterModal = true;
         }}
@@ -715,7 +715,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
         {#each Object.entries(filterFormData) as [key, value]}
           {#if value}
             <div
-              class="flex items-center gap-2 text-gray-900 dark:text-gray-100 text-sm p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
+              class="flex flex-wrap items-center gap-2 text-gray-900 dark:text-gray-100 text-sm p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
             >
               <span><span class="text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</span> <span>{value}</span></span>
               <button
