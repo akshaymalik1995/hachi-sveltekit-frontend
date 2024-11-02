@@ -766,7 +766,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
                   images_data["data_hash"][scoreindex.ix]}
                 alt="image"
               />
-              <div
+              <!-- <div
                 class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
               >
                 <div>
@@ -792,7 +792,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
                     parseDate(images_data["meta_data"][scoreindex.ix])
                   )}
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         {/each}
