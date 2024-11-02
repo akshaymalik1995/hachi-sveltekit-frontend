@@ -766,12 +766,12 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
         {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
           <div
             on:click={() => onImageModalClick(index)}
-            class="flex bg-gray-100 dark:bg-gray-700 rounded-lg shadow-xl justify-center items-center"
+            class="flex bg-gray-100 dark:bg-gray-800 rounded-lg shadow-xl justify-center items-center"
           >
             <div class="relative rounded-lg overflow-hidden shadow-md">
               <img
                 loading="lazy"
-                class="lg:w-64 bg-gray-100 dark:bg-gray-700 lg:h-64 cursor-pointer transform transition-transform duration-500 hover:scale-110"
+                class="lg:w-64 bg-gray-100 dark:bg-gray-700  cursor-pointer transform transition-transform duration-500 hover:scale-110"
                 src={DOMAIN +
                   "/getRawData/" +
                   images_data["data_hash"][scoreindex.ix]}
