@@ -1,6 +1,7 @@
 <script>
   import Sidebar from "$lib/Sidebar.svelte";
   import {goto} from "$app/navigation";
+  import {page} from "$app/stores";
   import "../app.css";
   import {
     imagesDataStore,
@@ -62,6 +63,11 @@
   let innerWidth = window.innerWidth;
 
   let drawerHidden = window.innerWidth > 1024 ? false : true;
+
+  $ : {
+    console.log("PAGE URL", $page.url);
+    drawerHidden = window.innerWidth > 1024 ? false : true;
+  }
 
   function toggleDarkMode() {
     console.log("TOGGLE DARK MODE");
