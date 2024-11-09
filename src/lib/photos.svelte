@@ -308,10 +308,9 @@
         const updateIndex = $imagesDataStore["meta_data"].findIndex((item) => {
           return item.absolute_path === imageCard.absolute_path;
         });
-        $imagesDataStore["meta_data"][updateIndex].person =
-        parsePersonList(imageCard.person).map((item) =>
-            item === old_person_id ? new_person_id : item
-          );
+        $imagesDataStore["meta_data"][updateIndex].person = parsePersonList(
+          imageCard.person
+        ).map((item) => (item === old_person_id ? new_person_id : item));
         imageCard.person = parsePersonList(imageCard.person).map((item) =>
           item === old_person_id ? new_person_id : item
         );
@@ -404,7 +403,7 @@
   }
 
   $: {
-    if (imageModal){
+    if (imageModal) {
       // disable scroll on body
       document.body.style.overflow = "hidden";
     } else {
@@ -414,12 +413,19 @@
   }
 </script>
 
-<Modal dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex' placement="center" title={imageCard.filename} bind:open={photoDetailsModal} size="md" class="bg-white z-50 dark:bg-gray-800 text-gray-900 overflow-auto dark:text-gray-100">
+<Modal
+  dialogClass="fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex"
+  placement="center"
+  title={imageCard.filename}
+  bind:open={photoDetailsModal}
+  size="md"
+  class="bg-white z-50 dark:bg-gray-800 text-gray-900 overflow-auto dark:text-gray-100"
+>
   <PhotoDetail photoDetails={imageCard} />
 </Modal>
 
 <Modal
-dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
+  dialogClass="fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex"
   placement="center"
   title="Filter Images"
   bodyClass="p-4 md:p-5 space-y-4 flex-1 overflow-y-auto overscroll-contain"
@@ -469,8 +475,6 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
       </Label>
     </div>
 
-    
-
     <div class="grid grid-cols-1 gap-4">
       <button
         type="submit"
@@ -482,7 +486,13 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
   </form>
 </Modal>
 
-<Modal dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex' bind:open={formModal} size="xs" autoclose={false} class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+<Modal
+  dialogClass="fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex"
+  bind:open={formModal}
+  size="xs"
+  autoclose={false}
+  class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+>
   <form
     on:submit={handleImageSubmit}
     id="imageForm"
@@ -514,8 +524,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
     </button>
     <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
       <a
-        href={"/people/" +
-          (parsePersonList(imageCard.person)[current_box_ix])}
+        href={"/people/" + parsePersonList(imageCard.person)[current_box_ix]}
         class="text-primary-700 hover:underline dark:text-primary-500"
       >
         See all pictures
@@ -568,39 +577,39 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
         {/if}
 
         {#if showFaceDetection}
-        <div class="absolute flex justify-center bottom-0">
-          <div class="flex overflow-auto gap-4">
-            {#if typeof imageCard.person === "string"}
-              {#if imageCard.person !== "no_person_detected" && imageCard.person !== "no-categorical-info"}
-                <img
-                  on:click={() => {
-                    dismissAllModals();
-                    goto("/search?person=" + person);
-                  }}
-                  loading="lazy"
-                  src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
-                  class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-sm"
-                  alt="{imageCard.person}"
-                />
-              {/if}
-            {:else}
-              {#each imageCard.person as person}
-                {#if person !== "no_person_detected" && person !== "no-categorical-info"}
+          <div class="absolute flex justify-center bottom-0">
+            <div class="flex overflow-auto gap-4">
+              {#if typeof imageCard.person === "string"}
+                {#if imageCard.person !== "no_person_detected" && imageCard.person !== "no-categorical-info"}
                   <img
                     on:click={() => {
                       dismissAllModals();
                       goto("/search?person=" + person);
                     }}
                     loading="lazy"
-                    src={DOMAIN + "/getPreviewPerson/" + person}
+                    src={DOMAIN + "/getPreviewPerson/" + imageCard.person}
                     class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-sm"
-                    alt="{person}"
+                    alt={imageCard.person}
                   />
                 {/if}
-              {/each}
-            {/if}
+              {:else}
+                {#each imageCard.person as person}
+                  {#if person !== "no_person_detected" && person !== "no-categorical-info"}
+                    <img
+                      on:click={() => {
+                        dismissAllModals();
+                        goto("/search?person=" + person);
+                      }}
+                      loading="lazy"
+                      src={DOMAIN + "/getPreviewPerson/" + person}
+                      class="object-strech cursor-pointer border-2 rounded-lg w-24 h-24 bg-gray-800 border-gray-100 shadow-sm"
+                      alt={person}
+                    />
+                  {/if}
+                {/each}
+              {/if}
+            </div>
           </div>
-        </div>
         {/if}
 
         <button
@@ -677,7 +686,9 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
             on:click={() => {
               showFaceDetection = !showFaceDetection;
             }}
-            class="rounded {showFaceDetection ? 'bg-yellow-500' : ''} w-8 h-8 text-white flex items-center justify-center bg-gray-800 focus:outline-none"
+            class="rounded {showFaceDetection
+              ? 'bg-yellow-500'
+              : ''} w-8 h-8 text-white flex items-center justify-center bg-gray-800 focus:outline-none"
           >
             <i class="fa fa-face-smile"></i>
           </button>
@@ -705,7 +716,11 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
             <div
               class="flex flex-wrap items-center gap-2 text-gray-900 dark:text-gray-100 text-sm p-2 px-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 ease-in-out"
             >
-              <span><span class="text-gray-500">{key.charAt(0).toUpperCase() + key.slice(1)}</span> <span>{value}</span></span>
+              <span
+                ><span class="text-gray-500"
+                  >{key.charAt(0).toUpperCase() + key.slice(1)}</span
+                > <span>{value}</span></span
+              >
               <button
                 class="text-gray-900 dark:text-gray-100 text-sm rounded"
                 on:click={() => {
@@ -713,7 +728,10 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
                   filtered_images_data = structuredClone(
                     filterImages(images_data)
                   );
-                  if (Object.values(filterFormData).filter((item) => item).length === 0) {
+                  if (
+                    Object.values(filterFormData).filter((item) => item)
+                      .length === 0
+                  ) {
                     filterOn = false;
                   }
                 }}
@@ -733,7 +751,7 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
         </div>
       {/if}
     </div>
-  
+
     {#if !isSearch}
       <div
         on:click={() => {
@@ -747,46 +765,50 @@ dialogClass='fixed inset-0 h-modal md:inset-0 md:h-full z-50 w-full p-4 flex'
       </div>
     {/if}
   </div>
-  
+
   <div class="">
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mx-auto">
+    <div
+      class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mx-auto"
+    >
       <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
         {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
           <div
-
             on:click={() => onImageModalClick(index)}
             class="flex justify-center items-center"
           >
-            <div class="relative rounded-lg overflow-hidden shadow-md">
+            <div
+              class="relative rounded-lg overflow-hidden shadow-lg transition-shadow duration-300 hover:shadow-xl"
+            >
               <img
                 loading="lazy"
-                class="lg:h-64 lg:w-64 bg-gray-100 dark:bg-gray-700  cursor-pointer transform transition-transform duration-500 hover:scale-110"
+                class="lg:h-64 lg:w-64 bg-gray-100 dark:bg-gray-700 cursor-pointer transform transition-transform duration-500 hover:scale-110"
                 src={DOMAIN +
                   "/getRawData/" +
                   images_data["data_hash"][scoreindex.ix]}
                 alt="image"
               />
               <div
-                class="absolute items-center justify-between flex bottom-0 left-0 right-0 m-2"
+                class="absolute bottom-0 left-0 right-0 m-2 flex items-center justify-between"
               >
                 <div>
                   {#if $likedImagesStore["data_hash"].includes(images_data["data_hash"][scoreindex.ix])}
                     <div
-                      on:click={(event) => handleImageLike(event, "false", index)}
-                      class={"text-white cursor-pointer"}
+                      on:click={(event) =>
+                        handleImageLike(event, "false", index)}
+                      class="text-white cursor-pointer p-1 rounded-full bg-red-500 hover:bg-red-600 transition-colors duration-300"
                     >
                       <HeartSolid color="white" />
                     </div>
                   {:else}
                     <div
-                      on:click={(event) => handleImageLike(event, "true", index)}
-                      class={"text-white cursor-pointer"}
+                      on:click={(event) =>
+                        handleImageLike(event, "true", index)}
+                      class="text-white cursor-pointer p-1 rounded-full bg-gray-500 hover:bg-gray-600 transition-colors duration-300"
                     >
                       <HeartOutline />
                     </div>
                   {/if}
                 </div>
-  
                 <div class="text-white text-xs sm:text-sm lg:text-base">
                   {getDateString(
                     parseDate(images_data["meta_data"][scoreindex.ix])
