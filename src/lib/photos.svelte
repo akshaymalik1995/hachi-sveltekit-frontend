@@ -768,7 +768,7 @@
 
   <div class="">
     <div
-      class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mx-auto"
+      class="flex flex-wrap justify-center items-center gap-4 p-2 md:p-4"
     >
       <InfiniteScroll loadMoreFunction={loadMoreImages} threshold={100}>
         {#each filtered_images_data.scoreIndex.slice(0, imagesloadedcount) as scoreindex, index}
@@ -781,13 +781,13 @@
             >
               <img
                 loading="lazy"
-                class="lg:h-64 lg:w-64 bg-gray-100 dark:bg-gray-700 cursor-pointer transform transition-transform duration-500 hover:scale-110"
+                class=" lg:w-32 bg-gray-100 dark:bg-gray-700 cursor-pointer transform transition-transform duration-500 hover:scale-110"
                 src={DOMAIN +
                   "/getRawData/" +
                   images_data["data_hash"][scoreindex.ix]}
                 alt="image"
               />
-              <div
+              <!-- <div
                 class="absolute bottom-0 left-0 right-0 m-2 flex items-center justify-between"
               >
                 <div>
@@ -809,12 +809,12 @@
                     </div>
                   {/if}
                 </div>
-                <div class="text-white text-xs sm:text-sm lg:text-base">
+                <div class="text-white text-xs sm:text-sm">
                   {getDateString(
                     parseDate(images_data["meta_data"][scoreindex.ix])
                   )}
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         {/each}
