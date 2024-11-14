@@ -781,13 +781,13 @@
             >
               <img
                 loading="lazy"
-                class=" lg:w-32 bg-gray-100 dark:bg-gray-700 cursor-pointer transform transition-transform duration-500 hover:scale-110"
+                class=" lg:w-48 lg:h-48 bg-gray-100 dark:bg-gray-700 cursor-pointer transform transition-transform duration-500 hover:scale-110"
                 src={DOMAIN +
                   "/getRawData/" +
                   images_data["data_hash"][scoreindex.ix]}
                 alt="image"
               />
-              <!-- <div
+              <div
                 class="absolute bottom-0 left-0 right-0 m-2 flex items-center justify-between"
               >
                 <div>
@@ -814,7 +814,7 @@
                     parseDate(images_data["meta_data"][scoreindex.ix])
                   )}
                 </div>
-              </div> -->
+              </div>
             </div>
           </div>
         {/each}
